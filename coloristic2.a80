@@ -1,0 +1,227 @@
+		opt	--syntax=abf
+		device	zxspectrumnext
+
+		include	"nextants.inc"
+
+		; convert classic ULA: 0 1 2 3 4 5 6 7
+		defarray BORDER_TO_332 $00,$02,$A0,$A2,$14,$16,$B4,$B6
+
+	macro	border color?
+		nextreg	TRANSPARENCY_FALLBACK_COL_NR_4A,BORDER_TO_332[color?]	; transparency fallback register
+	endm
+
+
+TM_MAP_ADDR	equ	$4000
+TM_GFX_ADDR	equ	$6000
+
+
+
+		org	$8000
+
+
+start:		nextreg	TURBO_CONTROL_NR_07,3
+	; check for 50/60Hz mode and remember it -> to repeat keyboard handler calls (before making proper 300Hz inputs)
+	;	READNR	PERIPHERAL_1_NR_05
+	;	.3	rra					; CF=1 60Hz, 0 for 50Hz
+	;	ld	a,300/50
+	;	sbc	a,0					; A = 6 for 50Hz, 5 for 60Hz
+	;	ld	(main_loop.keyboard_handler_repeat),a
+	;	nextreg	LAYER2_RAM_BANK_NR_12,$$l2_pix_data/2
+		nextreg	SPRITE_CONTROL_NR_15,%00011011		; LoRes=0, SprToTop, Sclip=0, blend B+L, Sborder, S=1
+		nextreg	DISPLAY_CONTROL_NR_69,$00		; Layer2=1, ULA bank5, Timex off (regular ULA)
+		nextreg	LAYER2_CONTROL_NR_70,%00100000		; 640x256x4bpp, palette offset 0
+		nextreg	LAYER2_XOFFSET_MSB_NR_71,0,,LAYER2_XOFFSET_NR_16,0,,LAYER2_YOFFSET_NR_17,0
+		nextreg	CLIP_WINDOW_CONTROL_NR_1C,$0F
+		nextreg	CLIP_LAYER2_NR_18,0,,CLIP_LAYER2_NR_18,159,,CLIP_LAYER2_NR_18,0,,CLIP_LAYER2_NR_18,255
+		nextreg	CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,159,,CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,255
+		nextreg	ULA_CONTROL_NR_68,%11100000		; ULA=off, TM blend, 0 half scroll, defaults for others
+		nextreg	TILEMAP_CONTROL_NR_6B,%10010000		; TM=on,40x32x2,Pal2,4bpp,index8,UT
+		nextreg	TILEMAP_XOFFSET_MSB_NR_2F,0,,TILEMAP_XOFFSET_LSB_NR_30,0,,TILEMAP_YOFFSET_NR_31,0
+		nextreg	TILEMAP_TRANSPARENCY_I_NR_4C,$0F
+		nextreg	TILEMAP_BASE_ADR_NR_6E,high(TM_MAP_ADDR),,TILEMAP_GFX_ADR_NR_6F,high(TM_GFX_ADDR)
+
+	; draw tilemap static-debug screen
+		nextreg	MMU6_C000_NR_56,$$tilemap_map
+		nextreg	MMU7_E000_NR_57,$$tilemap_map+1
+		ld	de,TM_MAP_ADDR
+		ld	hl,tilemap_map
+		ld	bc,tilemap_map.x * tilemap_map.y
+		ldir
+
+		nextreg	MMU7_E000_NR_57,$$tilemap_gfx
+		ld	de,TM_GFX_ADDR
+		ld	hl,tilemap_gfx
+		ld	bc,tilemap_gfx.sz
+		ldir
+
+	; load sprite palette
+		nextreg	PALETTE_CONTROL_NR_43,%0'110'1'1'0'0	; second Sprite palette
+		ld	hl,tile_data.pal
+		call	UploadPaletteData
+
+	; load tilemode palette
+		nextreg	PALETTE_CONTROL_NR_43,%0'111'1'1'0'0	; second Tilemode palette
+		ld	hl,tile_data.pal
+		call	UploadPaletteData
+
+	; main loop
+main_loop:
+		border	0
+		call	WaitForScanlineBelow
+		border	1
+
+		jp	main_loop
+
+
+READNR	macro	reg
+		ld	a,reg?
+		call	ReadNextReg
+	endm
+
+ReadNextReg:	ld	bc,TBBLUE_REGISTER_SELECT_P_243B
+		out	(c),a
+		inc	b
+		in	a,(c)
+		ret
+
+;--------------------------------------------------------------------------------------------
+; (24b de) += (24b hl)
+
+Add24bHlToDe:	or	a
+		ld	b,3
+.add_loop:	ld	a,(de)
+		adc	a,(hl)
+		ld	(de),a
+		inc	de
+		inc	hl
+		djnz	.add_loop
+		ret
+
+;--------------------------------------------------------------------------------------------
+WAIT_SCANLINE	equ	192+32		; no offset yet, so 192+32 is below 640x256
+
+WaitForScanlineBelow:
+	; read NextReg	$1F - LSB of current raster line
+		ld	bc,TBBLUE_REGISTER_SELECT_P_243B
+		ld	a,VIDEO_LINE_LSB_NR_1F
+		out	(c),a		; select NextReg	$1F
+		inc	b		; BC = TBBLUE_REGISTER_ACCESS_P_253B
+	; if already at scanline WAIT_SCANLINE, then wait extra whole frame (for super-fast game loops)
+.cantStartAtN:	in	a,(c)		; read the raster line LSB
+		cp	WAIT_SCANLINE
+		jr	z,.cantStartAtN
+	; if not yet at scanline WAIT_SCANLINE, wait for it ... wait for it ...
+.waitLoop:	in	a,(c)		; read the raster line LSB
+		cp	WAIT_SCANLINE
+		jr	nz,.waitLoop
+		ret
+
+;--------------------------------------------------------------------------------------------
+; HL = memory: byte N (0 is 256 colours), N * 16b data (RRRGGGBB, p000000B bytes)
+; NR_43 has to be already set by caller to select palette to upload
+UploadPaletteData:
+		nextreg	PALETTE_INDEX_NR_40,0
+		ld	bc,TBBLUE_REGISTER_SELECT_P_243B
+		ld	a,PALETTE_VALUE_9BIT_NR_44
+		out	(c),a
+		inc	b
+		ld	a,(hl)		; fetch count-size of palette data
+		inc	hl
+.pal_loop:	outinb
+		outinb
+		dec	a
+		jr	nz,.pal_loop
+		ret
+
+;--------------------------------------------------------------------------------------------
+; Calculates HL = HL % 320, for uin16_t values (0..65535)
+; modifies: DE, B, F
+; code length: 26 bytes, about 450T total duration
+; (for [incomplete] int16_t input you can do `add hl,32640` to get -32640..+32767 as 0..65407)
+
+hlMod320:	ld	b,7
+		ld	de,-320<<6	; -320<<7 overflows int16_t and makes the loop fail for large inputs
+					; but with only -320<<6 as starting point, the large values need two extra subtractions
+		add	hl,de
+		jr	nc,.not_included
+		add	hl,de
+		jr	nc,.not_included
+.loop:		add	hl,de		; check if the particular -320<<n is included in the input value
+		jr	c,.was_included
+.not_included:	sbc	hl,de		; restore HL
+.was_included:	add	hl,hl		; shift input value to left in every loop (instead of shifting -320<<n down)
+		djnz	.loop
+	; HL = result_9b << 7; shift it back to return it in HL
+		ex	de,hl
+		ld	b,7
+		bsrl	de,b
+		ex	de,hl
+		ret
+
+;--------------------------------------------------------------------------------------------
+; Calculates HL = HL % 640, for uin16_t values (0..65535)
+; modifies: DE, B, F
+; code length: 26 bytes, about 400T total duration
+; (for [incomplete] int16_t input you can do `add hl,32640` to get -32640..+32767 as 0..65407)
+
+hlMod640:	ld	b,6
+		ld	de,-640<<5	; -640<<6 overflows int16_t and makes the loop fail for large inputs
+					; but with only -640<<5 as starting point, the large values need two extra subtractions
+		add	hl,de
+		jr	nc,.not_included
+		add	hl,de
+		jr	nc,.not_included
+.loop:		add	hl,de		; check if the particular -640<<n is included in the input value
+		jr	c,.was_included
+.not_included:	sbc	hl,de		; restore HL
+.was_included:	add	hl,hl		; shift input value to left in every loop (instead of shifting -640<<n down)
+		djnz	.loop
+		ex	de,hl		; HL = result_10b << 6; shift it back to return it in HL
+		ld	b,6
+		bsrl	de,b
+		ex	de,hl
+		ret
+
+
+;--------------------------------------------------------------------------------------------
+; STACK block 512 bytes
+		ds	512,$A1
+stack:
+
+;--------------------------------------------------------------------------------------------
+; DATA/VARIABLES BLOCK
+
+tile_data.pal:	db	low(.count)
+.r:		incbin	"gfx/base.pal"	; raw data, include full 256 palette
+.count		equ	($-.r)/2
+
+		assert	$ < $C000
+
+		org	$C000
+		mmu	$0000 n, 4, $0000
+;--------------------------------------------------------------------------------------------
+; Tilemap data
+tilemap_gfx:	incbin	"tileset/tileset.spr"
+
+.sz		equ	$ - tilemap_gfx
+;		assert	$$ == $$tilemap_gfx	; must fit into one page
+
+;--------------------------------------------------------------------------------------------
+; Sprite data, converted by: gfx2next -sprites -colors-4bit spr_num_font.png
+sprite_data:	incbin	"gfx/numerals.spr"
+.count		equ	($ - sprite_data)/128
+		assert	$$ == $$sprite_data	; must fit into one page
+
+
+tilemap_map:
+.x		equ	40
+.y		equ	32
+
+		incbin	"tileset/tilemap.map",128
+
+
+		savenex	OPEN "coloristic2.nex",start,stack	; nexstack-ok
+		savenex	CORE 3,1,5
+		savenex	CFG 0,0
+		savenex	AUTO
+		savenex	CLOSE

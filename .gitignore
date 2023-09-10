@@ -1,0 +1,10 @@
+*.lst
+*.sld
+*.exe
+*.nex
+*.pak
+*.bin
+*.bak
+.DS_Store
+.vscode/settings.json
+bordel.dir/

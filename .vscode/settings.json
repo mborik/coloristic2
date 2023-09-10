@@ -1,0 +1,15 @@
+{
+	"editor.tabSize": 8,
+	"editor.insertSpaces": false,
+	"editor.colorDecorators": false,
+	"editor.rulers": [80],
+	"files.eol": "\n",
+
+	"files.associations": {
+		"*.{a80,inc}": "z80-macroasm"
+	},
+
+	"z80-macroasm.format.enabled": true,
+	"z80-macroasm.format.uppercaseKeywords": false,
+	"z80-macroasm.format.whitespaceAfterInstruction": "tab",
+}
