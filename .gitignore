@@ -1,5 +1,6 @@
 *.lst
 *.sld
+*.map
 *.exe
 *.nex
 *.pak
