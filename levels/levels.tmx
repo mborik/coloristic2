@@ -1,0 +1,2061 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.9" tiledversion="1.9.0" orientation="orthogonal" renderorder="right-down" width="9" height="7" tilewidth="32" tileheight="32" infinite="0" backgroundcolor="#ffdbb6" nextlayerid="4" nextobjectid="1">
+ <editorsettings>
+  <chunksize width="9" height="7"/>
+ </editorsettings>
+ <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32" tilecount="20" columns="20">
+  <image source="tileset.png" width="640" height="32"/>
+ </tileset>
+ <group id="1" name="chapter1">
+  <layer id="101" name="level101" width="9" height="7" visible="0" locked="1">
+   <properties>
+    <property name="steps1" type="int" value="4"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,4,1,1,1,1,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="102" name="level102" width="9" height="7" visible="0" locked="1">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="6"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,1,1,1,0,0,0,
+0,0,0,1,1,1,0,0,0,
+0,0,0,0,5,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="103" name="level103" width="9" height="7" visible="0" locked="1">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="10"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,1,6,0,0,0,0,0,
+0,0,1,1,1,1,1,0,0,
+0,0,1,1,0,1,1,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="104" name="level104" width="9" height="7" visible="0" locked="1">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="11"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,1,1,0,0,
+0,0,0,1,1,7,1,0,0,
+0,0,0,1,1,1,1,0,0,
+0,0,0,1,1,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="105" name="level105" width="9" height="7" visible="0" locked="1">
+   <properties>
+    <property name="steps1" type="int" value="12"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,1,1,1,0,0,0,
+0,0,1,1,4,1,1,0,0,
+0,0,1,1,1,1,1,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="106" name="level106" width="9" height="7" visible="0" locked="1">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="13"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,1,1,1,1,1,0,0,
+0,0,1,0,1,0,1,0,0,
+0,0,1,1,1,1,1,0,0,
+0,0,0,5,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="107" name="level107" width="9" height="7" visible="0" locked="1">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="14"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,1,1,1,0,0,
+0,0,1,6,1,1,1,0,0,
+0,0,1,0,1,1,1,0,0,
+0,0,1,1,1,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="108" name="level108" width="9" height="7" visible="0" locked="1">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="21"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,1,1,1,0,0,0,
+0,0,1,1,7,1,1,0,0,
+0,0,1,1,1,1,1,0,0,
+0,0,1,1,0,1,1,0,0,
+0,0,1,1,1,1,1,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="109" name="level109" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="110" name="level110" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="111" name="level111" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="112" name="level112" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="113" name="level113" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="114" name="level114" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="115" name="level115" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="116" name="level116" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="117" name="level117" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="118" name="level118" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="119" name="level119" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="120" name="level120" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+ </group>
+ <group id="2" name="chapter2">
+  <layer id="201" name="level201" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="202" name="level202" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="203" name="level203" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="204" name="level204" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="205" name="level205" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="206" name="level206" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="207" name="level207" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="208" name="level208" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="209" name="level209" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="210" name="level210" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="211" name="level211" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="212" name="level212" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="213" name="level213" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="214" name="level214" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="215" name="level215" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="216" name="level216" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="217" name="level217" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="218" name="level218" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="219" name="level219" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="220" name="level220" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+ </group>
+ <group id="3" name="chapter3">
+  <layer id="301" name="level301" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="302" name="level302" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="303" name="level303" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="304" name="level304" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="305" name="level305" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="306" name="level306" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="307" name="level307" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="308" name="level308" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="309" name="level309" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="310" name="level310" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="311" name="level311" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="312" name="level312" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="313" name="level313" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="314" name="level314" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="315" name="level315" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="316" name="level316" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="317" name="level317" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="318" name="level318" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="319" name="level319" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="320" name="level320" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+ </group>
+ <group id="4" name="chapter4">
+  <layer id="401" name="level401" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="402" name="level402" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="403" name="level403" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="404" name="level404" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="405" name="level405" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="406" name="level406" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="407" name="level407" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="408" name="level408" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="409" name="level409" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="410" name="level410" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="411" name="level411" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="412" name="level412" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="413" name="level413" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="414" name="level414" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="415" name="level415" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="416" name="level416" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="417" name="level417" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="418" name="level418" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="419" name="level419" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="420" name="level420" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+ </group>
+ <group id="5" name="chapter5">
+  <layer id="501" name="level501" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="502" name="level502" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="503" name="level503" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="504" name="level504" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="505" name="level505" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="506" name="level506" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="507" name="level507" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="508" name="level508" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="509" name="level509" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="510" name="level510" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="511" name="level511" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="512" name="level512" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="513" name="level513" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="514" name="level514" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="515" name="level515" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="516" name="level516" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="517" name="level517" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="518" name="level518" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="519" name="level519" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="520" name="level520" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+ </group>
+ <group id="6" name="chapter6">
+  <layer id="601" name="level601" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="602" name="level602" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="603" name="level603" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="604" name="level604" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="605" name="level605" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="606" name="level606" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="607" name="level607" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="608" name="level608" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="609" name="level609" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="610" name="level610" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="611" name="level611" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="612" name="level612" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="613" name="level613" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="614" name="level614" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="615" name="level615" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="616" name="level616" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="617" name="level617" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="618" name="level618" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="619" name="level619" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer id="620" name="level620" width="9" height="7" visible="0">
+   <properties>
+    <property name="steps1" type="int" value="0"/>
+    <property name="steps2" type="int" value="0"/>
+    <property name="steps3" type="int" value="0"/>
+    <property name="steps4" type="int" value="0"/>
+   </properties>
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+ </group>
+</map>
