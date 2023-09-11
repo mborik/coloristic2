@@ -9,7 +9,8 @@
 		"*.{a80,inc}": "z80-macroasm"
 	},
 
-	"z80-macroasm.format.enabled": true,
+	"z80-macroasm.format.enabled": false,
 	"z80-macroasm.format.uppercaseKeywords": false,
 	"z80-macroasm.format.whitespaceAfterInstruction": "tab",
+	"editor.formatOnType": false,
 }

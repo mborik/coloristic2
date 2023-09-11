@@ -217,18 +217,15 @@ sprite_data:	incbin	"gfx/numerals.spr"
 
 		assert	$ < $C000
 
-		mmu	7,50
-		org	$E000
+		mmu	$E000 w, 28, $E000
 ;--------------------------------------------------------------------------------------------
 ; Tilemap data
 tilemap_gfx:	incbin	"tileset/tileset.spr"
 
 .sz		equ	$ - tilemap_gfx
-;		assert	$$ == $$tilemap_gfx	; must fit into one page
 
 
-		mmu	7,51
-		org	$E000
+		mmu	$E000, 29, $E000
 tilemap_map:
 .x		equ	40
 .y		equ	32
