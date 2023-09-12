@@ -19,10 +19,10 @@ parser.parseString(tmx, (e, result) => {
 		console.error(e);
 	}
 	else {
-		const levels = (result.map && result.map.layer) || [];
+		const levels = (result.map?.group || []).flatMap(group => group?.layer || []);
 		levels.forEach(level => {
 			const props = (level.properties && level.properties.property) || [];
-			const levelData = new Buffer(96); // (level.width * level.height) + props.length
+			const levelData = new Buffer(68);
 
 			const data = level.data;
 			if (data && data.encoding === 'csv' && data.text) {
@@ -31,11 +31,14 @@ parser.parseString(tmx, (e, result) => {
 				let offset = 0;
 				for (; offset < values.length; offset++) {
 					let value = parseInt(values[offset]) || 0;
-					if (value >= 28 && value < 32) {
-						value = (value - 16) | 64;
+					if (value === 16) { // cross
+						value = 64;
 					}
-					else if (value === 24) {
-						value = 65;
+					else if (value === 17) { // rotation
+						value--;
+					}
+					else if (value === 18) { // teleport
+						value = 32;
 					}
 
 					levelData.writeUInt8(value, offset);
