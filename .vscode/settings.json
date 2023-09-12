@@ -12,5 +12,6 @@
 	"z80-macroasm.format.enabled": false,
 	"z80-macroasm.format.uppercaseKeywords": false,
 	"z80-macroasm.format.whitespaceAfterInstruction": "tab",
+	"z80-macroasm.seekSymbolsThroughWorkspace": true,
 	"editor.formatOnType": false,
 }

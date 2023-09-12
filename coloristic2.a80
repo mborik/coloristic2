@@ -3,6 +3,7 @@
 		cspectmap "coloristic2.map"
 
 		include	"nextants.inc"
+		include	"constants.inc"
 
 
 		org	$8000
@@ -48,11 +49,13 @@ start:		nextreg	TURBO_CONTROL_NR_07,3
 		ld	(hl),l
 		ldir
 
-		nextreg	MMU7_E000_NR_57,tilemap_gfx.page
+		nextreg	MMU7_E000_NR_57, tilemap_gfx.page
 		ld	hl,tilemap_gfx
 		ld	de,MEM_TILEMAP_GFX_6000
 		ld	bc,tilemap_gfx.sz
 		ldir
+
+		nextreg	MMU6_C000_NR_56, levels.page
 
 	; main loop
 main_loop:
@@ -60,7 +63,20 @@ main_loop:
 		jp	main_loop
 
 ;--------------------------------------------------------------------------------------------
+		include "render.a80"
 		include "utils.a80"
+
+active_color	db	0
+music_muted	db	0
+
+
+		align	256
+
+playground	ds	PLAYFIELD_SIZE
+.steps = $ - (STEP_COUNT_SIZE * 2)
+.current_location = $ - STEP_COUNT_SIZE
+
+undo_area	ds	PLAYFIELD_SIZE * UNDO_LEVELS
 
 ;--------------------------------------------------------------------------------------------
 ; STACK block >256 bytes
@@ -74,10 +90,12 @@ stack:
 base_palette:	incbin	"gfx/base.pal"	; raw data, include full 256 palette
 .count		equ	($ - base_palette) / 2
 
+		include "tiledefs.inc"
+
 
 		assert	$ < $C000
 
-		mmu	$E000 w, 28, $E000
+		mmu	$E000 w, MMU_PG_TILESET, $E000
 ;--------------------------------------------------------------------------------------------
 ; Tilemap data
 tilemap_gfx:	incbin	"tileset/tileset.spr"
@@ -90,13 +108,21 @@ tilemap_map:	equ	MEM_TILEMAP_DAT_4000
 .sz		equ	.x * .y
 
 
-		mmu	$E000 w, 29, $E000
+		mmu	$E000 w, MMU_PG_SPRITES, $E000
 ;--------------------------------------------------------------------------------------------
 ; Sprite data
 sprite_data:	incbin	"gfx/numerals.spr"
 .page		equ	$$sprite_data
 .count		equ	($ - sprite_data) / 128
 		assert	$$ == $$sprite_data	; must fit into one page
+
+
+		mmu	$C000 w, MMU_PG_LEVELS, $C000
+;--------------------------------------------------------------------------------------------
+; Level data
+levels:		incbin	"levels/levels.bin"
+.page		equ	$$levels
+		assert	$$ == $$levels		; must fit into one page
 
 
 ;--------------------------------------------------------------------------------------------

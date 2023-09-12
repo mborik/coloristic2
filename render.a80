@@ -1,0 +1,173 @@
+prepare_level	cp	-1
+		ret	z
+		cp	LEVEL_CNT
+		jr	c,.copy2pg
+
+		xor	a
+.copy2pg	rlca
+		ld	d,a
+		ld	e,PLAYFIELD_SIZE
+		mul	d,e
+		ld	hl,levels
+		add	hl,de
+		ld	de,playground
+		ld	bc,PLAYFIELD_SIZE
+		ld	a,e
+		ldir
+		ld	h,d
+		ld	l,e
+		inc	de
+		ld	bc,PLAYFIELD_SIZE*UNDO_LEVELS-1
+		ld	(hl),a
+		ldir
+
+		ld	(redraw_bubbles.color00+1),bc
+		ld	(redraw_bubbles.color01+1),bc
+		ld	(redraw_bubbles.color10+1),bc
+		ld	(redraw_bubbles.color11+1),bc
+		dec	bc
+		ld	(playground.current_location+0),bc
+		ld	(playground.current_location+2),bc
+		ld	a,#CC ; call z
+		ld	(.firsttime),a
+		ld	(.endno1stTime+1),a
+;		ld	(store_undo.lastcolor+1),a
+;		ld	(perform_move.makemove+1),a
+
+.justdraw	ei
+		halt
+		ld	de,tilemap_map + (3 * tilemap_map.x) + 3
+		ld	ix,playground
+		ld	c,PLAYFIELD_H
+.rows		ld	b,PLAYFIELD_W
+		push	de
+.cols		ld	a,(ix+0)
+		or	a
+		jr	z,.next
+		and	#FC
+		cp	4
+		push	bc
+.firsttime	call	z,.startile
+		ld	l,(ix+0)
+		ld	h,0
+		add	hl,hl
+		ld	bc,sprite2fntab
+		add	hl,bc
+		ld	a,(hl)
+		ld	(draw_sprite+1),a
+		inc	l
+		ld	c,(hl)
+		push	ix
+		ld	xh,d
+		ld	xl,e
+		call	draw_sprite
+		pop	ix
+		pop	bc
+.next		inc	ix
+		add	de,4
+		djnz	.cols
+		pop	de
+		add	de,tilemap_map.x
+		dec	c
+		jr	nz,.rows
+		call	redraw_bubbles
+.endno1stTime	ld	a,0
+		or	a
+		jp	z,reset_color_keys
+		ld	a,1
+		ld	(.firsttime),a
+		dec	a
+		ld	(.endno1stTime+1),a
+		jp	findplayablecolor
+
+.startile	ld	a,(ix+0)
+		and	3
+		ld	l,a
+		ld	h,0
+		ld	c,a
+		ld	b,h
+		add	hl,hl
+		add	hl,hl
+		add	hl,hl
+		add	hl,bc
+		ld	bc,redraw_bubbles.color00+1
+		add	hl,bc
+		ld	(hl),e
+		inc	hl
+		ld	(hl),d
+		add	a,low playground.current_location
+		ld	l,a
+		ld	h,high playground.current_location
+		ld	a,xl
+		ld	(hl),a
+		ret
+
+redraw_bubbles	ld	a,(playground.steps+0)
+.color00	ld	bc,0
+		call	.drawbubble
+		ld	a,(playground.steps+1)
+.color01	ld	bc,0
+		call	.drawbubble
+		ld	a,(playground.steps+2)
+.color10	ld	bc,0
+		call	.drawbubble
+		ld	a,(playground.steps+3)
+.color11	ld	bc,0
+.drawbubble	bit	6,b
+		ret	z
+		and	31
+		inc	a
+		;; TODO
+		ret
+
+findplayablecolor
+		xor	a
+		ld	hl,playground.steps
+		ld	e,a
+.findnext	ld	bc,#0303
+.loop		or	(hl)
+		jr	nz,.setcolor
+		ex	af,af'
+		ld	a,l
+		inc	a
+		ld	l,a
+		cp	4 + (low playground.steps)
+		jr	c,.nowrap
+		ld	l,low playground.steps
+.nowrap		ex	af,af'
+		djnz	.loop
+		or	(hl)
+		jr	z,reset_color_keys
+
+.setcolor	ld	a,b
+		xor	c
+		add	a,e
+		and	c
+		ld	(active_color),a
+
+reset_color_keys
+		;; TODO
+		ret
+
+draw_base	xor	a
+		cp	c
+		ret
+
+draw_blob	ret
+
+draw_blocked	ret
+
+draw_sprite	jr	$+2
+		jr	draw_base	; TILE_BASE
+		jr	draw_blob	; TILE_BLOB
+		jr	draw_blocked	; TILE_BLOCKED
+		jr	draw_tele	; TILE_TELE
+		jr	draw_path	; TILE_PATH
+		jr	draw_cross	; TILE_CROSS
+		ret
+
+draw_tele	ret
+
+draw_path	ret
+
+draw_cross	ret
