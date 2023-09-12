@@ -4,14 +4,13 @@ prepare_level	cp	-1
 		jr	c,.copy2pg
 
 		xor	a
-.copy2pg	rlca
-		ld	d,a
-		ld	e,PLAYFIELD_SIZE
+.copy2pg	ld	d,a
+		ld	e,LEVEL_SIZE
 		mul	d,e
 		ld	hl,levels
 		add	hl,de
 		ld	de,playground
-		ld	bc,PLAYFIELD_SIZE
+		ld	bc,LEVEL_SIZE
 		ld	a,e
 		ldir
 		ld	h,d
@@ -34,8 +33,7 @@ prepare_level	cp	-1
 ;		ld	(store_undo.lastcolor+1),a
 ;		ld	(perform_move.makemove+1),a
 
-.justdraw	ei
-		halt
+.justdraw	call	WaitForScanline
 		ld	de,tilemap_map + (3 * tilemap_map.x) + 3
 		ld	ix,playground
 		ld	c,PLAYFIELD_H
@@ -67,7 +65,7 @@ prepare_level	cp	-1
 		add	de,4
 		djnz	.cols
 		pop	de
-		add	de,tilemap_map.x
+		add	de,tilemap_map.x * 4
 		dec	c
 		jr	nz,.rows
 		call	redraw_bubbles
@@ -101,6 +99,95 @@ prepare_level	cp	-1
 		ld	a,xl
 		ld	(hl),a
 		ret
+
+draw_tiles_by_base
+		ld	(ix - tilemap_map.x - 1),a
+		inc	a
+		ld	(ix - tilemap_map.x + 2),a
+		inc	a
+		ld	(ix + (2 * tilemap_map.x) - 1),a
+		inc	a
+		ld	(ix + (2 * tilemap_map.x) + 2),a
+		inc	a
+		ld	(ix - tilemap_map.x),a
+		inc	a
+		ld	(ix - tilemap_map.x + 1),a
+		inc	a
+		ld	(ix + (2 * tilemap_map.x)),a
+		inc	a
+		ld	(ix + (2 * tilemap_map.x) + 1),a
+		inc	a
+		ld	(ix - 1),a
+		inc	a
+		ld	(ix + 2),a
+		inc	a
+		ld	(ix + tilemap_map.x - 1),a
+		inc	a
+		ld	(ix + tilemap_map.x + 2),a
+		ret
+
+draw_center_of_tile
+		ld	(ix + 0),h
+		ld	(ix + 1),l
+		ld	(ix + tilemap_map.x),b
+		ld	(ix + tilemap_map.x + 1),c
+		ret
+
+draw_base	ld	a,tilemap.base.ptr
+		call	draw_tiles_by_base
+		xor	a
+		add	a,c
+		jr	z,.void
+.center		ld	h,a
+		inc	a
+		ld	l,a
+		inc	a
+		ld	b,a
+		inc	a
+		ld	c,a
+		jr	draw_center_of_tile
+
+.void		ld	hl,(tilemap.tilebackground << 8) | tilemap.tilebackground
+		ld	bc,(tilemap.tilebackground << 8) | tilemap.tilebackground
+		jr	draw_center_of_tile
+
+draw_blob	ld	a,c
+		call	draw_tiles_by_base
+		ld	a,c
+		sub	tilemap.colorblob.C1
+		swapnib
+		add	a,tilemap.base.C1
+		ld	(ix + 0),a
+		ld	(ix + 1),a
+		ld	(ix + tilemap_map.x),a
+		ld	(ix + tilemap_map.x + 1),a
+		ret
+
+draw_blocked	ld	a,tilemap.blocked.ptr
+		call	draw_tiles_by_base
+		ld	a,tilemap.blocked.cross
+		jr	draw_base.center
+
+draw_sprite	jr	$+2
+		jr	draw_base	; TILE_BASE
+		jr	draw_blob	; TILE_BLOB
+		jr	draw_blocked	; TILE_BLOCKED
+		jr	draw_tele	; TILE_TELE
+		jr	draw_path	; TILE_PATH
+		jr	draw_cross	; TILE_CROSS
+		ret
+
+draw_tele	ld	a,tilemap.base.ptr
+		call	draw_tiles_by_base
+		ld	a,tilemap.teleport
+.phase		add	a,0
+		jr	draw_base.center
+
+draw_path	ret
+
+draw_cross	ret
+
+;------------------------------------------------------------------------------
 
 redraw_bubbles	ld	a,(playground.steps+0)
 .color00	ld	bc,0
@@ -148,26 +235,3 @@ findplayablecolor
 reset_color_keys
 		;; TODO
 		ret
-
-draw_base	xor	a
-		cp	c
-		ret
-
-draw_blob	ret
-
-draw_blocked	ret
-
-draw_sprite	jr	$+2
-		jr	draw_base	; TILE_BASE
-		jr	draw_blob	; TILE_BLOB
-		jr	draw_blocked	; TILE_BLOCKED
-		jr	draw_tele	; TILE_TELE
-		jr	draw_path	; TILE_PATH
-		jr	draw_cross	; TILE_CROSS
-		ret
-
-draw_tele	ret
-
-draw_path	ret
-
-draw_cross	ret

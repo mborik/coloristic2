@@ -1,6 +1,7 @@
 		opt	--syntax=abf
 		device	zxspectrumnext
 		cspectmap "coloristic2.map"
+		sldopt COMMENT WPMEM, LOGPOINT, ASSERTION
 
 		include	"nextants.inc"
 		include	"constants.inc"
@@ -56,6 +57,9 @@ start:		nextreg	TURBO_CONTROL_NR_07,3
 		ldir
 
 		nextreg	MMU6_C000_NR_56, levels.page
+
+		ld	a,117
+		call	prepare_level
 
 	; main loop
 main_loop:
