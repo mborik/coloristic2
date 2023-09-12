@@ -25,18 +25,18 @@ WaitForScanline:
 		ret
 
 ;--------------------------------------------------------------------------------------------
-; HL = memory: byte N (0 is 256 colours), N * 16b data (RRRGGGBB, p000000B bytes)
-; NR_43 has to be already set by caller to select palette to upload
+; HL = memory: N * 16b data (RRRGGGBB, p000000B bytes)
+; E = count-size of palette data (0 is 256 colours)
+; A = value to select palette to upload via NR_43
 UploadPaletteData:
+		nextreg	PALETTE_CONTROL_NR_43,a
 		nextreg	PALETTE_INDEX_NR_40,0
 		ld	bc,NEXTREG_SELECT_P_243B
 		ld	a,PALETTE_VALUE_9BIT_NR_44
 		out	(c),a
 		inc	b
-		ld	a,(hl)		; fetch count-size of palette data
-		inc	hl
 .pal_loop:	outinb
 		outinb
-		dec	a
+		dec	e
 		jr	nz,.pal_loop
 		ret

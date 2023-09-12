@@ -31,13 +31,14 @@ start:		nextreg	TURBO_CONTROL_NR_07,3
 		nextreg	TILEMAP_BASE_ADR_NR_6E,high(MEM_TILEMAP_DAT_4000),,TILEMAP_GFX_ADR_NR_6F,high(MEM_TILEMAP_GFX_6000)
 
 	; load sprite palette
-		nextreg	PALETTE_CONTROL_NR_43,%01101100	; second Sprite palette
-		ld	hl,tile_data.pal
+		ld	a,%01101100	; second Sprite palette
+		ld	hl,base_palette
+		ld	e,low(base_palette.count)
 		call	UploadPaletteData
 
 	; load tilemode palette
-		nextreg	PALETTE_CONTROL_NR_43,%01111100	; second Tilemode palette
-		ld	hl,tile_data.pal
+		ld	a,%01111100	; second Tilemode palette
+		ld	hl,base_palette
 		call	UploadPaletteData
 
 	; fill tilemap screen
@@ -62,16 +63,16 @@ main_loop:
 		include "utils.a80"
 
 ;--------------------------------------------------------------------------------------------
-; STACK block 512 bytes
-		ds	512,$A1
+; STACK block >256 bytes
+		align	256
+		ds	256
 stack:
 
 ;--------------------------------------------------------------------------------------------
 ; DATA/VARIABLES BLOCK
 
-tile_data.pal:	db	low(.count)
-.r:		incbin	"gfx/base.pal"	; raw data, include full 256 palette
-.count		equ	($-.r)/2
+base_palette:	incbin	"gfx/base.pal"	; raw data, include full 256 palette
+.count		equ	($ - base_palette) / 2
 
 
 		assert	$ < $C000
