@@ -145,7 +145,9 @@ sprite2fntab:	dw	TILE_NOP			; 000
 		s2fn	TILE_BASE, tilemap.rotation	; 016
 		sgap 15					; 017 ... 031
 		s2fn	TILE_TELE, tilemap.teleport	; 032
-		sgap 95					; 033 ... 127
+		sgap 31					; 033 ... 063
+		s2fn	TILE_BASE, tilemap.cross	; 064
+		sgap 63					; 065 ... 127
 		s2path	TILE_PATH, tilemap.base.C1	; 128 ... 143
 		s2path	TILE_PATH, tilemap.base.C2	; 144 ... 159
 		s2path	TILE_PATH, tilemap.base.C3	; 160 ... 175
