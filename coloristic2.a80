@@ -50,6 +50,14 @@ start:		nextreg	TURBO_CONTROL_NR_07,3
 		ld	(hl),l
 		ldir
 
+		nextreg	MMU7_E000_NR_57, sprite_data.page
+		ld	hl,sprite_data
+		ld	bc,SPRITE_PATTERN_P_5B
+		ld	a,sprite_data.count / 2
+.spriteupload	otir
+		dec	a
+		jr	nz,.spriteupload
+
 		nextreg	MMU7_E000_NR_57, tilemap_gfx.page
 		ld	hl,tilemap_gfx
 		ld	de,MEM_TILEMAP_GFX_6000
@@ -94,7 +102,9 @@ stack:
 base_palette:	incbin	"gfx/base.pal"	; raw data, include full 256 palette
 .count		equ	($ - base_palette) / 2
 
-		include "tiledefs.inc"
+
+		include "def.sprites.inc"
+		include "def.tiles.inc"
 
 
 		assert	$ < $C000
@@ -114,10 +124,11 @@ tilemap_map:	equ	MEM_TILEMAP_DAT_4000
 
 		mmu	$E000 w, MMU_PG_SPRITES, $E000
 ;--------------------------------------------------------------------------------------------
-; Sprite data
-sprite_data:	incbin	"gfx/numerals.spr"
-.page		equ	$$sprite_data
+; Sprite data ; TODO fix binaries
+sprite_data:	incbin	"gfx/numerals.spr", 0, (28 * 128)
+.gloworb	incbin	"gfx/gloworb.spr", (4 * 128), (36 * 128)
 .count		equ	($ - sprite_data) / 128
+.page		equ	$$sprite_data
 		assert	$$ == $$sprite_data	; must fit into one page
 
 

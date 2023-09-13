@@ -20,10 +20,6 @@ prepare_level	cp	-1
 		ld	(hl),a
 		ldir
 
-		ld	(redraw_bubbles.color00+1),bc
-		ld	(redraw_bubbles.color01+1),bc
-		ld	(redraw_bubbles.color10+1),bc
-		ld	(redraw_bubbles.color11+1),bc
 		dec	bc
 		ld	(playground.current_location+0),bc
 		ld	(playground.current_location+2),bc
@@ -32,9 +28,13 @@ prepare_level	cp	-1
 		ld	(.endno1stTime+1),a
 ;		ld	(store_undo.lastcolor+1),a
 ;		ld	(perform_move.makemove+1),a
+		ld	a,#BF ; res 7,a
+		ld	(redraw_bubbles.color00+1),a
+		ld	(redraw_bubbles.color01+1),a
+		ld	(redraw_bubbles.color10+1),a
+		ld	(redraw_bubbles.color11+1),a
 
-.justdraw	call	WaitForScanline
-		ld	de,tilemap_map + (3 * tilemap_map.x) + 3
+.justdraw	ld	de,tilemap_map + (3 * tilemap_map.x) + 3
 		ld	ix,playground
 		ld	c,PLAYFIELD_H
 .rows		ld	b,PLAYFIELD_W
@@ -45,7 +45,7 @@ prepare_level	cp	-1
 		and	#FC
 		cp	4
 		push	bc
-.firsttime	call	z,.startile
+.firsttime	call	z,startile
 		ld	l,(ix+0)
 		ld	h,0
 		add	hl,hl
@@ -78,27 +78,66 @@ prepare_level	cp	-1
 		ld	(.endno1stTime+1),a
 		jp	findplayablecolor
 
-.startile	ld	a,(ix+0)
-		and	3
+startile	ex	hl,de
+		ld	bc,tilemap_map.x
+		ld	a,3
+.row		ex	af,af'
+		xor	a
+		or	b
+		jr	nz,.nextrow
+		or	c
+		test	#C0
+		jr	nz,.nextrow
 		ld	l,a
 		ld	h,0
-		ld	c,a
-		ld	b,h
 		add	hl,hl
 		add	hl,hl
 		add	hl,hl
-		add	hl,bc
-		ld	bc,redraw_bubbles.color00+1
-		add	hl,bc
-		ld	(hl),e
-		inc	hl
-		ld	(hl),d
+		ex	hl,de
+		ld	a,(ix+0)
+		and	3
+		ld	b,a
+		rlca
+		rlca
+		ld	h,high sprattr.numeralC1
+		ld	l,a
+		ld	(hl),e	; S_SPRITE_ATTR.x
+		inc	l
+		ex	af,af'
+		rlca
+		rlca
+		rlca
+		ld	(hl),a	; S_SPRITE_ATTR.y
+		inc	l
+		ld	a,b
+		inc	a	; palette offset = blob color + 1
+		swapnib
+		or	d	; x8
+		ld	(hl),a	; S_SPRITE_ATTR.palx8
+
+		ld	a,b
 		add	a,low playground.current_location
 		ld	l,a
 		ld	h,high playground.current_location
 		ld	a,xl
 		ld	(hl),a
+		xor	a
+		ld	l,b
+		ld	h,a
+		add	hl,hl
+		add	hl,hl
+		add	hl,hl
+		ld	bc,redraw_bubbles.color00
+		add	hl,bc
+		dec	a ; #77 = set 7,a
+		ld	(hl),a
 		ret
+
+.nextrow	xor	a
+		sbc	hl,bc
+		ex	af,af'
+		inc	a
+		jr	.row
 
 draw_tiles_by_base
 		ld	(ix - tilemap_map.x - 1),a
@@ -189,22 +228,27 @@ draw_cross	ret
 
 ;------------------------------------------------------------------------------
 
-redraw_bubbles	ld	a,(playground.steps+0)
-.color00	ld	bc,0
-		call	.drawbubble
+redraw_bubbles	ld	hl,sprattr.numeralC1 + S_SPRITE_ATTR.vpat
+		ld	bc,4
+		ld	a,(playground.steps+0)
+.color00	res	7,a
+		nop			; reserved
+		ld	(hl),a
+		add	hl,bc
 		ld	a,(playground.steps+1)
-.color01	ld	bc,0
-		call	.drawbubble
+.color01	res	7,a
+		nop			; reserved
+		ld	(hl),a
+		add	hl,bc
 		ld	a,(playground.steps+2)
-.color10	ld	bc,0
-		call	.drawbubble
+.color10	res	7,a
+		nop			; reserved
+		ld	(hl),a
+		add	hl,bc
 		ld	a,(playground.steps+3)
-.color11	ld	bc,0
-.drawbubble	bit	6,b
-		ret	z
-		and	31
-		inc	a
-		;; TODO
+.color11	res	7,a
+		nop			; reserved
+		ld	(hl),a
 		ret
 
 findplayablecolor
