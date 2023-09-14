@@ -125,7 +125,8 @@ teleport	= 160
 
 ;;-----------------------------------------------------------------------------
 
-; assumed aligned to 256
+		align	256
+
 sprite2fntab:	dw	TILE_NOP			; 000
 		s2fn	TILE_BASE, tilemap.base.void	; 001
 		s2fn	TILE_BASE, tilemap.switch	; 002

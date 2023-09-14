@@ -28,7 +28,7 @@ prepare_level	cp	-1
 		ld	(.endno1stTime+1),a
 ;		ld	(store_undo.lastcolor+1),a
 ;		ld	(perform_move.makemove+1),a
-		ld	a,#BF ; res 7,a
+		ld	a,#BE ; res 7,(hl)
 		ld	(redraw_bubbles.color00+1),a
 		ld	(redraw_bubbles.color01+1),a
 		ld	(redraw_bubbles.color10+1),a
@@ -94,11 +94,13 @@ startile	xor	a
 		add	hl,hl
 		add	hl,hl
 		ex	hl,de
+		ld	c,3
 		ld	a,(ix+0)
-		and	3
+		and	c
 		ld	b,a
 		rlca
 		rlca
+		add	a,b
 		ld	h,high sprattr.numeralC1
 		ld	l,a
 		ld	(hl),e	; S_SPRITE_ATTR.x
@@ -117,16 +119,15 @@ startile	xor	a
 		ld	h,high playground.current_location
 		ld	a,xl
 		ld	(hl),a
-		xor	a
-		ld	l,b
-		ld	h,a
-		add	hl,hl
-		add	hl,hl
-		add	hl,hl
-		ld	bc,redraw_bubbles.color00+1
+		ld	a,b
+		xor	c
+		rlca
+		rlca
+		ld	l,a
+		ld	h,0
+		ld	bc,redraw_bubbles.color11+1
 		add	hl,bc
-		dec	a ; #FF = set 7,a
-		ld	(hl),a
+		ld	(hl),#FE ; set 7,(hl)
 		pop	de
 		ret
 
@@ -226,39 +227,37 @@ draw_cross	ret
 ;------------------------------------------------------------------------------
 
 redraw_bubbles	ld	hl,sprattr.numeralC1 + S_SPRITE_ATTR.vpat
-		ld	e,#40 ; enable attribute byte 4
-		ld	bc,S_SPRITE_ATTR
-		ld	a,(playground.steps+0)
-.color00	res	7,a
-		or	e
+		ld	bc,S_SPRITE_ATTR - 1
+		ld	d,#40
+	dup 4, idx
+		ld	e,b
+		ld	a,(playground.steps + idx)
+		srl	a
+		rr	e
+		or	d
 		ld	(hl),a
+		inc	l ; S_SPRITE_ATTR.ext
+		scf
+		rr	e
+		ld	(hl),e
 		add	hl,bc
-		ld	a,(playground.steps+1)
-.color01	res	7,a
-		or	e
-		ld	(hl),a
-		add	hl,bc
-		ld	a,(playground.steps+2)
-.color10	res	7,a
-		or	e
-		ld	(hl),a
-		add	hl,bc
-		ld	a,(playground.steps+3)
-.color11	res	7,a
-		or	e
-		ld	(hl),a
+	edup
+		org	$-1
+		inc	c
+		dec	l
+.color11	res	7,(hl)
+		sbc	hl,bc
+.color10	res	7,(hl)
+		sbc	hl,bc
+.color01	res	7,(hl)
+		sbc	hl,bc
+.color00	res	7,(hl)
 		ld	bc,SPRITE_SLOT_SELECT_P_303B
 		xor	a
 		out	(c),a	; select slot 0
-		rlc	e
 		ld	hl,sprattr.numeralC1
-		ld	bc,(4 * 5 * 256) + SPRITE_ATTRIBUTE_P_57
-.updatespr	outi
-		outi
-		outi
-		outi
-		out	(c),e
-		djnz	.updatespr
+		ld	bc,(4 * S_SPRITE_ATTR * 256) + SPRITE_ATTRIBUTE_P_57
+		otir
 		ret
 
 findplayablecolor
