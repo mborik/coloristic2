@@ -19,18 +19,21 @@ start:		nextreg	TURBO_CONTROL_NR_07,3
 ;		sbc	a,0					; A = 6 for 50Hz, 5 for 60Hz
 ;		ld	(main_loop.keyboard_handler_repeat),a
 ;		nextreg	LAYER2_RAM_BANK_NR_12,$$l2_pix_data/2
-		nextreg	SPRITE_CONTROL_NR_15,%00011011		; LoRes=0, SprToTop, Sclip=0, blend B+L, Sborder, S=1
+		nextreg	SPRITE_CONTROL_NR_15,%00000111		; LoRes=0, SprToTop, Sclip=0, LSU, Sborder, S=1
+		nextreg SPRITE_TRANSPARENCY_I_NR_4B,$0F
 		nextreg	DISPLAY_CONTROL_NR_69,$00		; Layer2=0, ULA bank5, Timex off (regular ULA)
 		nextreg	LAYER2_CONTROL_NR_70,%00100000		; 640x256x4bpp, palette offset 0
 		nextreg	LAYER2_XOFFSET_MSB_NR_71,0,,LAYER2_XOFFSET_NR_16,0,,LAYER2_YOFFSET_NR_17,0
 		nextreg	CLIP_WINDOW_CONTROL_NR_1C,$0F
 		nextreg	CLIP_LAYER2_NR_18,0,,CLIP_LAYER2_NR_18,159,,CLIP_LAYER2_NR_18,0,,CLIP_LAYER2_NR_18,255
+		nextreg	CLIP_SPRITE_NR_19,0,,CLIP_SPRITE_NR_19,159,,CLIP_SPRITE_NR_19,0,,CLIP_SPRITE_NR_19,255
 		nextreg	CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,159,,CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,255
 		nextreg	ULA_CONTROL_NR_68,%11100000		; ULA=off, TM blend, 0 half scroll, defaults for others
 		nextreg	TILEMAP_CONTROL_NR_6B,%10110000		; TM=on,40x32x1,Pal2,4bpp,index8,UT
 		nextreg	TILEMAP_XOFFSET_MSB_NR_2F,0,,TILEMAP_XOFFSET_LSB_NR_30,0,,TILEMAP_YOFFSET_NR_31,0
 		nextreg	TILEMAP_TRANSPARENCY_I_NR_4C,$0F
 		nextreg	TILEMAP_BASE_ADR_NR_6E,high(MEM_TILEMAP_DAT_4000),,TILEMAP_GFX_ADR_NR_6F,high(MEM_TILEMAP_GFX_6000)
+		nextreg	TRANSPARENCY_FALLBACK_COL_NR_4A,$F5
 
 	; load sprite palette
 		ld	a,%01101100	; second Sprite palette
@@ -41,6 +44,7 @@ start:		nextreg	TURBO_CONTROL_NR_07,3
 	; load tilemode palette
 		ld	a,%01111100	; second Tilemode palette
 		ld	hl,base_palette
+		ld	e,low(base_palette.count)
 		call	UploadPaletteData
 
 	; fill tilemap screen
@@ -50,6 +54,9 @@ start:		nextreg	TURBO_CONTROL_NR_07,3
 		ld	(hl),l
 		ldir
 
+		ld	bc,SPRITE_SLOT_SELECT_P_303B
+		xor	a
+		out	(c),a	; select slot 0 for patterns (selects also index 0 for attributes)
 		nextreg	MMU7_E000_NR_57, sprite_data.page
 		ld	hl,sprite_data
 		ld	bc,SPRITE_PATTERN_P_5B

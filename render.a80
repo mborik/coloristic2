@@ -78,18 +78,18 @@ prepare_level	cp	-1
 		ld	(.endno1stTime+1),a
 		jp	findplayablecolor
 
-startile	ex	hl,de
+startile	xor	a
+		push	de
+		ex	hl,de
+		res	6,h
 		ld	bc,tilemap_map.x
-		ld	a,3
 .row		ex	af,af'
 		xor	a
-		or	b
+		or	h
 		jr	nz,.nextrow
-		or	c
-		test	#C0
-		jr	nz,.nextrow
-		ld	l,a
-		ld	h,0
+		or	l
+		cp	tilemap_map.x
+		jr	nc,.nextrow
 		add	hl,hl
 		add	hl,hl
 		add	hl,hl
@@ -109,11 +109,7 @@ startile	ex	hl,de
 		rlca
 		ld	(hl),a	; S_SPRITE_ATTR.y
 		inc	l
-		ld	a,b
-		inc	a	; palette offset = blob color + 1
-		swapnib
-		or	d	; x8
-		ld	(hl),a	; S_SPRITE_ATTR.palx8
+		ld	(hl),d	; S_SPRITE_ATTR.palx8
 
 		ld	a,b
 		add	a,low playground.current_location
@@ -127,10 +123,11 @@ startile	ex	hl,de
 		add	hl,hl
 		add	hl,hl
 		add	hl,hl
-		ld	bc,redraw_bubbles.color00
+		ld	bc,redraw_bubbles.color00+1
 		add	hl,bc
-		dec	a ; #77 = set 7,a
+		dec	a ; #FF = set 7,a
 		ld	(hl),a
+		pop	de
 		ret
 
 .nextrow	xor	a
@@ -229,26 +226,39 @@ draw_cross	ret
 ;------------------------------------------------------------------------------
 
 redraw_bubbles	ld	hl,sprattr.numeralC1 + S_SPRITE_ATTR.vpat
-		ld	bc,4
+		ld	e,#40 ; enable attribute byte 4
+		ld	bc,S_SPRITE_ATTR
 		ld	a,(playground.steps+0)
 .color00	res	7,a
-		nop			; reserved
+		or	e
 		ld	(hl),a
 		add	hl,bc
 		ld	a,(playground.steps+1)
 .color01	res	7,a
-		nop			; reserved
+		or	e
 		ld	(hl),a
 		add	hl,bc
 		ld	a,(playground.steps+2)
 .color10	res	7,a
-		nop			; reserved
+		or	e
 		ld	(hl),a
 		add	hl,bc
 		ld	a,(playground.steps+3)
 .color11	res	7,a
-		nop			; reserved
+		or	e
 		ld	(hl),a
+		ld	bc,SPRITE_SLOT_SELECT_P_303B
+		xor	a
+		out	(c),a	; select slot 0
+		rlc	e
+		ld	hl,sprattr.numeralC1
+		ld	bc,(4 * 5 * 256) + SPRITE_ATTRIBUTE_P_57
+.updatespr	outi
+		outi
+		outi
+		outi
+		out	(c),e
+		djnz	.updatespr
 		ret
 
 findplayablecolor
