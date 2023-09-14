@@ -7,6 +7,7 @@
             "name": "Internal Simulator",
             "remoteType": "zsim",
             "zsim": {
+                "Z80N": true,
                 "visualMemory": true,
                 "memoryModel": "ZXNEXT",
                 "ulaScreen": true,
@@ -69,8 +70,14 @@
                 "reverseDebugInstructionCount": 1000000,
                 "spotCount": 10,
             },
+            "commandsAfterLaunch": [
+                "-rmv"
+            ],
+            "zrcp": {
+                "skipInterrupt": true,
+                "loadDelay": 100
+            },
             "startAutomatically": false,
-            "commandsAfterLaunch": [],
             "rootFolder": "${workspaceFolder}",
             "topOfStack": "stack",
             "load": "coloristic2.nex",
