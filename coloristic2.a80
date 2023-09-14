@@ -57,7 +57,8 @@ start:		nextreg	TURBO_CONTROL_NR_07,3
 		ld	bc,SPRITE_SLOT_SELECT_P_303B
 		xor	a
 		out	(c),a	; select slot 0 for patterns (selects also index 0 for attributes)
-		nextreg	MMU7_E000_NR_57, sprite_data.page
+		nextreg	MMU6_C000_NR_56, sprite_data.page
+		nextreg	MMU7_E000_NR_57, sprite_data.page + 1
 		ld	hl,sprite_data
 		ld	bc,SPRITE_PATTERN_P_5B
 		ld	a,sprite_data.count / 2
@@ -129,14 +130,14 @@ tilemap_map:	equ	MEM_TILEMAP_DAT_4000
 .sz		equ	.x * .y
 
 
-		mmu	$E000 w, MMU_PG_SPRITES, $E000
+		mmu	6 7, MMU_PG_SPRITES, $C000
 ;--------------------------------------------------------------------------------------------
-; Sprite data ; TODO fix binaries
-sprite_data:	incbin	"gfx/numerals.spr", 0, (28 * 128)
-.gloworb	incbin	"gfx/gloworb.spr", (4 * 128), (36 * 128)
+; Sprite data
+sprite_data:	incbin	"gfx/numerals.spr"
+.gloworb	incbin	"gfx/gloworb.spr"
 .count		equ	($ - sprite_data) / 128
 .page		equ	$$sprite_data
-		assert	$$ == $$sprite_data	; must fit into one page
+		assert	$$ == $$sprite_data + 1	; must fit into two pages
 
 
 		mmu	$C000 w, MMU_PG_LEVELS, $C000

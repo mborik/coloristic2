@@ -235,16 +235,16 @@ redraw_bubbles	ld	hl,sprattr.numeralC1 + S_SPRITE_ATTR.vpat
 		srl	a
 		rr	e
 		or	d
-		ld	(hl),a
-		inc	l ; S_SPRITE_ATTR.ext
+		ld	(hl),a	; S_SPRITE_ATTR.vpat
+		inc	l
 		scf
 		rr	e
-		ld	(hl),e
+		ld	(hl),e	; S_SPRITE_ATTR.ext
 		add	hl,bc
 	edup
 		org	$-1
 		inc	c
-		dec	l
+		dec	l	; S_SPRITE_ATTR.vpat
 .color11	res	7,(hl)
 		sbc	hl,bc
 .color10	res	7,(hl)

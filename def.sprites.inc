@@ -28,4 +28,5 @@ gloworbC4 = sprites + (7 * S_SPRITE_ATTR)
 
 sprite
 .numerals = 0
-.gloworb = 28
+.gloworb = 32
+.gloworb.anicount = 10
