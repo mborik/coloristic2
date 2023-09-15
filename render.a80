@@ -29,10 +29,10 @@ prepare_level	cp	-1
 ;		ld	(store_undo.lastcolor+1),a
 ;		ld	(perform_move.makemove+1),a
 		ld	a,#BE ; res 7,(hl)
-		ld	(redraw_bubbles.color00+1),a
-		ld	(redraw_bubbles.color01+1),a
-		ld	(redraw_bubbles.color10+1),a
-		ld	(redraw_bubbles.color11+1),a
+		ld	(redraw_numerals.color00+1),a
+		ld	(redraw_numerals.color01+1),a
+		ld	(redraw_numerals.color10+1),a
+		ld	(redraw_numerals.color11+1),a
 
 .justdraw	ld	de,tilemap_map + (3 * tilemap_map.x) + 3
 		ld	ix,playground
@@ -68,16 +68,58 @@ prepare_level	cp	-1
 		add	de,tilemap_map.x * 4
 		dec	c
 		jr	nz,.rows
-		call	redraw_bubbles
+		call	redraw_numerals
 .endno1stTime	ld	a,0
 		or	a
-		jp	z,reset_color_keys
+		jp	z,reset_gloworb
 		ld	a,1
 		ld	(.firsttime),a
 		dec	a
 		ld	(.endno1stTime+1),a
-		jp	findplayablecolor
+		call	findplayablecolor
 
+; draw border around the game plan
+;------------------------------------------------------------------------------
+	macro carry_if_nonempty_tile offset?
+		ld	a,(ix + offset?)
+		or	a
+		jr	z,$+3
+		cp	d
+		rr	l
+	endm
+
+draw_border	ld	ix,tilemap_map + tilemap_map.x
+		ld	d,tilemap.border.ptr
+		ld	b,tilemap_map.y - 2
+.row		ld	c,tilemap_map.x - 1
+.col		dec	c
+		jr	z,.endline
+		inc	ix
+		ld	a,(ix)
+		or	a
+		jr	nz,.col
+		ld	l,a
+		carry_if_nonempty_tile 1
+		carry_if_nonempty_tile tilemap_map.x + 1
+		carry_if_nonempty_tile tilemap_map.x
+		carry_if_nonempty_tile tilemap_map.x - 1
+		carry_if_nonempty_tile -1
+		carry_if_nonempty_tile -(tilemap_map.x + 1)
+		carry_if_nonempty_tile -tilemap_map.x
+		carry_if_nonempty_tile -(tilemap_map.x - 1)
+		ld	h,high edges2border
+		ld	a,(hl)
+		or	a
+		jr	z,.col
+		ld	(ix),a
+		jr	.col
+
+.endline	inc	ix
+		inc	ix
+		djnz	.row
+
+; calculate numeral sprite data from starting blob tile
+;------------------------------------------------------------------------------
 startile	xor	a
 		push	de
 		ex	hl,de
@@ -125,7 +167,7 @@ startile	xor	a
 		rlca
 		ld	l,a
 		ld	h,0
-		ld	bc,redraw_bubbles.color11+1
+		ld	bc,redraw_numerals.color11+1
 		add	hl,bc
 		ld	(hl),#FE ; set 7,(hl)
 		pop	de
@@ -137,6 +179,8 @@ startile	xor	a
 		inc	a
 		jr	.row
 
+; tilemap drawings
+;------------------------------------------------------------------------------
 draw_tiles_by_base
 		ld	(ix - tilemap_map.x - 1),a
 		inc	a
@@ -224,9 +268,9 @@ draw_path	ret
 
 draw_cross	ret
 
+; updating of numeral sprites with current steps
 ;------------------------------------------------------------------------------
-
-redraw_bubbles	ld	hl,sprattr.numeralC1 + S_SPRITE_ATTR.vpat
+redraw_numerals	ld	hl,sprattr.numeralC1 + S_SPRITE_ATTR.vpat
 		ld	bc,S_SPRITE_ATTR - 1
 		ld	d,#40
 	dup 4, idx
@@ -277,7 +321,7 @@ findplayablecolor
 .nowrap		ex	af,af'
 		djnz	.loop
 		or	(hl)
-		jr	z,reset_color_keys
+		jr	z,reset_gloworb
 
 .setcolor	ld	a,b
 		xor	c
@@ -285,6 +329,6 @@ findplayablecolor
 		and	c
 		ld	(active_color),a
 
-reset_color_keys
+reset_gloworb
 		;; TODO
 		ret
