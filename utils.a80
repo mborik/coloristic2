@@ -1,5 +1,4 @@
-
-ReadNextReg:	ld	bc,NEXTREG_SELECT_P_243B
+read_next_reg:	ld	bc,NEXTREG_SELECT_P_243B
 		out	(c),a
 		inc	b
 		in	a,(c)
@@ -8,7 +7,8 @@ ReadNextReg:	ld	bc,NEXTREG_SELECT_P_243B
 ;--------------------------------------------------------------------------------------------
 WAIT_SCANLINE	equ	192+32		; no offset yet, so 192+32 is below 640x256
 
-WaitForScanline:
+wait_end_frame:	push	bc
+		push	af
 	; read NextReg	$1F - LSB of current raster line
 		ld	bc,NEXTREG_SELECT_P_243B
 		ld	a,VIDEO_LINE_LSB_NR_1F
@@ -19,17 +19,18 @@ WaitForScanline:
 		cp	WAIT_SCANLINE
 		jr	z,.cantStartAtN
 	; if not yet at scanline WAIT_SCANLINE, wait for it ... wait for it ...
-.waitLoop:	in	a,(c)		; read the raster line LSB
+.waitloop:	in	a,(c)		; read the raster line LSB
 		cp	WAIT_SCANLINE
-		jr	nz,.waitLoop
+		jr	nz,.waitloop
+		pop	af
+		pop	bc
 		ret
 
 ;--------------------------------------------------------------------------------------------
 ; HL = memory: N * 16b data (RRRGGGBB, p000000B bytes)
 ; E = count-size of palette data (0 is 256 colours)
 ; A = value to select palette to upload via NR_43
-UploadPaletteData:
-		nextreg	PALETTE_CONTROL_NR_43,a
+upload_palette:	nextreg	PALETTE_CONTROL_NR_43,a
 		nextreg	PALETTE_INDEX_NR_40,0
 		ld	bc,NEXTREG_SELECT_P_243B
 		ld	a,PALETTE_VALUE_9BIT_NR_44

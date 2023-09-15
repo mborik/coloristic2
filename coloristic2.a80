@@ -10,7 +10,7 @@
 		org	$8000
 
 
-start:		nextreg	TURBO_CONTROL_NR_07,3
+start:		nextreg	TURBO_CONTROL_NR_07,2
 ;	; check for 50/60Hz mode and remember it -> to repeat keyboard handler calls (before making proper 300Hz inputs)
 ;		ld	a,PERIPHERAL_1_NR_05
 ;		call	ReadNextReg
@@ -39,20 +39,13 @@ start:		nextreg	TURBO_CONTROL_NR_07,3
 		ld	a,%01101100	; second Sprite palette
 		ld	hl,base_palette
 		ld	e,low(base_palette.count)
-		call	UploadPaletteData
+		call	upload_palette
 
 	; load tilemode palette
 		ld	a,%01111100	; second Tilemode palette
 		ld	hl,base_palette
 		ld	e,low(base_palette.count)
-		call	UploadPaletteData
-
-	; fill tilemap screen
-		ld	hl,tilemap_map
-		ld	de,tilemap_map+1
-		ld	bc,tilemap_map.sz
-		ld	(hl),l
-		ldir
+		call	upload_palette
 
 		ld	bc,SPRITE_SLOT_SELECT_P_303B
 		xor	a
@@ -74,15 +67,8 @@ start:		nextreg	TURBO_CONTROL_NR_07,3
 
 		nextreg	MMU6_C000_NR_56, levels.page
 
-		ld	a,117
-		call	prepare_level
-
-	; main loop
-main_loop:
-		call	WaitForScanline
-		jp	main_loop
-
 ;--------------------------------------------------------------------------------------------
+		include "engine.a80"
 		include "render.a80"
 		include "utils.a80"
 

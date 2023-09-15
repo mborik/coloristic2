@@ -28,11 +28,6 @@ prepare_level	cp	-1
 		ld	(.endno1stTime+1),a
 ;		ld	(store_undo.lastcolor+1),a
 ;		ld	(perform_move.makemove+1),a
-		ld	a,#BE ; res 7,(hl)
-		ld	(redraw_numerals.color00+1),a
-		ld	(redraw_numerals.color01+1),a
-		ld	(redraw_numerals.color10+1),a
-		ld	(redraw_numerals.color11+1),a
 
 .justdraw	ld	de,tilemap_map + (3 * TILEMAP_CHAR_WIDTH) + 3
 		ld	ix,playground

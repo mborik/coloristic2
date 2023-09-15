@@ -1,0 +1,136 @@
+play
+	; clear tilemap render screen
+		ld	hl,tilemap_map
+		ld	de,tilemap_map+1
+		ld	bc,tilemap_map.sz
+		ld	(hl),l
+		ldir
+		ld	a,#BE ; res 7,(hl)
+		ld	(redraw_numerals.color00+1),a
+		ld	(redraw_numerals.color01+1),a
+		ld	(redraw_numerals.color10+1),a
+		ld	(redraw_numerals.color11+1),a
+		call	redraw_numerals
+
+start_level
+.nokey		xor	a
+		in	a,(ULA_P_FE)
+		cpl
+		and	31
+		jr	nz,.nokey
+		call	wait_end_frame
+
+level		ld	a,0
+tmplevel	cp	-1
+		jr	z,.tmp
+
+		;load level and print it to the screen
+		call	prepare_level
+		jr	.playground
+
+.tmp		ld	a,-1
+		ld	(tmplevel+1),a
+		call	prepare_level.justdraw
+
+.playground	ld	a,(level+1)	;level
+		; TODO print level
+
+mainloop	call	get_controls.entry
+
+		cp	K_FIRE		;change color
+		jr	z,next_level
+mainloop_cont	call	key_delay
+		jr	mainloop
+
+next_level
+; 		call	beeeep
+		ld	a,-1
+		ld	(tmplevel+1),a
+
+; 		ld	b,50
+; .waitsec	call	wait_end_frame
+; 		djnz	.waitsec
+
+		ld	a,(level+1)
+		inc	a
+		ld	(level+1),a
+		cp	LEVEL_CNT
+;		jr	nc,game_end
+
+; .wkey		call	get_controls.entry
+; 		jr	z,.wkey
+		jp	play
+
+;------------------------------------------------------------------------------
+
+key_delay	ld	bc,#0F1F
+.loop		call	wait_end_frame
+.havekempston	jr	.tstkeys
+		xor	a
+		in	a,(KEMPSTON_JOY1_P_1F)
+		and	c
+		jr	z,.tstkeys
+		cp	c
+		jr	c,.next
+.tstkeys	xor	a
+		in	a,(ULA_P_FE)
+		cpl
+		and	c
+		ret	z
+.next		djnz	.loop
+		ret
+
+get_controls	call	get_key_core
+		ret	nz
+.entry		ld	hl,ctrldefs
+.havekempston	jr	get_controls
+		ld	bc,KEMPSTON_JOY1_P_1F
+		in	a,(c)
+		and	c
+		jr	z,get_controls
+		cp	c
+		jr	z,get_controls
+		ld	b,5
+		ld	hl,kempdefs
+.kemploop	rrca
+		jr	c,.kempston
+		inc	hl
+		djnz	.kemploop
+.kempston	ld	a,(hl)
+		or	a
+		ret
+
+get_key		ld	hl,keys
+		call	get_key_core
+		ret	nz
+		jr	get_key
+
+get_key_core	ld	bc,(ULA_P_FE << 8) | ULA_P_FE
+		ld	de,#0804
+		in	a,(c)
+		cpl
+		and	31
+		rra
+		jr	nc,.cols
+		ld	hl,keys.caps
+.cols		rra
+		jr	c,.found
+		inc	hl
+		dec	e
+		jr	nz,.cols
+		rrc	b
+		dec	d
+		ret	z
+.rows		in	a,(c)
+		cpl
+		and	31
+		ld	e,5
+		jr	.cols
+
+.found		ld	a,(hl)
+		or	a
+		ret
+
+		include "keymap.inc"
+
+kempdefs	db	K_RIGHT, K_LEFT, K_DOWN, K_UP, K_FIRE, 0
