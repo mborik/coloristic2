@@ -51,6 +51,7 @@ ZX128P3_MEMORY_P_1FFD		equ $1FFD
 
 AY_REG_P_FFFD			equ $FFFD
 AY_DATA_P_BFFD			equ $BFFD
+TURBO_SOUND_CONTROL_P_FFFD	equ $FFFD	; write with bit 7 = 1 (port shared with AY)
 
 Z80_DMA_PORT_DATAGEAR		equ $6B		; on ZXN the zxnDMA handles this in zxnDMA mode
 Z80_DMA_PORT_MB02		equ $0B		; on ZXN the zxnDMA handles this in Zilog mode
@@ -121,6 +122,11 @@ LAYER2_ACCESS_OVER_ROM_BANK_1	equ $40		; screen lines 64..127	(256x192) or colum
 LAYER2_ACCESS_OVER_ROM_BANK_2	equ $80		; screen lines 128..191 (256x192) or columns 128..191 (320x256) or columns 256..383 (640x256)
 LAYER2_ACCESS_OVER_ROM_48K	equ $C0		; maps all 0..191 lines into $0000..$BFFF region (256x192) or 2/3 of columns in 320x256/640x256
 
+; tilemap resolution constants
+TILEMAP_CHAR_WIDTH		equ 40
+TILEMAP_CHAR_WIDE_WIDTH		equ 80
+TILEMAP_CHAR_HEIGHT		equ 32
+
 SPRITE_SLOT_SELECT_P_303B	equ $303B
 	; -- port $303B = 12347	Read+Write (detection bitmask: %0011_0000_0011_1011)
 	;	-- write:
@@ -161,8 +167,6 @@ SPRITE_PATTERN_P_5B		equ $5B
 	;	one byte encodes single pixel in 8 bit mode and two pixels in 4 bit
 	;	mode (bits 7-4 are "left" pixel, 3-0 are "right" pixel)
 	;	- pixels are offset (index) into active sprite palette
-
-TURBO_SOUND_CONTROL_P_FFFD	equ $FFFD	; write with bit 7 = 1 (port shared with AY)
 
 ;-----------------------------------------------------------------------------
 ;-- NEXT HW Registers (NextReg)

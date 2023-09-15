@@ -34,7 +34,7 @@ prepare_level	cp	-1
 		ld	(redraw_numerals.color10+1),a
 		ld	(redraw_numerals.color11+1),a
 
-.justdraw	ld	de,tilemap_map + (3 * tilemap_map.x) + 3
+.justdraw	ld	de,tilemap_map + (3 * TILEMAP_CHAR_WIDTH) + 3
 		ld	ix,playground
 		ld	c,PLAYFIELD_H
 .rows		ld	b,PLAYFIELD_W
@@ -65,7 +65,7 @@ prepare_level	cp	-1
 		add	de,4
 		djnz	.cols
 		pop	de
-		add	de,tilemap_map.x * 4
+		add	de,TILEMAP_CHAR_WIDTH * 4
 		dec	c
 		jr	nz,.rows
 		call	redraw_numerals
@@ -88,10 +88,10 @@ prepare_level	cp	-1
 		rr	l
 	endm
 
-draw_border	ld	ix,tilemap_map + tilemap_map.x
+draw_border	ld	ix,tilemap_map + TILEMAP_CHAR_WIDTH
 		ld	d,tilemap.border.ptr
-		ld	b,tilemap_map.y - 2
-.row		ld	c,tilemap_map.x - 1
+		ld	b,TILEMAP_CHAR_HEIGHT - 2
+.row		ld	c,TILEMAP_CHAR_WIDTH - 1
 .col		dec	c
 		jr	z,.endline
 		inc	ix
@@ -100,13 +100,13 @@ draw_border	ld	ix,tilemap_map + tilemap_map.x
 		jr	nz,.col
 		ld	l,a
 		carry_if_nonempty_tile 1
-		carry_if_nonempty_tile tilemap_map.x + 1
-		carry_if_nonempty_tile tilemap_map.x
-		carry_if_nonempty_tile tilemap_map.x - 1
+		carry_if_nonempty_tile TILEMAP_CHAR_WIDTH + 1
+		carry_if_nonempty_tile TILEMAP_CHAR_WIDTH
+		carry_if_nonempty_tile TILEMAP_CHAR_WIDTH - 1
 		carry_if_nonempty_tile -1
-		carry_if_nonempty_tile -(tilemap_map.x + 1)
-		carry_if_nonempty_tile -tilemap_map.x
-		carry_if_nonempty_tile -(tilemap_map.x - 1)
+		carry_if_nonempty_tile -(TILEMAP_CHAR_WIDTH + 1)
+		carry_if_nonempty_tile -TILEMAP_CHAR_WIDTH
+		carry_if_nonempty_tile -(TILEMAP_CHAR_WIDTH - 1)
 		ld	h,high edges2border
 		ld	a,(hl)
 		or	a
@@ -124,13 +124,13 @@ startile	xor	a
 		push	de
 		ex	hl,de
 		res	6,h
-		ld	bc,tilemap_map.x
+		ld	bc,TILEMAP_CHAR_WIDTH
 .row		ex	af,af'
 		xor	a
 		or	h
 		jr	nz,.nextrow
 		or	l
-		cp	tilemap_map.x
+		cp	TILEMAP_CHAR_WIDTH
 		jr	nc,.nextrow
 		add	hl,hl
 		add	hl,hl
@@ -182,36 +182,36 @@ startile	xor	a
 ; tilemap drawings
 ;------------------------------------------------------------------------------
 draw_tiles_by_base
-		ld	(ix - tilemap_map.x - 1),a
+		ld	(ix - TILEMAP_CHAR_WIDTH - 1),a
 		inc	a
-		ld	(ix - tilemap_map.x + 2),a
+		ld	(ix - TILEMAP_CHAR_WIDTH + 2),a
 		inc	a
-		ld	(ix + (2 * tilemap_map.x) - 1),a
+		ld	(ix + (2 * TILEMAP_CHAR_WIDTH) - 1),a
 		inc	a
-		ld	(ix + (2 * tilemap_map.x) + 2),a
+		ld	(ix + (2 * TILEMAP_CHAR_WIDTH) + 2),a
 		inc	a
-		ld	(ix - tilemap_map.x),a
+		ld	(ix - TILEMAP_CHAR_WIDTH),a
 		inc	a
-		ld	(ix - tilemap_map.x + 1),a
+		ld	(ix - TILEMAP_CHAR_WIDTH + 1),a
 		inc	a
-		ld	(ix + (2 * tilemap_map.x)),a
+		ld	(ix + (2 * TILEMAP_CHAR_WIDTH)),a
 		inc	a
-		ld	(ix + (2 * tilemap_map.x) + 1),a
+		ld	(ix + (2 * TILEMAP_CHAR_WIDTH) + 1),a
 		inc	a
 		ld	(ix - 1),a
 		inc	a
 		ld	(ix + 2),a
 		inc	a
-		ld	(ix + tilemap_map.x - 1),a
+		ld	(ix + TILEMAP_CHAR_WIDTH - 1),a
 		inc	a
-		ld	(ix + tilemap_map.x + 2),a
+		ld	(ix + TILEMAP_CHAR_WIDTH + 2),a
 		ret
 
 draw_center_of_tile
 		ld	(ix + 0),h
 		ld	(ix + 1),l
-		ld	(ix + tilemap_map.x),b
-		ld	(ix + tilemap_map.x + 1),c
+		ld	(ix + TILEMAP_CHAR_WIDTH),b
+		ld	(ix + TILEMAP_CHAR_WIDTH + 1),c
 		ret
 
 draw_base	ld	a,tilemap.base.ptr
@@ -240,8 +240,8 @@ draw_blob	ld	a,c
 		add	a,tilemap.base.C1
 		ld	(ix + 0),a
 		ld	(ix + 1),a
-		ld	(ix + tilemap_map.x),a
-		ld	(ix + tilemap_map.x + 1),a
+		ld	(ix + TILEMAP_CHAR_WIDTH),a
+		ld	(ix + TILEMAP_CHAR_WIDTH + 1),a
 		ret
 
 draw_blocked	ld	a,tilemap.blocked.ptr

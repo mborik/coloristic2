@@ -125,9 +125,7 @@ tilemap_gfx:	incbin	"tileset/tileset.spr"
 .sz		equ	$ - tilemap_gfx
 
 tilemap_map:	equ	MEM_TILEMAP_DAT_4000
-.x		equ	40
-.y		equ	32
-.sz		equ	.x * .y
+.sz		equ	TILEMAP_CHAR_WIDTH * TILEMAP_CHAR_HEIGHT
 
 
 		mmu	6 7, MMU_PG_SPRITES, $C000
