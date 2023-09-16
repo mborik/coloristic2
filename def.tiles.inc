@@ -230,7 +230,7 @@ edges2border:	db	0			;  87654321
 		db	0			; %00110011
 		db	0			; %00110100
 		db	0			; %00110101
-		db	0			; %00110110
+		db	tilemap.border.inner_BL	; %00110110
 		db	0			; %00110111
 		db	tilemap.border.edgeR	; %00111000
 		db	0			; %00111001
@@ -275,7 +275,7 @@ edges2border:	db	0			;  87654321
 		db	tilemap.border.edgeB	; %01100000
 		db	0			; %01100001
 		db	0			; %01100010
-		db	0			; %01100011
+		db	tilemap.border.inner_TR	; %01100011
 		db	0			; %01100100
 		db	0			; %01100101
 		db	0			; %01100110
