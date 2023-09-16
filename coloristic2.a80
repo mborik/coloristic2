@@ -33,19 +33,37 @@ start:		nextreg	TURBO_CONTROL_NR_07,2
 		nextreg	TILEMAP_XOFFSET_MSB_NR_2F,0,,TILEMAP_XOFFSET_LSB_NR_30,0,,TILEMAP_YOFFSET_NR_31,0
 		nextreg	TILEMAP_TRANSPARENCY_I_NR_4C,$0F
 		nextreg	TILEMAP_BASE_ADR_NR_6E,high(MEM_TILEMAP_DAT_4000),,TILEMAP_GFX_ADR_NR_6F,high(MEM_TILEMAP_GFX_6000)
-		nextreg	TRANSPARENCY_FALLBACK_COL_NR_4A,$F5
+		nextreg	TRANSPARENCY_FALLBACK_COL_NR_4A,0
 
 	; load sprite palette
-		ld	a,%01101100	; second Sprite palette
+		ld	a,%01101110
 		ld	hl,base_palette
-		ld	e,low(base_palette.count)
+		ld	de,low(base_palette.count)
 		call	upload_palette
 
 	; load tilemode palette
-		ld	a,%01111100	; second Tilemode palette
+		ld	a,%01111110
 		ld	hl,base_palette
-		ld	e,low(base_palette.count)
+		ld	de,low(base_palette.count)
 		call	upload_palette
+
+	; load ULA palette
+		ld	a,%01001110
+		ld	hl,base_palette + 16
+		ld	de,$0008
+		call	upload_palette
+		ld	hl,base_palette
+		ld	de,$0808
+		call	upload_palette
+		ld	hl,base_palette + 16
+		ld	de,$1008
+		call	upload_palette
+		ld	hl,base_palette
+		ld	de,$1808
+		call	upload_palette
+
+		ld	a,PAL_COLOR_BACKGROUND
+		out	(ULA_P_FE),a
 
 		ld	bc,SPRITE_SLOT_SELECT_P_303B
 		xor	a

@@ -28,10 +28,13 @@ wait_end_frame:	push	bc
 
 ;--------------------------------------------------------------------------------------------
 ; HL = memory: N * 16b data (RRRGGGBB, p000000B bytes)
+; D = starting index of palette
 ; E = count-size of palette data (0 is 256 colours)
 ; A = value to select palette to upload via NR_43
-upload_palette:	nextreg	PALETTE_CONTROL_NR_43,a
-		nextreg	PALETTE_INDEX_NR_40,0
+upload_palette:	push	af
+		nextreg	PALETTE_CONTROL_NR_43,a
+		ld	a,d
+		nextreg	PALETTE_INDEX_NR_40,a
 		ld	bc,NEXTREG_SELECT_P_243B
 		ld	a,PALETTE_VALUE_9BIT_NR_44
 		out	(c),a
@@ -40,4 +43,5 @@ upload_palette:	nextreg	PALETTE_CONTROL_NR_43,a
 		outinb
 		dec	e
 		jr	nz,.pal_loop
+		pop	af
 		ret
