@@ -28,9 +28,9 @@ parser.parseString(tmx, (e, result) => {
 			if (data && data.encoding === 'csv' && data.text) {
 				const values = data.text.replace(/\s+/g, '').split(',');
 
-				let offset = 0;
-				for (; offset < values.length; offset++) {
-					let value = parseInt(values[offset]) || 0;
+				let i = 0;
+				for (; i < values.length; i++) {
+					let value = parseInt(values[i]) || 0;
 					if (value === 16) { // cross
 						value = 64;
 					}
@@ -41,12 +41,16 @@ parser.parseString(tmx, (e, result) => {
 						value = 32;
 					}
 
-					levelData.writeUInt8(value, offset);
+					levelData.writeUInt8(value, i);
 				}
 
-				offset = levelData.length - props.length;
+				const offset = ((level.offsetx || 0) >> 3) +
+						(((level.offsety || 0) >> 3) * 40);
+				levelData.writeUInt8(offset, i);
+
+				i = levelData.length - props.length;
 				for (const prop of props) {
-					levelData.writeUInt8(parseInt(prop.value) || 0, offset++);
+					levelData.writeUInt8(parseInt(prop.value) || 0, i++);
 				}
 
 				fs.appendFileSync(resultFn, levelData);

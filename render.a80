@@ -31,6 +31,8 @@ prepare_level	cp	-1
 
 .justdraw	ld	de,tilemap_map + (3 * TILEMAP_CHAR_WIDTH) + 3
 		ld	ix,playground
+		ld	a,(ix + (PLAYFIELD_W * PLAYFIELD_H))
+		add	de,a
 		ld	c,PLAYFIELD_H
 .rows		ld	b,PLAYFIELD_W
 		push	de
