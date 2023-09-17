@@ -29,10 +29,16 @@ prepare_level	cp	-1
 ;		ld	(store_undo.lastcolor+1),a
 ;		ld	(perform_move.makemove+1),a
 
-.justdraw	ld	de,tilemap_map + (3 * TILEMAP_CHAR_WIDTH) + 3
+.justdraw	ld	hl,tilemap_map + PLAYFIELD_OFFSET_BASE
 		ld	ix,playground
-		ld	a,(ix + (PLAYFIELD_W * PLAYFIELD_H))
-		add	de,a
+		ld	a,(ix + LEVEL_OFFSET_INDEX)
+		add	hl,a
+		push	hl
+	; store playfield offset XY to gloworb position offset
+		call	calc_tilemap_offset_to_xy
+		ld	(reset_gloworb.playfield_x+2),hl
+		ld	(reset_gloworb.playfield_y+1),a
+		pop	de
 		ld	c,PLAYFIELD_H
 .rows		ld	b,PLAYFIELD_W
 		push	de
@@ -62,7 +68,7 @@ prepare_level	cp	-1
 		add	de,4
 		djnz	.cols
 		pop	de
-		add	de,TILEMAP_CHAR_WIDTH * 4
+		add	de,PLAYFIELD_TILE_HEIGHT
 		dec	c
 		jr	nz,.rows
 		call	redraw_numerals
@@ -117,22 +123,11 @@ draw_border	ld	ix,tilemap_map + TILEMAP_CHAR_WIDTH
 
 ; calculate numeral sprite data from starting blob tile
 ;------------------------------------------------------------------------------
-startile	xor	a
-		push	de
+startile	push	de
 		ex	hl,de
-		res	6,h
-		ld	bc,TILEMAP_CHAR_WIDTH
-.row		ex	af,af'
-		xor	a
-		or	h
-		jr	nz,.nextrow
-		or	l
-		cp	TILEMAP_CHAR_WIDTH
-		jr	nc,.nextrow
-		add	hl,hl
-		add	hl,hl
-		add	hl,hl
+		call	calc_tilemap_offset_to_xy
 		ex	hl,de
+		ex	af,af'
 		ld	c,3
 		ld	a,(ix+0)
 		and	c
@@ -145,9 +140,6 @@ startile	xor	a
 		ld	(hl),e	; S_SPRITE_ATTR.x
 		inc	l
 		ex	af,af'
-		rlca
-		rlca
-		rlca
 		ld	(hl),a	; S_SPRITE_ATTR.y
 		inc	l
 		ld	(hl),d	; S_SPRITE_ATTR.palx8
@@ -169,12 +161,6 @@ startile	xor	a
 		ld	(hl),#FE ; set 7,(hl)
 		pop	de
 		ret
-
-.nextrow	xor	a
-		sbc	hl,bc
-		ex	af,af'
-		inc	a
-		jr	.row
 
 ; tilemap drawings
 ;------------------------------------------------------------------------------
@@ -326,6 +312,112 @@ findplayablecolor
 		and	c
 		ld	(active_color),a
 
-reset_gloworb
-		;; TODO
+reset_gloworb	ld	a,(active_color)
+		ld	c,a	; keep color in C
+		ld	de,$FF00 | PLAYFIELD_W
+		add	a,low playground.current_location
+		ld	l,a
+		ld	h,high playground.current_location
+		ld	a,(hl)
+.row		inc	d
+		sub	e
+		jr	nc,.row
+		add	a,e	; X * 32
+		rlca
+		rlca
+		dec	a
+		rlca
+		rlca
+		ld	l,a
+		ld	h,0
+		add	hl,hl	; store to HL
+.playfield_x	add	hl,0
+
+		ld	a,c	; color to palette shift
+		inc	a
+		swapnib		; PPPPxxxx
+		ld	c,a	; store to C
+
+		ld	a,d	; Y * 32
+		rlca
+		rlca
+		dec	a
+		rlca
+		rlca
+		rlca
+.playfield_y	add	a,0
+		ld	b,a	; store to B
+
+		ex	hl,de
+		ld	hl,sprattr.gloworbP1
+		call	.store_sprattr
+		push	de
+		add	de,16
+		call	.store_sprattr
+		pop	de
+		ld	a,b
+		add	a,16
+		ld	b,a
+		call	.store_sprattr
+		add	de,16
+		call	.store_sprattr
+		ld	(update_gloworb+1),a
+		ret
+
+.store_sprattr	ld	(hl),e	; S_SPRITE_ATTR.x
+		inc	l
+		ld	(hl),b	; S_SPRITE_ATTR.y
+		inc	l
+		ld	a,c
+		or	d
+		ld	(hl),a	; S_SPRITE_ATTR.palx8
+		inc	l
+		ld	(hl),#40
+		inc	l
+		ld	(hl),#80
+		inc	l
+		ret
+
+update_gloworb	ld	de,gloworb_animation_sprattrs
+		ld	hl,sprattr.gloworbP1 + 3
+		ld	bc,S_SPRITE_ATTR - 1
+		ld	a,(de)
+		ld	(hl),a
+		inc	e
+		inc	hl
+		ld	a,(de)
+		ld	(hl),a
+		inc	e
+		add	hl,bc
+		ld	a,(de)
+		ld	(hl),a
+		inc	e
+		inc	hl
+		ld	a,(de)
+		ld	(hl),a
+		inc	e
+		add	hl,bc
+		ld	a,(de)
+		ld	(hl),a
+		inc	e
+		inc	hl
+		ld	a,(de)
+		ld	(hl),a
+		inc	e
+		add	hl,bc
+		ld	a,(de)
+		ld	(hl),a
+		inc	e
+		inc	hl
+		ld	a,(de)
+		ld	(hl),a
+		inc	e
+		ex	de,hl
+		ld	(update_gloworb+1),hl
+		ld	bc,SPRITE_SLOT_SELECT_P_303B
+		ld	a,4
+		out	(c),a	; select slot 0
+		ld	hl,sprattr.gloworbP1
+		ld	bc,(4 * S_SPRITE_ATTR * 256) + SPRITE_ATTRIBUTE_P_57
+		otir
 		ret

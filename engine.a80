@@ -11,6 +11,8 @@ play
 		ld	(redraw_numerals.color10+1),a
 		ld	(redraw_numerals.color11+1),a
 		call	redraw_numerals
+		ld	(update_gloworb+1),a
+		call	update_gloworb
 
 start_level
 .nokey		xor	a

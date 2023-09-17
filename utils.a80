@@ -4,11 +4,13 @@ read_next_reg:	ld	bc,NEXTREG_SELECT_P_243B
 		in	a,(c)
 		ret
 
-;--------------------------------------------------------------------------------------------
-WAIT_SCANLINE	equ	192+32		; no offset yet, so 192+32 is below 640x256
+;------------------------------------------------------------------------------
+WAIT_SCANLINE	equ	192+32		; no offset yet, so 192+32 is below 320x256
 
-wait_end_frame:	push	bc
-		push	af
+wait_end_frame:	push	af
+		push	bc
+		push	de
+		push	hl
 	; read NextReg	$1F - LSB of current raster line
 		ld	bc,NEXTREG_SELECT_P_243B
 		ld	a,VIDEO_LINE_LSB_NR_1F
@@ -22,11 +24,16 @@ wait_end_frame:	push	bc
 .waitloop:	in	a,(c)		; read the raster line LSB
 		cp	WAIT_SCANLINE
 		jr	nz,.waitloop
-		pop	af
+
+		call	update_gloworb
+
+		pop	hl
+		pop	de
 		pop	bc
+		pop	af
 		ret
 
-;--------------------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ; HL = memory: N * 16b data (RRRGGGBB, p000000B bytes)
 ; D = starting index of palette
 ; E = count-size of palette data (0 is 256 colours)
@@ -45,3 +52,32 @@ upload_palette:	push	af
 		jr	nz,.pal_loop
 		pop	af
 		ret
+
+;------------------------------------------------------------------------------
+; HL = tilemap offset
+; returning HL = real X, A = real Y
+calc_tilemap_offset_to_xy:
+		xor	a
+		res	6,h
+		ld	bc,TILEMAP_CHAR_WIDTH
+.row		ex	af,af'
+		xor	a
+		or	h
+		jr	nz,.nextrow
+		or	l
+		cp	TILEMAP_CHAR_WIDTH
+		jr	nc,.nextrow
+		add	hl,hl
+		add	hl,hl
+		add	hl,hl
+		ex	af,af'
+		rlca
+		rlca
+		rlca
+		ret
+
+.nextrow	xor	a
+		sbc	hl,bc
+		ex	af,af'
+		inc	a
+		jr	.row
