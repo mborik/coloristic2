@@ -12,10 +12,11 @@
 
 start:		di
 		nextreg	TURBO_CONTROL_NR_07,3
-		nextreg	INTERRUPT_CONTROL_C0,(int_vectors & %11100000) | 1
+		nextreg	INTERRUPT_CONTROL_C0,%00000000
 		nextreg INTERRUPT_ENABLE_0_ULA_C4,%10000001
 		nextreg INTERRUPT_ENABLE_1_CTC_C5,%00000000
 		nextreg INTERRUPT_ENABLE_2_UART_C6,%00000000
+		nextreg	VIDEO_INTERUPT_CONTROL_NR_22,%00000000
 		nextreg	GLOBAL_TRANSPARENCY_NR_14,PAL_COLOR_TRANSPARENT
 		nextreg	SPRITE_CONTROL_NR_15,%00000111		; LoRes=0, SprToTop, Sclip=0, LSU, Sborder, S=1
 		nextreg	SPRITE_TRANSPARENCY_I_NR_4B,PAL_COLOR_TRANSPARENT
@@ -84,7 +85,7 @@ start:		di
 		ld	bc,tilemap_gfx.sz
 		ldir
 
-		ld	a,high int_vectors
+		ld	a,high int_vector
 		ld	i,a
 		im	2
 		ei
@@ -114,29 +115,15 @@ playground	ds	PLAYFIELD_SIZE
 
 undo_area	ds	PLAYFIELD_SIZE * UNDO_LEVELS
 
-		align	32
+		org	(high $) << 8 | (high $)
+int_jumper	jp	interrupt
 
-int_vectors	dw	int_default	; 0 = line interrupt (highest priority)
-		dw	int_default	; 1 = UART0 Rx
-		dw	int_default	; 2 = UART1 Rx
-		dw	int_default	; 3 = CTC channel 0
-		dw	int_default	; 4 = CTC channel 1
-		dw	int_default	; 5 = CTC channel 2
-		dw	int_default	; 6 = CTC channel 3
-		dw	int_default	; 7 = CTC channel 4
-		dw	int_default	; 8 = CTC channel 5
-		dw	int_default	; 9 = CTC channel 6
-		dw	int_default	; 10 = CTC channel 7
-		dw	interrupt	; 11 = ULA
-		dw	int_default	; 12 = UART0 Tx
-		dw	int_default	; 13 = UART1 Tx (lowest priority)
-		dw	int_default
-		dw	int_default
+		align	256
+int_vector	block	257, high int_jumper
 
 ;--------------------------------------------------------------------------------------------
-; STACK block >256 bytes
-		align	256
-		ds	256
+; STACK block
+		ds	255
 stack:
 
 ;--------------------------------------------------------------------------------------------

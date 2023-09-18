@@ -10,11 +10,12 @@
                 "Z80N": true,
                 "visualMemory": true,
                 "memoryModel": "ZXNEXT",
-                "ulaScreen": true,
-                "zxBorderWidth": 5,
+                "ulaScreen": false,
+                "zxBorderWidth": 0,
+                "cpuLoadInterruptRange": 4,
                 "vsyncInterrupt": true,
                 "zxKeyboard": true,
-                "zxBeeper": true
+                "kempstonJoy": true
             },
             "sjasmplus": [
                 {

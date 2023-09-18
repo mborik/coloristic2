@@ -51,7 +51,8 @@ next_level
 		ld	(tmplevel+1),a
 
 ; 		ld	b,50
-; .waitsec	halt
+; .waitsec	ei
+;		halt
 ; 		djnz	.waitsec
 
 		ld	a,(level+1)
@@ -87,7 +88,8 @@ detect_kempston	ld	bc,#001F
 		ret
 
 key_delay	ld	bc,#0F1F
-.loop		halt
+.loop		ei
+		halt
 .havekempston	jr	.tstkeys
 		xor	a
 		in	a,(KEMPSTON_JOY1_P_1F)
