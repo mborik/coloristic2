@@ -1,0 +1,41 @@
+interrupt:	di
+		push	ix
+		push	iy
+		push	hl
+		push	de
+		push	bc
+		push	af
+		exx
+		ex	af,af'
+		push	hl
+		push	de
+		push	bc
+		push	af
+
+.even		ld	a,0
+		xor	1
+		ld	(.even+1),a
+		jr	z,.testmute
+
+		call	update_gloworb
+
+.testmute	ld	a,(music_muted)
+		rrca
+		jr	c,.muted
+;		call	music_play
+
+.muted		pop	af
+		pop	bc
+		pop	de
+		pop	hl
+		ex	af,af'
+		exx
+		pop	af
+		pop	bc
+		pop	de
+		pop	hl
+		pop	iy
+		pop	ix
+
+int_default:	ei
+		reti

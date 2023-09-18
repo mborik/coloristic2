@@ -20,7 +20,8 @@ start_level
 		cpl
 		and	31
 		jr	nz,.nokey
-		call	wait_end_frame
+		ei
+		halt
 
 level		ld	a,0
 tmplevel	cp	-1
@@ -50,7 +51,7 @@ next_level
 		ld	(tmplevel+1),a
 
 ; 		ld	b,50
-; .waitsec	call	wait_end_frame
+; .waitsec	halt
 ; 		djnz	.waitsec
 
 		ld	a,(level+1)
@@ -65,8 +66,28 @@ next_level
 
 ;------------------------------------------------------------------------------
 
+detect_kempston	ld	bc,#001F
+		in	b,(c)
+		ld	a,b
+		rlca
+		ret	c
+		ld	a,b
+		and	3
+		cp	3
+		ret	z
+		ld	a,b
+		rrca
+		rrca
+		and	3
+		cp	3
+		ret	z
+		xor	a
+		ld	(get_controls.havekempston+1),a
+		ld	(key_delay.havekempston+1),a
+		ret
+
 key_delay	ld	bc,#0F1F
-.loop		call	wait_end_frame
+.loop		halt
 .havekempston	jr	.tstkeys
 		xor	a
 		in	a,(KEMPSTON_JOY1_P_1F)

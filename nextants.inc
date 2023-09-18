@@ -290,6 +290,12 @@ EXTENDED_KEYS_0_NR_B0		equ $B0		;read Next compound keys as standalone keys (out
 EXTENDED_KEYS_1_NR_B1		equ $B1		;read Next compound keys as standalone keys (outside of zx48 matrix)
 ;DIVMMC_TRAP_ENABLE_1_NR_B2	equ $B2	; NOT IMPLEMENTED in core yet (as of 3.1.4), may happen in future
 ;DIVMMC_TRAP_ENABLE_2_NR_B4	equ $B4	; NOT IMPLEMENTED in core yet (as of 3.1.4), may happen in future
+INTERRUPT_CONTROL_C0		equ $C0
+INTERRUPT_NMI_ADDRESS_LSB_C2	equ $C2
+INTERRUPT_NMI_ADDRESS_MSB_C3	equ $C3
+INTERRUPT_ENABLE_0_ULA_C4	equ $C4
+INTERRUPT_ENABLE_1_CTC_C5	equ $C5
+INTERRUPT_ENABLE_2_UART_C6	equ $C6
 DEBUG_LED_CONTROL_NR_FF		equ $FF		;Turns debug LEDs on and off on TBBlue implementations that have them.
 
 ;-----------------------------------------------------------------------------

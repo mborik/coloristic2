@@ -29,7 +29,9 @@ prepare_level	cp	-1
 ;		ld	(store_undo.lastcolor+1),a
 ;		ld	(perform_move.makemove+1),a
 
-.justdraw	ld	hl,tilemap_map + PLAYFIELD_OFFSET_BASE
+.justdraw	ei
+		halt
+		ld	hl,tilemap_map + PLAYFIELD_OFFSET_BASE
 		ld	ix,playground
 		ld	a,(ix + LEVEL_OFFSET_INDEX)
 		add	hl,a
