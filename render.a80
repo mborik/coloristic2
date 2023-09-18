@@ -12,6 +12,7 @@ prepare_level	cp	-1
 		ld	de,playground
 		ld	bc,LEVEL_SIZE
 		ld	a,e
+		nextreg	MMU6_C000_NR_56, levels.page
 		ldir
 		ld	h,d
 		ld	l,e

@@ -22,7 +22,7 @@ interrupt:	di
 .testmute	ld	a,(music_muted)
 		rrca
 		jr	c,.muted
-;		call	music_play
+		call	music_play
 
 .muted		pop	af
 		pop	bc

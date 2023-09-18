@@ -12,6 +12,9 @@
 
 start:		di
 		nextreg	TURBO_CONTROL_NR_07,3
+		nextreg	PERIPHERAL_2_NR_06,%00000001 ; CPUSpeed off, NMI button off, M1 button off, PS2 off, AY
+		nextreg	PERIPHERAL_3_NR_08,%01000000 ; 128k off, Contention off, ABC, Beeper off, DAC off, Timex off, TS off
+		nextreg	PERIPHERAL_4_NR_09,%00000000 ; Stereo AY, other cfg off
 		nextreg	INTERRUPT_CONTROL_C0,%00000000
 		nextreg INTERRUPT_ENABLE_0_ULA_C4,%10000001
 		nextreg INTERRUPT_ENABLE_1_CTC_C5,%00000000
@@ -91,20 +94,18 @@ start:		di
 		ei
 		halt
 
-;		call	music_init
+		call	music_init
 		call	detect_kempston
-
-
-		nextreg	MMU6_C000_NR_56, levels.page
 
 ;--------------------------------------------------------------------------------------------
 		include "engine.a80"
 		include "render.a80"
 		include "utils.a80"
 		include "interrupt.a80"
+		include "music/p3x.a80"
 
-active_color	db	0
 music_muted	db	0
+active_color	db	0
 
 
 		align	256
@@ -158,6 +159,14 @@ sprite_data:	incbin	"gfx/numerals.spr"
 .count		equ	($ - sprite_data) / 128
 .page		equ	$$sprite_data
 		assert	$$ == $$sprite_data + 1	; must fit into two pages
+
+
+		mmu	6 7, MMU_PG_MUSIC, $C000
+;--------------------------------------------------------------------------------------------
+; Music
+music:		incbin	"music/final.pt3"
+.page		equ	$$music
+		assert	$$ == $$music + 1	; must fit into two pages
 
 
 		mmu	$C000 w, MMU_PG_LEVELS, $C000
