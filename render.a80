@@ -24,18 +24,20 @@ prepare_level	cp	-1
 		dec	bc
 		ld	(playground.current_location+0),bc
 		ld	(playground.current_location+2),bc
+	; save level offset because after undo will not exist
+		ld	a,(playground + LEVEL_OFFSET_INDEX)
+		ld	(.level_offset+2),a
 		ld	a,#CC ; call z
 		ld	(.firsttime),a
 		ld	(.endno1stTime+1),a
-;		ld	(store_undo.lastcolor+1),a
-;		ld	(perform_move.makemove+1),a
+		ld	(store_undo.lastcolor+1),a
+		ld	(perform_move.makemove+1),a
 
 .justdraw	ei
 		halt
 		ld	hl,tilemap_map + PLAYFIELD_OFFSET_BASE
+.level_offset	add	hl,0
 		ld	ix,playground
-		ld	a,(ix + LEVEL_OFFSET_INDEX)
-		add	hl,a
 		push	hl
 	; store playfield offset XY to gloworb position offset
 		call	calc_tilemap_offset_to_xy
@@ -61,11 +63,9 @@ prepare_level	cp	-1
 		ld	(draw_sprite+1),a
 		inc	l
 		ld	c,(hl)
-		push	ix
-		ld	xh,d
-		ld	xl,e
+		ld	yh,d
+		ld	yl,e
 		call	draw_sprite
-		pop	ix
 		pop	bc
 .next		inc	ix
 		add	de,4
@@ -123,6 +123,7 @@ draw_border	ld	ix,tilemap_map + TILEMAP_CHAR_WIDTH
 .endline	inc	ix
 		inc	ix
 		djnz	.row
+		ret
 
 ; calculate numeral sprite data from starting blob tile
 ;------------------------------------------------------------------------------
@@ -168,36 +169,36 @@ startile	push	de
 ; tilemap drawings
 ;------------------------------------------------------------------------------
 draw_tiles_by_base
-		ld	(ix - TILEMAP_CHAR_WIDTH - 1),a
+		ld	(iy - TILEMAP_CHAR_WIDTH - 1),a
 		inc	a
-		ld	(ix - TILEMAP_CHAR_WIDTH + 2),a
+		ld	(iy - TILEMAP_CHAR_WIDTH + 2),a
 		inc	a
-		ld	(ix + (2 * TILEMAP_CHAR_WIDTH) - 1),a
+		ld	(iy + (2 * TILEMAP_CHAR_WIDTH) - 1),a
 		inc	a
-		ld	(ix + (2 * TILEMAP_CHAR_WIDTH) + 2),a
+		ld	(iy + (2 * TILEMAP_CHAR_WIDTH) + 2),a
 		inc	a
-		ld	(ix - TILEMAP_CHAR_WIDTH),a
+		ld	(iy - TILEMAP_CHAR_WIDTH),a
 		inc	a
-		ld	(ix - TILEMAP_CHAR_WIDTH + 1),a
+		ld	(iy - TILEMAP_CHAR_WIDTH + 1),a
 		inc	a
-		ld	(ix + (2 * TILEMAP_CHAR_WIDTH)),a
+		ld	(iy + (2 * TILEMAP_CHAR_WIDTH)),a
 		inc	a
-		ld	(ix + (2 * TILEMAP_CHAR_WIDTH) + 1),a
+		ld	(iy + (2 * TILEMAP_CHAR_WIDTH) + 1),a
 		inc	a
-		ld	(ix - 1),a
+		ld	(iy - 1),a
 		inc	a
-		ld	(ix + 2),a
+		ld	(iy + 2),a
 		inc	a
-		ld	(ix + TILEMAP_CHAR_WIDTH - 1),a
+		ld	(iy + TILEMAP_CHAR_WIDTH - 1),a
 		inc	a
-		ld	(ix + TILEMAP_CHAR_WIDTH + 2),a
+		ld	(iy + TILEMAP_CHAR_WIDTH + 2),a
 		ret
 
 draw_center_of_tile
-		ld	(ix + 0),h
-		ld	(ix + 1),l
-		ld	(ix + TILEMAP_CHAR_WIDTH),b
-		ld	(ix + TILEMAP_CHAR_WIDTH + 1),c
+		ld	(iy + 0),h
+		ld	(iy + 1),l
+		ld	(iy + TILEMAP_CHAR_WIDTH),b
+		ld	(iy + TILEMAP_CHAR_WIDTH + 1),c
 		ret
 
 draw_base	ld	a,tilemap.base.ptr
@@ -224,10 +225,11 @@ draw_blob	ld	a,c
 		sub	tilemap.colorblob.C1
 		swapnib
 		add	a,tilemap.base.C1
-		ld	(ix + 0),a
-		ld	(ix + 1),a
-		ld	(ix + TILEMAP_CHAR_WIDTH),a
-		ld	(ix + TILEMAP_CHAR_WIDTH + 1),a
+draw_center_color
+		ld	(iy + 0),a
+		ld	(iy + 1),a
+		ld	(iy + TILEMAP_CHAR_WIDTH),a
+		ld	(iy + TILEMAP_CHAR_WIDTH + 1),a
 		ret
 
 draw_blocked	ld	a,tilemap.blocked.ptr
@@ -250,9 +252,125 @@ draw_tele	ld	a,tilemap.base.ptr
 .phase		add	a,0
 		jr	draw_base.center
 
-draw_path	ret
+draw_cross	; TODO setup cross sprite overlay and drop to path code
 
-draw_cross	ret
+draw_path	ld	a,c
+		and	31
+		add	a,low path_corners
+		ld	l,a
+		ld	h,high path_corners
+		ld	a,(hl)
+		ex	af,af'
+		push	hl
+		push	de
+		ld	a,c
+		swapnib
+		rrca
+		and	7
+		ld	b,a
+		dec	a
+		swapnib
+		ld	c,a
+		call	draw_tiles_by_base
+		ld	a,tilemap.edging.path_L
+		add	a,c
+		ld	h,a
+		inc	a
+		ld	l,a
+		inc	a
+		ld	d,a
+		inc	a
+		ld	e,a
+		ex	af,af'
+		rrca
+		jr	nc,.edge1
+		ld	(iy - TILEMAP_CHAR_WIDTH - 1),d
+		ld	(iy - TILEMAP_CHAR_WIDTH),d
+		ld	(iy - 1),b
+.edge1		rrca
+		jr	nc,.edge2
+		ld	(iy - TILEMAP_CHAR_WIDTH - 1),h
+		ld	(iy - TILEMAP_CHAR_WIDTH),b
+		ld	(iy - 1),h
+.edge2		rrca
+		jr	nc,.edge3
+		ld	(iy - TILEMAP_CHAR_WIDTH + 2),d
+		ld	(iy - TILEMAP_CHAR_WIDTH + 1),d
+		ld	(iy + 2),b
+.edge3		rrca
+		jr	nc,.edge4
+		ld	(iy - TILEMAP_CHAR_WIDTH + 2),l
+		ld	(iy - TILEMAP_CHAR_WIDTH + 1),b
+		ld	(iy + 2),l
+.edge4		rrca
+		jr	nc,.edge5
+		ld	(iy + TILEMAP_CHAR_WIDTH - 1),b
+		ld	(iy + (2 * TILEMAP_CHAR_WIDTH) - 1),e
+		ld	(iy + (2 * TILEMAP_CHAR_WIDTH)),e
+.edge5		rrca
+		jr	nc,.edge6
+		ld	(iy + TILEMAP_CHAR_WIDTH - 1),h
+		ld	(iy + (2 * TILEMAP_CHAR_WIDTH) - 1),h
+		ld	(iy + (2 * TILEMAP_CHAR_WIDTH)),b
+.edge6		rrca
+		jr	nc,.edge7
+		ld	(iy + TILEMAP_CHAR_WIDTH + 2),b
+		ld	(iy + (2 * TILEMAP_CHAR_WIDTH) + 1),e
+		ld	(iy + (2 * TILEMAP_CHAR_WIDTH) + 2),e
+.edge7		rrca
+		jr	nc,.iscorner
+		ld	(iy + TILEMAP_CHAR_WIDTH + 2),l
+		ld	(iy + (2 * TILEMAP_CHAR_WIDTH) + 1),b
+		ld	(iy + (2 * TILEMAP_CHAR_WIDTH) + 2),l
+.iscorner	pop	de
+		pop	hl
+		inc	l
+		ld	a,(hl)
+		or	a
+		jr	z,.center_color
+		srl	a
+		jr	nc,.corner1
+		ld	(iy - TILEMAP_CHAR_WIDTH - 1),b
+		ld	(iy - TILEMAP_CHAR_WIDTH),b
+		ld	(iy - 1),b
+.corner1	srl	a
+		jr	nc,.corner2
+		ld	(iy - TILEMAP_CHAR_WIDTH + 1),b
+		ld	(iy - TILEMAP_CHAR_WIDTH + 2),b
+		ld	(iy + 2),b
+.corner2	srl	a
+		jr	nc,.corner3
+		ld	(iy + (2 * TILEMAP_CHAR_WIDTH) - 1),b
+		ld	(iy + (2 * TILEMAP_CHAR_WIDTH)),b
+		ld	(iy + TILEMAP_CHAR_WIDTH - 1),b
+.corner3	srl	a
+		jr	nc,.ispoint
+		ld	(iy + (2 * TILEMAP_CHAR_WIDTH) + 2),b
+		ld	(iy + (2 * TILEMAP_CHAR_WIDTH) + 1),b
+		ld	(iy + TILEMAP_CHAR_WIDTH + 2),b
+.ispoint	jr	z,.center_color
+		ld	a,b
+		add	a,(low playground.current_location) - 4
+		ld	l,a
+		ld	h,high playground.current_location
+		ld	a,(hl)
+		cp	xl
+		ret	nz
+		ld	a,b
+		rlca
+		rlca
+		add	a,tilemap.endpoint.C1 - tilemap.base.ptr
+		ld	(iy + 0),a
+		inc	a
+		ld	(iy + 1),a
+		inc	a
+		ld	(iy + TILEMAP_CHAR_WIDTH),a
+		inc	a
+		ld	(iy + TILEMAP_CHAR_WIDTH + 1),a
+		ret
+
+.center_color	ld	a,b
+		jp	draw_center_color
 
 ; updating of numeral sprites with current steps
 ;------------------------------------------------------------------------------

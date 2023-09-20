@@ -39,20 +39,357 @@ tmplevel	cp	-1
 		; TODO print level
 
 mainloop	call	get_controls.entry
+		cp	K_LEFT
+		jr	c,mainloop
+		cp	K_UP + 1
+		jp	c,perform_move
+
+;		cp	K_BREAK		;info
+;		jp	z,info_screen
 
 		cp	K_FIRE		;change color
-		jr	z,next_level
+		jr	z,change_color
+
+		cp	'c'		;level code
+		jp	z,next_level	; TODO
+
+		cp	'm'		;music off/on
+		jr	z,manage_music
+
+		cp	'u'		;undo
+		jr	z,perform_undo
+
+		cp	'l'		;select level
+		ret	z
+
+		cp	'r'		;reload
+		jr	z,do_restart
+
+		cp	'1'
+		jr	c,mainloop_cont
+		cp	'5'
+		jr	nc,mainloop_cont
+
+		sub	'1'
+		push	af
+		add	a,low playground.steps
+		ld	l,a
+		ld	h,high playground.steps
+		ld	a,(hl)
+		or	a
+		jr	nz,.setact
+		pop	af
+		jr	mainloop_cont
+
+.setact		pop	af
+		ld	c,a
+		ld	a,(active_color)
+		cp	c
+		jr	z,mainloop_cont
+		call	tick
+		ld	a,c
+		ld	(active_color),a
+		call	reset_gloworb
+
 mainloop_cont	call	key_delay
 		jr	mainloop
 
-next_level
-; 		call	beeeep
+manage_music	call	tick
+		call	mute_unmute
+		jr	mainloop_cont
+
+perform_undo	call	undo
+		jr	mainloop_cont
+
+change_color	call	tick
+		ld	a,(active_color)
+		inc	a
+		and	3
+		ld	e,a
+		add	a,low playground.steps
+		ld	l,a
+		ld	h,high playground.steps
+		xor	a
+		call	findplayablecolor.findnext
+		jr	mainloop_cont
+
+do_restart	call	tick
+;		call	tick
+;		dec	a
+;		jr	nz,do_restart
+		jp	start_level
+
+undo		ld	a,(undo_area+PLAYFIELD_SIZE-8)
+		or	a
+		ret	z
+		ld	b,9
+.tock		call	tick
+		djnz	.tock
+		ld	hl,undo_area
+		ld	de,playground
+		ld	bc,PLAYFIELD_SIZE*UNDO_LEVELS
+		ld	a,e
+		ldir
+		ld	h,d
+		ld	l,e
+		inc	de
+		ld	bc,PLAYFIELD_SIZE-1
+		ld	(hl),a
+		ldir
+		dec	a
+		ld	(store_undo.lastcolor+1),a
+		ld	(perform_move.makemove+1),a
+		ld	hl,playground+LEVEL_OFFSET_INDEX
+		ld	a,(hl)	; pick stored active_color
+		ld	(hl),c	; and discard from level data
+		push	af
+		call	prepare_level.justdraw
+		pop	af
+		ld	(active_color),a
+		ret
+
+store_undo	push	hl
+		push	de
+		push	bc
+		ld	a,(active_color)
+.lastcolor	cp	#CC
+		jr	z,.nop
+		ld	(.lastcolor+1),a
+		ld	hl,playground+PLAYFIELD_SIZE*UNDO_LEVELS-1
+		ld	de,undo_area+PLAYFIELD_SIZE*UNDO_LEVELS-1
+		ld	bc,PLAYFIELD_SIZE*UNDO_LEVELS
+		lddr
+		ld	(undo_area+LEVEL_OFFSET_INDEX),a
+		xor	a
+		ld	(perform_move.makemove+1),a
+.nop		pop	bc
+		pop	de
+		pop	hl
+		ret
+
+perform_move	rlca
+		add	a,low ctrl2direction
+		ld	h,high ctrl2direction
+		ld	l,a
+		jr	nc,.getdir
+		inc	h
+.getdir		ld	d,(hl)
+		inc	hl
+		ld	a,(hl)
+		ld	(.whatatdir+2),a
+		ld	(.wraponedge+1),a
+		ld	e,a
+
+		ld	a,(active_color)
+		ld	c,a
+		add	a,low playground.steps
+		ld	l,a
+		ld	h,high playground.current_location
+		ex	af,af'
+		ld	a,(hl)	; check remaining steps
+		or	a
+		jr	z,.forbidden
+		ex	af,af'
+		add	a,playground.current_location - playground.steps
+		ld	l,a
+		ld	a,(hl)
+		ld	xl,a
+		ld	xh,high playground
+		add	a,e
+		ld	l,a
+;		ld	h,high playground
+		ld	b,(ix+0)
+.whatatdir	ld	e,(ix+0)
+
+; ix = position, b = tile at current position,
+; c = color, d = direction, e = tile at following position
+
+		xor	a	; reset flags
+		ld	(.additional+1),a
+
+		or	e	; is void?
+		jr	z,.forbidden
+
+.restartwrap	bit	7,e	; is filled?
+		jr	nz,.forbidden
+		bit	5,e	; is teleport?
+		jr	nz,.teleport
+		ld	a,#0C
+		and	e
+		cp	4	; is another start tile?
+		jr	z,.forbidden
+		cp	8	; is color tick?
+		jr	z,.colortick
+		cp	12	; is arrow?
+		jr	z,.dirarrow
+		ld	a,e
+		dec	a	; is empty tile?
+		jr	z,.makemove
+		dec	a
+		dec	a	; is blocker?
+		jr	z,.forbidden
+		inc	a	; is switch?
+		call	z,.switch
+
+.makemove	ld	a,0	; nonzero when we storing undo
+		or	a
+		call	nz,store_undo
+;		bit	4,e	; TODO rotation handling
+;		call	nz,.rotation
+		ld	a,c
+		swapnib
+		ld	e,a	; e = color << 4
+		bit	7,b
+		jr	z,.firstmove
+		ld	a,b	; last tile dir
+		and	3
+		rlca
+		rlca
+		or	d	; plus current dir
+		push	hl
+		ld	h,high dir2tile
+		ld	l,a
+		ld	a,(hl)	; get target path-tile
+		pop	hl
+		or	e	; add color << 4
+		bit	6,b	; was cross path tile?
+		jr	z,.finish
+		set	6,a
+.finish		ld	(ix+0),a
+		ld	a,#86	; mirrored target tile
+		xor	d
+		or	e	; color << 4
+.additional	or	0
+		ld	(hl),a
+		call	tick
+		call	finish_move
+.forbidden	call	key_delay
+		jp	mainloop
+
+.firstmove	ld	a,#84
+		or	d
+		or	e	; color << 4
+		jr	.finish
+
+.colortick	ld	a,e	; follow-tile
+		and	3
+		cp	c	; color
+		jr	nz,.forbidden
+		jr	.makemove
+
+.dirarrow	ld	a,e	; follow-tile
+		and	3
+		cp	d	; direction
+		jr	nz,.forbidden
+		jr	.makemove
+
+.teleport	ld	a,e	; follow-tile
+		and	3
+		cp	d	; direction
+		jr	nz,.forbidden
+		ld	a,d
+		rrca
+		jr	c,.wrapvert
+		rrca
+		jr	nc,.wraphoriz
+		ld	a,-8
+		and	l
+		jr	.wrapfind
+.wraphoriz	ld	a,7
+		or	l
+		jr	.wrapfind
+.wrapvert	ex	af,af'
+		ld	a,7
+		and	l
+		ld	l,a
+		ex	af,af'
+		rrca
+		jr	c,.wrapfindloop
+		ex	af,af'
+		or	PLAYFIELD_H << 3
+.wrapfind	ld	l,a	; we got furthest opposite edge
+.wrapfindloop	ld	e,(hl)
+		ld	a,(hl)
+		or	a
+		jp	nz,.restartwrap
+.wraponedge	ld	a,0
+		add	a,l
+		ld	l,a
+		jr	.wrapfindloop
+
+.switch		push	hl
+		push	bc
+		ld	b,LEVEL_OFFSET_INDEX
+		ld	hl,playground
+.switchloop	ld	a,(hl)
+		cp	3	; blocked tile
+		jr	nz,.switchnext
+.switchnext	inc	l
+		djnz	.switchloop
+		ld	a,#80	; switched path additional flag
+		ld	(.additional+1),a
+		pop	bc
+		pop	hl
+		ret
+
+.powerup	push	hl
+		ld	a,c	; color
+		add	a,low playground.steps
+		ld	l,a
+		ld	h,high playground.steps
+		ld	a,e	; follow-tile
+		and	7
+		add	a,(hl)	; add to steps
+		ld	(hl),a
+		pop	hl
+		ret
+
+finish_move	ld	e,l
+		ld	a,c
+		add	a,low playground.current_location
+		ld	l,a
+		ld	h,high playground.current_location
+		ld	(hl),e	; update location
+		add	a,+(playground.steps - playground.current_location)
+		ld	l,a
+		dec	(hl)	; update steps
+		push	hl
+		push	ix
+		call	prepare_level.justdraw
+		call	redraw_numerals
+		pop	ix
+		pop	hl
+		ld	l,low playground.steps
+		ld	a,(hl)
+		inc	l
+		or	(hl)
+		inc	l
+		or	(hl)
+		inc	l
+		or	(hl)
+		ret	nz
+
+		ld	l,a
+		ld	b,LEVEL_OFFSET_INDEX
+.testfield	ld	c,(hl)
+		inc	l
+		xor	a
+		or	c
+		jr	z,.testnext
+		cp	3
+		jr	z,.testnext
+		bit	7,c
+		ret	z
+.testnext	djnz	.testfield
+		pop	af ; throw away ret and move to next level
+
+next_level	call	beeeep
 		ld	a,-1
 		ld	(tmplevel+1),a
 
 ; 		ld	b,50
 ; .waitsec	ei
-;		halt
+; 		halt
 ; 		djnz	.waitsec
 
 		ld	a,(level+1)
@@ -61,9 +398,46 @@ next_level
 		cp	LEVEL_CNT
 ;		jr	nc,game_end
 
-; .wkey		call	get_controls.entry
-; 		jr	z,.wkey
+.wkey		call	get_controls.entry
+		jr	z,.wkey
 		jp	play
+
+tick		push	af
+		push	bc
+; 		ld	a,C_BG_PAPER
+; 		ld	b,16
+; .loop		out	(254),a
+; 		xor	16
+; 		nop
+; 		nop
+; 		djnz	.loop
+		pop	bc
+		pop	af
+		ret
+
+beeeep		push	af
+		push	bc
+; 		ld	bc,0
+; 		ld	a,C_BG_PAPER
+; .loop1:	push	bc
+; .loop2:	out	(254),a
+; 		djnz	.loop2
+; 		pop	bc
+; 		xor	16
+; 		dec	b
+; 		dec	c
+; 		jr	nz,.loop1
+		pop	bc
+		pop	af
+		ret
+
+mute_unmute	ld	a,(music_muted)
+		xor	1
+		ld	(music_muted),a
+		and	1
+		ret	z
+		call	music_stop
+		ret
 
 ;------------------------------------------------------------------------------
 
@@ -159,3 +533,9 @@ get_key_core	ld	bc,(ULA_P_FE << 8) | ULA_P_FE
 		include "keymap.inc"
 
 kempdefs	db	K_RIGHT, K_LEFT, K_DOWN, K_UP, K_FIRE, 0
+
+ctrl2direction	= $ - (K_LEFT * 2)
+		db	DIRECTION_LEFT, -1
+		db	DIRECTION_RIGHT, 1
+		db	DIRECTION_DOWN, PLAYFIELD_W
+		db	DIRECTION_UP, -PLAYFIELD_W
