@@ -12,7 +12,7 @@
                 "memoryModel": "ZXNEXT",
                 "ulaScreen": false,
                 "zxBorderWidth": 0,
-                "cpuLoadInterruptRange": 4,
+                "cpuFrequency": 28000000,
                 "vsyncInterrupt": true,
                 "zxKeyboard": true,
                 "kempstonJoy": true
