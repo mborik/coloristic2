@@ -434,39 +434,34 @@ findplayablecolor
 		ld	(active_color),a
 
 reset_gloworb	ld	a,(active_color)
-		ld	c,a	; keep color in C
+		ld	hl,playground.current_location
+		add	hl,a
+		inc	a	; color to palette shift
+		swapnib		; PPPPxxxx
+		ld	c,a	; store to C
 		ld	de,$FF00 | PLAYFIELD_W
-		add	a,low playground.current_location
-		ld	l,a
-		ld	h,high playground.current_location
 		ld	a,(hl)
 .row		inc	d
 		sub	e
 		jr	nc,.row
+		ld	hl,-1
 		add	a,e	; X * 32
+		sla	a
 		rlca
-		rlca
-		dec	a
-		rlca
-		rlca
-		ld	l,a
-		ld	h,0
+		add	hl,a
+		add	hl,hl
+		add	hl,hl
 		add	hl,hl	; store to HL
 .playfield_x	add	hl,0
-
-		ld	a,c	; color to palette shift
-		inc	a
-		swapnib		; PPPPxxxx
-		ld	c,a	; store to C
 
 		ld	a,d	; Y * 32
 		rlca
 		rlca
-		dec	a
 		rlca
 		rlca
 		rlca
 .playfield_y	add	a,0
+		sub	8
 		ld	b,a	; store to B
 
 		ex	hl,de
@@ -493,9 +488,9 @@ reset_gloworb	ld	a,(active_color)
 		or	d
 		ld	(hl),a	; S_SPRITE_ATTR.palx8
 		inc	l
-		ld	(hl),#40
+		ld	(hl),#40 ; S_SPRITE_ATTR.vpat
 		inc	l
-		ld	(hl),#80
+		ld	(hl),#80 ; S_SPRITE_ATTR.ext
 		inc	l
 		ret
 

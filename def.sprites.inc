@@ -27,9 +27,13 @@ sprite	; constants placeholder
 		align	256
 
 gloworb_animation_sprattrs:
-	dup ($100 - (sprite.gloworb.anicount * 8)) / 2
+	dup ($100 - (sprite.gloworb.anicount * 8 * 2)) / 2
 		db	$40
 		db	$80
+	edup
+	dup sprite.gloworb.anicount, pattern?
+.pattern = (pattern? * 4) + sprite.gloworb
+		glowframe .pattern
 	edup
 	dup sprite.gloworb.anicount, pattern?
 .pattern = (pattern? * 4) + sprite.gloworb
