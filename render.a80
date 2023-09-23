@@ -444,9 +444,9 @@ reset_gloworb	ld	a,(active_color)
 .row		inc	d
 		sub	e
 		jr	nc,.row
-		ld	hl,-1
 		add	a,e	; X * 32
-		sla	a
+		ld	hl,-1
+		rlca
 		rlca
 		add	hl,a
 		add	hl,hl
@@ -466,21 +466,23 @@ reset_gloworb	ld	a,(active_color)
 
 		ex	hl,de
 		ld	hl,sprattr.gloworbP1
+		ld	a,#20	; anchor sprite
 		call	.store_sprattr
-		push	de
-		add	de,16
+		xor	a
+		ld	(update_gloworb.ptr+1),a
+		ld	de,16
+		ld	b,0
 		call	.store_sprattr
-		pop	de
-		ld	a,b
-		add	a,16
-		ld	b,a
+		ld	de,0
+		ld	b,16
 		call	.store_sprattr
-		add	de,16
+		ld	de,16
 		call	.store_sprattr
 		ld	(update_gloworb+1),a
 		ret
 
-.store_sprattr	ld	(hl),e	; S_SPRITE_ATTR.x
+.store_sprattr	ex	af,af'
+		ld	(hl),e	; S_SPRITE_ATTR.x
 		inc	l
 		ld	(hl),b	; S_SPRITE_ATTR.y
 		inc	l
@@ -490,11 +492,16 @@ reset_gloworb	ld	a,(active_color)
 		inc	l
 		ld	(hl),#40 ; S_SPRITE_ATTR.vpat
 		inc	l
-		ld	(hl),#80 ; S_SPRITE_ATTR.ext
+		ex	af,af'
+		or	#80
+		ld	(hl),a	; S_SPRITE_ATTR.ext
 		inc	l
 		ret
 
-update_gloworb	ld	de,gloworb_animation_sprattrs
+update_gloworb	ld	a,0
+		or	a
+		ret	z
+.ptr		ld	de,gloworb_animation_sprattrs
 		ld	hl,sprattr.gloworbP1 + 3
 		ld	bc,S_SPRITE_ATTR - 1
 		ld	a,(de)
@@ -529,11 +536,20 @@ update_gloworb	ld	de,gloworb_animation_sprattrs
 		ld	(hl),a
 		inc	e
 		ex	de,hl
-		ld	(update_gloworb+1),hl
+		ld	(update_gloworb.ptr+1),hl
+		xor	a
+		or	l
+		jr	z,.finaltouch
 		ld	bc,SPRITE_SLOT_SELECT_P_303B
 		ld	a,4
 		out	(c),a	; select slot 0
 		ld	hl,sprattr.gloworbP1
 		ld	bc,(4 * S_SPRITE_ATTR * 256) + SPRITE_ATTRIBUTE_P_57
 		otir
+		ret
+
+.finaltouch	call	update_gloworb
+		xor	a
+		ld	(update_gloworb+1),a
+		ld	(update_gloworb.ptr+1),a
 		ret

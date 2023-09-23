@@ -13,31 +13,37 @@ sprite	; constants placeholder
 
 ;------------------------------------------------------------------------------
 
-	macro sprPatExt pattern?
-		db	$C0 | (pattern? >> 1)
-		db	$80 | ((pattern? & 1) << 6)
+	macro sprPatExt pattern?, enabled?, anchor?
+		db	$40 | (enabled? << 7) | (pattern? >> 1)
+	if anchor?
+		db	$80 | (anchor? << 5) | ((pattern? & 1) << 6)
+	else
+		db	$40 | ((pattern? & 1) << 5)
+	endif
 	endm
-	macro glowframe pattern?
-		sprPatExt pattern?
-		sprPatExt (pattern? + 1)
-		sprPatExt (pattern? + 2)
-		sprPatExt (pattern? + 3)
+	macro glowframe pattern?, enabled?
+		sprPatExt pattern?, enabled?, 1
+		sprPatExt (pattern? + 1), enabled?, 0
+		sprPatExt (pattern? + 2), enabled?, 0
+		sprPatExt (pattern? + 3), enabled?, 0
 	endm
 
 		align	256
 
 gloworb_animation_sprattrs:
-	dup ($100 - (sprite.gloworb.anicount * 8 * 2)) / 2
-		db	$40
-		db	$80
+	dup ($100 - (sprite.gloworb.anicount * 8 * 2)) / 8
+		sprPatExt 0, 0, 1
+		sprPatExt 0, 0, 0
+		sprPatExt 0, 0, 0
+		sprPatExt 0, 0, 0
 	edup
 	dup sprite.gloworb.anicount, pattern?
 .pattern = (pattern? * 4) + sprite.gloworb
-		glowframe .pattern
+		glowframe .pattern, 1
 	edup
 	dup sprite.gloworb.anicount, pattern?
 .pattern = (pattern? * 4) + sprite.gloworb
-		glowframe .pattern
+		glowframe .pattern, 1
 	edup
 
 ;------------------------------------------------------------------------------
