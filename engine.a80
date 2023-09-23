@@ -23,7 +23,7 @@ start_level
 		ei
 		halt
 
-level		ld	a,60 ; 34 ; TODO TESTING
+level		ld	a,90 ; 34 ; TODO TESTING
 tmplevel	cp	-1
 		jr	z,.tmp
 
@@ -177,7 +177,7 @@ perform_move	rlca
 		inc	hl
 		ld	a,(hl)
 		ld	(.whatatdir+2),a
-		ld	(.wraponedge+1),a
+		ld	(.switchreset+2),a
 		ld	e,a
 
 		ld	a,(active_color)
@@ -236,7 +236,12 @@ perform_move	rlca
 		call	nz,store_undo
 ;		bit	4,e	; TODO rotation handling
 ;		call	nz,.rotation
-		ld	a,c
+		call	.applymove
+		call	finish_move
+.forbidden	call	key_delay
+		jp	mainloop
+
+.applymove	ld	a,c
 		swapnib
 		ld	e,a	; e = color << 4
 		bit	7,b
@@ -261,10 +266,7 @@ perform_move	rlca
 		or	e	; color << 4
 .additional	or	0
 		ld	(hl),a
-		call	tick
-		call	finish_move
-.forbidden	call	key_delay
-		jp	mainloop
+		jp	tick
 
 .firstmove	ld	a,#84
 		or	d
@@ -283,52 +285,49 @@ perform_move	rlca
 		jr	nz,.forbidden
 		jr	.makemove
 
-.teleport	ld	a,e	; follow-tile
-		and	3
-		cp	d	; direction
-		jr	nz,.forbidden
-		ld	a,d
-		rrca
-		jr	c,.wrapvert
-		rrca
-		jr	nc,.wraphoriz
-		ld	a,-8
-		and	l
-		jr	.wrapfind
-.wraphoriz	ld	a,7
-		or	l
-		jr	.wrapfind
-.wrapvert	ex	af,af'
-		ld	a,7
-		and	l
+.teleport	call	.applymove
+		push	bc
+		ld	b,l
+		ld	a,c
+		add	a,low playground.current_location
 		ld	l,a
-		ex	af,af'
-		rrca
-		jr	c,.wrapfindloop
-		ex	af,af'
-		or	PLAYFIELD_H << 3
-.wrapfind	ld	l,a	; we got furthest opposite edge
-.wrapfindloop	ld	e,(hl)
-		ld	a,(hl)
-		or	a
-		jp	nz,.restartwrap
-.wraponedge	ld	a,0
-		add	a,l
-		ld	l,a
-		jr	.wrapfindloop
+		ld	h,high playground.current_location
+		ld	(hl),b	; update location
+		push	ix
+		call	prepare_level.justdraw+2
+		pop	ix
+		ld	b,PLAYFIELD_CHECK_SIZE
+		ld	hl,playground
+.teleloop	ld	a,(hl)
+		cp	32
+		jr	z,.telefound
+		inc	l
+		djnz	.teleloop
+.telefound	pop	bc
+		ld	a,4
+		add	a,c
+		ld	(hl),a
+		call	finish_move
+		jr	.forbidden
 
 .switch		push	hl
 		push	bc
-		ld	b,PLAYFIELD_CHECK_SIZE
+		ld	bc,1 | (PLAYFIELD_CHECK_SIZE << 8)
+.switchreset	ld	(ix+0),c
 		ld	hl,playground
 .switchloop	ld	a,(hl)
-		cp	3	; blocked tile
-		jr	nz,.switchnext
-.switchnext	inc	l
+		cp	2	; another switch tile
+		jr	z,.moreswitches
+		inc	l
 		djnz	.switchloop
-		ld	a,#80	; switched path additional flag
-		ld	(.additional+1),a
-		pop	bc
+		ld	b,PLAYFIELD_CHECK_SIZE
+.clearblocked	dec	l
+		ld	a,(hl)
+		cp	3	; blocked tile
+		jr	nz,.next
+		ld	(hl),c
+.next		djnz	.clearblocked
+.moreswitches	pop	bc
 		pop	hl
 		ret
 
@@ -350,13 +349,12 @@ finish_move	ld	e,l
 		ld	l,a
 		ld	h,high playground.current_location
 		ld	(hl),e	; update location
-		add	a,+(playground.steps - playground.current_location)
+		sub	playground.current_location - playground.steps
 		ld	l,a
 		dec	(hl)	; update steps
 		push	hl
 		push	ix
 		call	prepare_level.justdraw
-		call	redraw_numerals
 		pop	ix
 		pop	hl
 		ld	l,low playground.steps

@@ -15,4 +15,5 @@
 	"z80-macroasm.suggestOnInstructions": false,
 	"z80-macroasm.seekSymbolsThroughWorkspace": true,
 	"editor.formatOnType": false,
+	"color-highlight.enable": false,
 }
