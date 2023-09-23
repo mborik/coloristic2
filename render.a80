@@ -10,23 +10,38 @@ prepare_level	cp	-1
 		ld	hl,levels
 		add	hl,de
 		ld	de,playground
-		ld	bc,LEVEL_SIZE
-		ld	a,e
 		nextreg	MMU6_C000_NR_56, levels.page
+		ld	a,LEVEL_HEIGHT
+.row		ld	bc,LEVEL_WIDTH
 		ldir
+		ld	(hl),b
+		inc	de
+		dec	a
+		jr	nz,.row
+		push	hl
 		ld	h,d
 		ld	l,e
 		inc	de
-		ld	bc,PLAYFIELD_SIZE*UNDO_LEVELS-1
+		ld	(hl),a
+		ld	bc,LEVEL_WIDTH
+		ldir
+		pop	hl
+		ldi
+		ld	(de),a
+		inc	de
+	dup STEP_COUNT_SIZE
+		ldi
+	edup
+		ld	h,d
+		ld	l,e
+		inc	de
+		ld	bc,STEP_COUNT_SIZE + (PLAYFIELD_SNAPSHOT_SIZE * UNDO_LEVELS - 1)
 		ld	(hl),a
 		ldir
 
 		dec	bc
 		ld	(playground.current_location+0),bc
 		ld	(playground.current_location+2),bc
-	; save level offset because after undo will not exist
-		ld	a,(playground + LEVEL_OFFSET_INDEX)
-		ld	(.level_offset+2),a
 		ld	a,#CC ; call z
 		ld	(.firsttime),a
 		ld	(.endno1stTime+1),a
@@ -36,16 +51,17 @@ prepare_level	cp	-1
 .justdraw	ei
 		halt
 		ld	hl,tilemap_map + PLAYFIELD_OFFSET_BASE
-.level_offset	add	hl,0
 		ld	ix,playground
+		ld	a,(ix+PLAYFIELD_SIZE)
+		add	hl,a
 		push	hl
 	; store playfield offset XY to gloworb position offset
 		call	calc_tilemap_offset_to_xy
 		ld	(reset_gloworb.playfield_x+2),hl
 		ld	(reset_gloworb.playfield_y+1),a
 		pop	de
-		ld	c,PLAYFIELD_H
-.rows		ld	b,PLAYFIELD_W
+		ld	c,LEVEL_HEIGHT
+.rows		ld	b,LEVEL_WIDTH
 		push	de
 .cols		ld	a,(ix+0)
 		or	a
@@ -70,6 +86,7 @@ prepare_level	cp	-1
 .next		inc	ix
 		add	de,4
 		djnz	.cols
+		inc	ix ; extra gap for board checks
 		pop	de
 		add	de,PLAYFIELD_TILE_HEIGHT
 		dec	c

@@ -23,7 +23,7 @@ start_level
 		ei
 		halt
 
-level		ld	a,0
+level		ld	a,60 ; 34 ; TODO TESTING
 tmplevel	cp	-1
 		jr	z,.tmp
 
@@ -119,27 +119,27 @@ do_restart	call	tick
 ;		jr	nz,do_restart
 		jp	start_level
 
-undo		ld	a,(undo_area+PLAYFIELD_SIZE-8)
-		or	a
-		ret	z
+undo	;	ld	a,(undo_area+PLAYFIELD_SIZE-8) ; TODO FIXME
+	;	or	a
+	;	ret	z
 		ld	b,9
 .tock		call	tick
 		djnz	.tock
 		ld	hl,undo_area
 		ld	de,playground
-		ld	bc,PLAYFIELD_SIZE*UNDO_LEVELS
+		ld	bc,PLAYFIELD_SNAPSHOT_SIZE * UNDO_LEVELS
 		ld	a,e
 		ldir
 		ld	h,d
 		ld	l,e
 		inc	de
-		ld	bc,PLAYFIELD_SIZE-1
+		ld	bc,PLAYFIELD_SNAPSHOT_SIZE - 1
 		ld	(hl),a
 		ldir
 		dec	a
 		ld	(store_undo.lastcolor+1),a
 		ld	(perform_move.makemove+1),a
-		ld	hl,playground+LEVEL_OFFSET_INDEX
+		ld	hl,playground.active_color
 		ld	a,(hl)	; pick stored active_color
 		ld	(hl),c	; and discard from level data
 		push	af
@@ -155,11 +155,11 @@ store_undo	push	hl
 .lastcolor	cp	#CC
 		jr	z,.nop
 		ld	(.lastcolor+1),a
-		ld	hl,playground+PLAYFIELD_SIZE*UNDO_LEVELS-1
-		ld	de,undo_area+PLAYFIELD_SIZE*UNDO_LEVELS-1
-		ld	bc,PLAYFIELD_SIZE*UNDO_LEVELS
+		ld	hl,playground + PLAYFIELD_SNAPSHOT_SIZE * UNDO_LEVELS - 1
+		ld	de,undo_area + PLAYFIELD_SNAPSHOT_SIZE * UNDO_LEVELS - 1
+		ld	bc,PLAYFIELD_SNAPSHOT_SIZE * UNDO_LEVELS
 		lddr
-		ld	(undo_area+LEVEL_OFFSET_INDEX),a
+		ld	(undo_area.active_color),a
 		xor	a
 		ld	(perform_move.makemove+1),a
 .nop		pop	bc
@@ -319,7 +319,7 @@ perform_move	rlca
 
 .switch		push	hl
 		push	bc
-		ld	b,LEVEL_OFFSET_INDEX
+		ld	b,PLAYFIELD_CHECK_SIZE
 		ld	hl,playground
 .switchloop	ld	a,(hl)
 		cp	3	; blocked tile
@@ -370,7 +370,7 @@ finish_move	ld	e,l
 		ret	nz
 
 		ld	l,a
-		ld	b,LEVEL_OFFSET_INDEX
+		ld	b,PLAYFIELD_CHECK_SIZE
 .testfield	ld	c,(hl)
 		inc	l
 		xor	a

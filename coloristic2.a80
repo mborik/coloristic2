@@ -108,14 +108,20 @@ music_muted	db	0
 active_color	db	0
 
 
+		assert	$ < (playground - PLAYFIELD_W)
+
 		align	256
 
-playground	ds	PLAYFIELD_SIZE
+playground	ds	PLAYFIELD_SNAPSHOT_SIZE
+.offset_base = playground + PLAYFIELD_SIZE
+.active_color = playground + PLAYFIELD_SIZE + 1
 .steps = $ - (STEP_COUNT_SIZE * 2)
 .current_location = $ - STEP_COUNT_SIZE
 
-undo_area	ds	PLAYFIELD_SIZE * UNDO_LEVELS
+undo_area	ds	PLAYFIELD_SNAPSHOT_SIZE * UNDO_LEVELS
+.active_color = undo_area + PLAYFIELD_SIZE + 1
 
+		assert	low $ <= high $
 		org	(high $) << 8 | (high $)
 int_jumper	jp	interrupt
 
