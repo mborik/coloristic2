@@ -455,17 +455,14 @@ reset_gloworb	ld	a,(active_color)
 .playfield_x	add	hl,0
 
 		ld	a,d	; Y * 32
-		rlca
-		rlca
-		rlca
-		rlca
+		swapnib
 		rlca
 .playfield_y	add	a,0
 		sub	8
 		ld	b,a	; store to B
 
 		ex	hl,de
-		ld	hl,sprattr.gloworbP1
+		ld	hl,sprattr.gloworb
 		ld	a,#20	; anchor sprite
 		call	.store_sprattr
 		xor	a
@@ -502,7 +499,7 @@ update_gloworb	ld	a,0
 		or	a
 		ret	z
 .ptr		ld	de,gloworb_animation_sprattrs
-		ld	hl,sprattr.gloworbP1 + 3
+		ld	hl,sprattr.gloworb + 3
 		ld	bc,S_SPRITE_ATTR - 1
 		ld	a,(de)
 		ld	(hl),a
@@ -543,7 +540,7 @@ update_gloworb	ld	a,0
 		ld	bc,SPRITE_SLOT_SELECT_P_303B
 		ld	a,4
 		out	(c),a	; select slot 0
-		ld	hl,sprattr.gloworbP1
+		ld	hl,sprattr.gloworb
 		ld	bc,(4 * S_SPRITE_ATTR * 256) + SPRITE_ATTRIBUTE_P_57
 		otir
 		ret

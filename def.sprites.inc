@@ -55,14 +55,18 @@ sprites:
 
 	module sprattr
 
-numeralC1 = sprites + (0 * S_SPRITE_ATTR)
-numeralC2 = sprites + (1 * S_SPRITE_ATTR)
-numeralC3 = sprites + (2 * S_SPRITE_ATTR)
-numeralC4 = sprites + (3 * S_SPRITE_ATTR)
+numeralC1	= sprites + (0 * S_SPRITE_ATTR)
+numeralC2	= sprites + (1 * S_SPRITE_ATTR)
+numeralC3	= sprites + (2 * S_SPRITE_ATTR)
+numeralC4	= sprites + (3 * S_SPRITE_ATTR)
 
-gloworbP1 = sprites + (4 * S_SPRITE_ATTR)
-gloworbP2 = sprites + (5 * S_SPRITE_ATTR)
-gloworbP3 = sprites + (6 * S_SPRITE_ATTR)
-gloworbP4 = sprites + (7 * S_SPRITE_ATTR)
+gloworb		= sprites + (4 * S_SPRITE_ATTR) ; 4 phases
+
+crossoverlayP1	= sprites + (8 * S_SPRITE_ATTR)
+crossoverlayP2	= sprites + (12 * S_SPRITE_ATTR)
+crossoverlayP3	= sprites + (16 * S_SPRITE_ATTR)
+crossoverlayP4	= sprites + (20 * S_SPRITE_ATTR)
+crossoverlayP5	= sprites + (24 * S_SPRITE_ATTR)
+crossoverlayP6	= sprites + (28 * S_SPRITE_ATTR)
 
 	endmodule
