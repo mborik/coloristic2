@@ -13,14 +13,20 @@ DIRECTION_DOWN	= %11
 
 PATH_HORIZONTAL	= 0
 PATH_VERTICAL	= 2
-PATH_POINT_R	= 4
-PATH_POINT_D	= 6
-PATH_POINT_L	= 8
-PATH_POINT_U	= 10
-PATH_CORNER_L	= 12
-PATH_CORNER_U	= 14
-PATH_CORNER_R	= 16
-PATH_CORNER_D	= 18
+PATH_TELEPT_IN	= 4
+PATH_TELEPT_OUT	= 6
+PATH_POINT_R	= 8
+PATH_POINT_D	= 10
+PATH_POINT_L	= 12
+PATH_POINT_U	= 14
+PATH_CORNER_L	= 16
+PATH_CORNER_U	= 18
+PATH_CORNER_R	= 20
+PATH_CORNER_D	= 22
+PATH_TELEPT_R	= 24
+PATH_TELEPT_D	= 26
+PATH_TELEPT_L	= 28
+PATH_TELEPT_U	= 30
 
 	module tilemap
 
@@ -136,7 +142,8 @@ letters
 	opt push listoff
 		s2fn	tile?, .c + PATH_HORIZONTAL	; 128
 		s2fn	tile?, .c + PATH_VERTICAL	; 129
-		sgap 2
+		s2fn	tile?, .c + PATH_TELEPT_IN	; 130
+		s2fn	tile?, .c + PATH_TELEPT_OUT	; 131
 		s2fn	tile?, .c + PATH_POINT_L	; 132
 		s2fn	tile?, .c + PATH_POINT_U	; 133
 		s2fn	tile?, .c + PATH_POINT_R	; 134
@@ -145,7 +152,10 @@ letters
 		s2fn	tile?, .c + PATH_CORNER_U	; 137
 		s2fn	tile?, .c + PATH_CORNER_R	; 138
 		s2fn	tile?, .c + PATH_CORNER_D	; 139
-		sgap 4
+		s2fn	tile?, .c + PATH_TELEPT_L	; 140
+		s2fn	tile?, .c + PATH_TELEPT_U	; 141
+		s2fn	tile?, .c + PATH_TELEPT_R	; 142
+		s2fn	tile?, .c + PATH_TELEPT_D	; 143
 	opt pop
 	endm
 
@@ -272,6 +282,10 @@ path_corners	db	%01010101	; PATH_HORIZONTAL
 		db	0
 		db	%10101010	; PATH_VERTICAL
 		db	0
+		db	%00000000	; PATH_TELEPT_IN
+		db	128
+		db	%00000000	; PATH_TELEPT_OUT
+		db	0
 		db	%01000100	; PATH_POINT_R
 		db	128
 		db	%10100000	; PATH_POINT_D
@@ -288,3 +302,11 @@ path_corners	db	%01010101	; PATH_HORIZONTAL
 		db	%00001000
 		db	%00011000	; PATH_CORNER_D
 		db	%00000001
+		db	%01000100	; PATH_TELEPT_R
+		db	0
+		db	%10100000	; PATH_TELEPT_D
+		db	0
+		db	%00010001	; PATH_TELEPT_L
+		db	0
+		db	%00001010	; PATH_TELEPT_U
+		db	0

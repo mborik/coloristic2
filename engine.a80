@@ -184,14 +184,11 @@ perform_move	rlca
 		ld	c,a
 		add	a,low playground.steps
 		ld	l,a
-		ld	h,high playground.current_location
-		ex	af,af'
+		ld	h,high playground.steps
 		ld	a,(hl)	; check remaining steps
 		or	a
 		jr	z,.forbidden
-		ex	af,af'
-		add	a,playground.current_location - playground.steps
-		ld	l,a
+		add	hl,playground.current_location - playground.steps
 		ld	a,(hl)
 		ld	xl,a
 		ld	xh,high playground
@@ -210,12 +207,12 @@ perform_move	rlca
 		or	e	; is void?
 		jr	z,.forbidden
 
-.restartwrap	bit	7,e	; is filled?
+		bit	7,e	; is filled?
 		jr	nz,.forbidden
 		bit	5,e	; is teleport?
-		jr	nz,.teleport
-		ld	a,#0C
-		and	e
+		jp	nz,.teleport
+		ld	a,e
+		and	%1100
 		cp	4	; is another start tile?
 		jr	z,.forbidden
 		cp	8	; is color tick?
@@ -247,6 +244,9 @@ perform_move	rlca
 		bit	7,b
 		jr	z,.firstmove
 		ld	a,b	; last tile dir
+		and	#CF
+		cp	#83	; telepoint out
+		jr	z,.teleport_out
 		and	3
 		rlca
 		rlca
@@ -260,13 +260,22 @@ perform_move	rlca
 		bit	6,b	; was cross path tile?
 		jr	z,.finish
 		set	6,a
-.finish		ld	(ix+0),a
+.finish		ld	(ix),a
 		ld	a,#86	; mirrored target tile
 		xor	d
 		or	e	; color << 4
 .additional	or	0
 		ld	(hl),a
 		jp	tick
+
+.teleport_out	ld	a,4
+		add	a,c
+		ld	(ix),a
+		push	ix
+		exx	; redraw to continuing blob
+		call	prepare_level.justdraw+2
+		exx	; then act ast firstly moved
+		pop	ix
 
 .firstmove	ld	a,#84
 		or	d
@@ -285,17 +294,10 @@ perform_move	rlca
 		jr	nz,.forbidden
 		jr	.makemove
 
-.teleport	call	.applymove
+.teleport	ld	a,8
+		ld	(.additional+1),a
+		call	.applymove
 		push	bc
-		ld	b,l
-		ld	a,c
-		add	a,low playground.current_location
-		ld	l,a
-		ld	h,high playground.current_location
-		ld	(hl),b	; update location
-		push	ix
-		call	prepare_level.justdraw+2
-		pop	ix
 		ld	b,PLAYFIELD_CHECK_SIZE
 		ld	hl,playground
 .teleloop	ld	a,(hl)
@@ -304,11 +306,18 @@ perform_move	rlca
 		inc	l
 		djnz	.teleloop
 .telefound	pop	bc
-		ld	a,4
-		add	a,c
+		ld	a,#82	; PATH_TELEPT_IN
+		add	a,e
 		ld	(hl),a
+		push	af
+		push	hl
 		call	finish_move
-		jr	.forbidden
+		pop	hl
+		pop	af
+		inc	a	; PATH_TELEPT_OUT
+		ld	(hl),a
+		call	key_delay
+		jp	mainloop
 
 .switch		push	hl
 		push	bc
@@ -328,18 +337,6 @@ perform_move	rlca
 		ld	(hl),c
 .next		djnz	.clearblocked
 .moreswitches	pop	bc
-		pop	hl
-		ret
-
-.powerup	push	hl
-		ld	a,c	; color
-		add	a,low playground.steps
-		ld	l,a
-		ld	h,high playground.steps
-		ld	a,e	; follow-tile
-		and	7
-		add	a,(hl)	; add to steps
-		ld	(hl),a
 		pop	hl
 		ret
 
