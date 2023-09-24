@@ -14,8 +14,10 @@ prepare_level	cp	-1
 		ld	a,LEVEL_HEIGHT
 .row		ld	bc,LEVEL_WIDTH
 		ldir
+		ex	hl,de
 		ld	(hl),b
-		inc	de
+		inc	hl
+		ex	hl,de
 		dec	a
 		jr	nz,.row
 		push	hl
