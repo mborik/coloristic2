@@ -44,11 +44,15 @@ prepare_level	cp	-1
 		dec	bc
 		ld	(playground.current_location+0),bc
 		ld	(playground.current_location+2),bc
+		ld	(crossdata),bc
+		inc	bc
+		ld	(crossdata+2),bc
 		ld	hl,crossdata
-		ld	(hl),c
-		ld	de,crossdata+1
-		ld	bc,(6 * S_CROSS_ATTR) - 1
+		ld	de,crossdata + S_CROSS_ATTR
+	dup 5
+		ld	c,S_CROSS_ATTR
 		ldir
+	edup
 		ld	a,#CC ; call z
 		ld	(.firsttime),a
 		ld	(.endno1stTime+1),a
@@ -100,6 +104,7 @@ prepare_level	cp	-1
 		dec	c
 		jr	nz,.rows
 		call	redraw_numerals
+		call	update_crossoverlay
 .endno1stTime	ld	a,0
 		or	a
 		jp	z,reset_gloworb
@@ -293,11 +298,11 @@ draw_cross	ld	hl,crossdata
 		inc	hl
 		inc	hl
 		ld	a,(hl)
-		inc	a
+		or	a
 		call	nz,.crossdraw
 		inc	hl
 		ld	a,(hl)
-		inc	a
+		or	a
 		ret	z
 
 		ex	af,af'
@@ -305,8 +310,7 @@ draw_cross	ld	hl,crossdata
 		ld	(draw_path.bare),a
 		ex	af,af'
 
-.crossdraw	dec	a
-		push	hl
+.crossdraw	push	hl
 		ld	l,a
 		ld	h,0
 		add	hl,hl
@@ -525,6 +529,8 @@ reset_gloworb	ld	a,(active_color)
 		ld	(update_gloworb+1),a
 		ret
 
+; A = base of S_SPRITE_ATTR.ext,
+; HL = sprattr pointer, DE = X, B = Y, C = palette offset
 .store_sprattr	ex	af,af'
 		ld	(hl),e	; S_SPRITE_ATTR.x
 		inc	l
@@ -596,4 +602,85 @@ update_gloworb	ld	a,0
 		xor	a
 		ld	(update_gloworb+1),a
 		ld	(update_gloworb.ptr+1),a
+		ret
+
+update_crossoverlay
+		ld	a,8
+		ld	(.sprite_slot+1),a
+		ld	de,crossdata
+.repeat		ld	a,(de)
+		or	a
+		ret	m
+		call	calc_playfield_offset_to_xy
+		ld	b,a	; store Y to B
+		inc	de
+		push	de
+		inc	de
+		inc	de
+		ld	a,(de)
+		or	a
+		jr	nz,.getcolor
+		dec	de
+		ld	a,(de)
+.getcolor	and	%110000
+		rrca
+		rrca
+		add	a,sprite.cross
+		ld	c,a
+
+		pop	de
+		push	de
+		ld	a,(de)
+		ld	e,S_SPRITE_ATTR
+		ld	d,a
+		mul	d,e
+		add	de,sprattr.crossoverlayP1
+		push	de
+		ex	de,hl
+		ld	a,#A0	; anchor sprite
+		call	.store_sprattr
+		ld	de,16
+		ld	b,0
+		call	.store_sprattr
+		ld	de,0
+		ld	b,16
+		call	.store_sprattr
+		ld	de,16
+		call	.store_sprattr
+		ld	bc,SPRITE_SLOT_SELECT_P_303B
+.sprite_slot	ld	a,8
+		out	(c),a
+		add	a,4
+		ld	(.sprite_slot+1),a
+		pop	hl
+		ld	bc,(4 * S_SPRITE_ATTR * 256) + SPRITE_ATTRIBUTE_P_57
+		otir
+		pop	de
+		add	de,3
+		jr	.repeat
+
+.store_sprattr	ex	af,af'
+		ld	(hl),e	; S_SPRITE_ATTR.x
+		inc	l
+		ld	(hl),b	; S_SPRITE_ATTR.y
+		inc	l
+		ld	(hl),d	; S_SPRITE_ATTR.palx8
+		inc	l
+		push	hl
+		ld	a,c
+		ld	hl,.sprite_ext+1
+		res	5,(hl)
+		srl	a
+		jr	nc,.store_sprnext
+		set	5,(hl)
+.store_sprnext	pop	hl
+		or	#C0
+		ld	(hl),a	; S_SPRITE_ATTR.vpat
+		inc	l
+		ex	af,af'
+.sprite_ext	or	#00
+		ld	(hl),a	; S_SPRITE_ATTR.ext
+		inc	l
+		inc	c
+		ld	a,#40
 		ret

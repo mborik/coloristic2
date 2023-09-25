@@ -1,8 +1,8 @@
 	struct S_CROSS_ATTR
 location	byte	-1
 sprite_slot	byte	-1
-tile_first	byte	-1
-tile_second	byte	-1
+tile_first	byte	0
+tile_second	byte	0
 	ends
 
 crossdata

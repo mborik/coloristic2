@@ -59,7 +59,6 @@ calc_tilemap_offset_to_xy:
 calc_playfield_offset_to_xy:
 		push	de
 		ld	de,$FF00 | PLAYFIELD_W
-		ld	a,(hl)
 .row		inc	d
 		sub	e
 		jr	nc,.row

@@ -162,6 +162,7 @@ tilemap_map:	equ	MEM_TILEMAP_DAT_4000
 ; Sprite data
 sprite_data:	incbin	"gfx/numerals.spr"
 .gloworb	incbin	"gfx/gloworb.spr"
+.cross		incbin	"gfx/cross.spr"
 .count		equ	($ - sprite_data) / 128
 .page		equ	$$sprite_data
 		assert	$$ == $$sprite_data + 1	; must fit into two pages

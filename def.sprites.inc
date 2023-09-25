@@ -10,6 +10,7 @@ sprite	; constants placeholder
 .numerals = 0
 .gloworb = 32
 .gloworb.anicount = 10
+.cross = 32 + 44
 
 ;------------------------------------------------------------------------------
 
