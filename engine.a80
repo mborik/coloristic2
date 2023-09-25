@@ -23,7 +23,7 @@ start_level
 		ei
 		halt
 
-level		ld	a,90 ; 34 ; TODO TESTING
+level		ld	a,80 ; 34 ; TODO TESTING
 tmplevel	cp	-1
 		jr	z,.tmp
 
@@ -167,6 +167,8 @@ store_undo	push	hl
 		pop	hl
 		ret
 
+		include "def.cross.inc"
+
 perform_move	rlca
 		add	a,low ctrl2direction
 		ld	h,high ctrl2direction
@@ -207,6 +209,8 @@ perform_move	rlca
 		or	e	; is void?
 		jr	z,.forbidden
 
+		bit	6,e	; is cross?
+		jp	nz,.cross
 		bit	7,e	; is filled?
 		jr	nz,.forbidden
 		bit	5,e	; is teleport?
@@ -261,11 +265,13 @@ perform_move	rlca
 		jr	z,.finish
 		set	6,a
 .finish		ld	(ix),a
+		ex	af,af'
 		ld	a,#86	; mirrored target tile
 		xor	d
 		or	e	; color << 4
 .additional	or	0
 		ld	(hl),a
+.processcross	call	z,.storecross
 		jp	tick
 
 .teleport_out	ld	a,4
@@ -337,6 +343,68 @@ perform_move	rlca
 		ld	(hl),c
 .next		djnz	.clearblocked
 .moreswitches	pop	bc
+		pop	hl
+		ret
+
+.cross		bit	7,e
+		jr	z,.crosskip
+		ld	a,e
+		swapnib
+		and	3
+		cp	c
+		jp	z,.forbidden
+.crosskip	ld	a,#40
+		ld	(.additional+1),a
+		push	hl
+		push	bc
+		inc	l
+		ld	c,l
+		ld	b,6
+		ld	hl,crossdata
+.crossfinder	ld	a,(hl)
+		inc	a
+		jr	z,.crossfound
+		cp	c
+		jr	z,.crossfound
+		add	hl,S_CROSS_ATTR
+		djnz	.crossfinder
+		pop	bc
+		pop	hl
+		jp	.forbidden
+
+.crossfound	dec	c
+		ld	(hl),c
+		inc	hl
+		ld	a,6
+		sub	b
+		ld	(hl),a
+		inc	hl
+		bit	7,e
+		jr	z,.crossend
+		inc	hl
+.crossend	ld	(.storecross+2),hl
+		ld	a,#CD
+		ld	(.processcross),a
+		xor	a
+		ld	(.storecross_af),a
+		pop	bc
+		pop	hl
+		jp	.makemove
+
+.storecross	push	hl
+		ld	hl,#3131
+.storecross_af	nop
+		ld	(hl),a
+		ld	a,(.storecross_af)
+		or	a
+		jr	nz,.storecross_end
+		ld	a,8	; ex af,af'
+		ld	(.storecross_af),a
+		pop	hl
+		ret
+
+.storecross_end	ld	hl,.processcross
+		dec	(hl)
 		pop	hl
 		ret
 

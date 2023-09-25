@@ -44,11 +44,17 @@ prepare_level	cp	-1
 		dec	bc
 		ld	(playground.current_location+0),bc
 		ld	(playground.current_location+2),bc
+		ld	hl,crossdata
+		ld	(hl),c
+		ld	de,crossdata+1
+		ld	bc,(6 * S_CROSS_ATTR) - 1
+		ldir
 		ld	a,#CC ; call z
 		ld	(.firsttime),a
 		ld	(.endno1stTime+1),a
 		ld	(store_undo.lastcolor+1),a
 		ld	(perform_move.makemove+1),a
+		ld	(perform_move.processcross),a
 
 .justdraw	ei
 		halt
@@ -59,8 +65,8 @@ prepare_level	cp	-1
 		push	hl
 	; store playfield offset XY to gloworb position offset
 		call	calc_tilemap_offset_to_xy
-		ld	(reset_gloworb.playfield_x+2),hl
-		ld	(reset_gloworb.playfield_y+1),a
+		ld	(calc_playfield_offset_to_xy.playfield_x+2),hl
+		ld	(calc_playfield_offset_to_xy.playfield_y+1),a
 		pop	de
 		ld	c,LEVEL_HEIGHT
 .rows		ld	b,LEVEL_WIDTH
@@ -271,7 +277,47 @@ draw_tele	ld	a,tilemap.base.ptr
 .phase		add	a,0
 		jr	draw_base.center
 
-draw_cross	; TODO setup cross sprite overlay and drop to path code
+draw_cross	ld	hl,crossdata
+		ld	a,6
+.crossfinder	ex	af,af'
+		ld	a,(hl)
+		cp	xl
+		jr	z,.crossfound
+		add	hl,S_CROSS_ATTR
+		ex	af,af'
+		dec	a
+		ret	z
+		jr	.crossfinder
+
+.crossfound	ex	af,af'
+		inc	hl
+		inc	hl
+		ld	a,(hl)
+		inc	a
+		call	nz,.crossdraw
+		inc	hl
+		ld	a,(hl)
+		inc	a
+		ret	z
+
+		ex	af,af'
+		ld	a,#FC ; call m
+		ld	(draw_path.bare),a
+		ex	af,af'
+
+.crossdraw	dec	a
+		push	hl
+		ld	l,a
+		ld	h,0
+		add	hl,hl
+		ld	bc,sprite2fntab + 1
+		add	hl,bc
+		ld	c,(hl)
+		call	draw_path
+		ld	a,#CD ; call
+		ld	(draw_path.bare),a
+		pop	hl
+		ret
 
 draw_path	ld	a,c
 		and	31
@@ -290,7 +336,7 @@ draw_path	ld	a,c
 		dec	a
 		swapnib
 		ld	c,a
-		call	draw_tiles_by_base
+.bare		call	draw_tiles_by_base
 		ld	a,tilemap.edging.path_L
 		add	a,c
 		ld	h,a
@@ -458,26 +504,8 @@ reset_gloworb	ld	a,(active_color)
 		inc	a	; color to palette shift
 		swapnib		; PPPPxxxx
 		ld	c,a	; store to C
-		ld	de,$FF00 | PLAYFIELD_W
 		ld	a,(hl)
-.row		inc	d
-		sub	e
-		jr	nc,.row
-		add	a,e	; X * 32
-		ld	hl,-1
-		rlca
-		rlca
-		add	hl,a
-		add	hl,hl
-		add	hl,hl
-		add	hl,hl	; store to HL
-.playfield_x	add	hl,0
-
-		ld	a,d	; Y * 32
-		swapnib
-		rlca
-.playfield_y	add	a,0
-		sub	8
+		call	calc_playfield_offset_to_xy
 		ld	b,a	; store to B
 
 		ex	hl,de

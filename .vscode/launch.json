@@ -68,17 +68,15 @@
                 }
             ],
             "history": {
-                "reverseDebugInstructionCount": 1000000,
+                "reverseDebugInstructionCount": 100,
                 "spotCount": 10,
             },
-            "commandsAfterLaunch": [
-                "-rmv"
-            ],
             "zrcp": {
-                "skipInterrupt": true,
+                "skipInterrupt": false,
+                "resetOnLaunch": false,
                 "loadDelay": 100
             },
-            "startAutomatically": false,
+            "startAutomatically": true,
             "rootFolder": "${workspaceFolder}",
             "topOfStack": "stack",
             "load": "coloristic2.nex",

@@ -50,7 +50,7 @@ gloworb_animation_sprattrs:
 
 ; assumed aligned to 256
 sprites:
-.count = 16
+.count = 32
 		ds	.count * S_SPRITE_ATTR, 0
 
 	module sprattr
@@ -60,8 +60,9 @@ numeralC2	= sprites + (1 * S_SPRITE_ATTR)
 numeralC3	= sprites + (2 * S_SPRITE_ATTR)
 numeralC4	= sprites + (3 * S_SPRITE_ATTR)
 
-gloworb		= sprites + (4 * S_SPRITE_ATTR) ; 4 phases
+gloworb		= sprites + (4 * S_SPRITE_ATTR) ; 1 anchor + 3 composites
 
+; cross overlay anchor+composite sprite storage
 crossoverlayP1	= sprites + (8 * S_SPRITE_ATTR)
 crossoverlayP2	= sprites + (12 * S_SPRITE_ATTR)
 crossoverlayP3	= sprites + (16 * S_SPRITE_ATTR)

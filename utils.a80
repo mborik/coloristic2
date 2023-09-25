@@ -52,3 +52,30 @@ calc_tilemap_offset_to_xy:
 		ex	af,af'
 		inc	a
 		jr	.row
+
+;------------------------------------------------------------------------------
+; A = playfield offset
+; returning HL = real X, A = real Y
+calc_playfield_offset_to_xy:
+		push	de
+		ld	de,$FF00 | PLAYFIELD_W
+		ld	a,(hl)
+.row		inc	d
+		sub	e
+		jr	nc,.row
+		add	a,e	; X * 32
+		ld	hl,-1
+		rlca
+		rlca
+		add	hl,a
+		add	hl,hl
+		add	hl,hl
+		add	hl,hl	; store to HL
+.playfield_x	add	hl,0
+		ld	a,d	; Y * 32
+		swapnib
+		rlca
+.playfield_y	add	a,0
+		sub	8
+		pop	de
+		ret
