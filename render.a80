@@ -53,6 +53,7 @@ prepare_level	cp	-1
 		ld	c,S_CROSS_ATTR
 		ldir
 	edup
+		call	reset_crossoverlay
 		ld	a,#CC ; call z
 		ld	(.firsttime),a
 		ld	(.endno1stTime+1),a
@@ -104,7 +105,7 @@ prepare_level	cp	-1
 		dec	c
 		jr	nz,.rows
 		call	redraw_numerals
-		call	update_crossoverlay
+		call	redraw_crossoverlay
 .endno1stTime	ld	a,0
 		or	a
 		jp	z,reset_gloworb
@@ -591,8 +592,8 @@ update_gloworb	ld	a,0
 		or	l
 		jr	z,.finaltouch
 		ld	bc,SPRITE_SLOT_SELECT_P_303B
-		ld	a,4
-		out	(c),a	; select slot 0
+		ld	a,28
+		out	(c),a	; select slot
 		ld	hl,sprattr.gloworb
 		ld	bc,(4 * S_SPRITE_ATTR * 256) + SPRITE_ATTRIBUTE_P_57
 		otir
@@ -604,8 +605,26 @@ update_gloworb	ld	a,0
 		ld	(update_gloworb.ptr+1),a
 		ret
 
-update_crossoverlay
-		ld	a,8
+reset_crossoverlay
+		xor	a
+		ld	hl,sprattr.crossoverlayP1
+		ld	d,a
+		ld	e,a
+		ld	b,a
+		ld	c,a
+	dup 6
+		call	reset_gloworb.store_sprattr
+	edup
+		ld	bc,SPRITE_SLOT_SELECT_P_303B
+		ld	a,4
+		out	(c),a
+		ld	hl,sprattr.crossoverlayP1
+		ld	bc,(4 * 6 * S_SPRITE_ATTR * 256) + SPRITE_ATTRIBUTE_P_57
+		otir
+		ret
+
+redraw_crossoverlay
+		ld	a,4
 		ld	(.sprite_slot+1),a
 		ld	de,crossdata
 .repeat		ld	a,(de)
@@ -648,7 +667,7 @@ update_crossoverlay
 		ld	de,16
 		call	.store_sprattr
 		ld	bc,SPRITE_SLOT_SELECT_P_303B
-.sprite_slot	ld	a,8
+.sprite_slot	ld	a,4
 		out	(c),a
 		add	a,4
 		ld	(.sprite_slot+1),a

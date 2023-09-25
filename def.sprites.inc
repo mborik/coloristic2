@@ -10,7 +10,7 @@ sprite	; constants placeholder
 .numerals = 0
 .gloworb = 32
 .gloworb.anicount = 10
-.cross = 32 + 44
+.cross = .gloworb + 44
 
 ;------------------------------------------------------------------------------
 
@@ -61,14 +61,14 @@ numeralC2	= sprites + (1 * S_SPRITE_ATTR)
 numeralC3	= sprites + (2 * S_SPRITE_ATTR)
 numeralC4	= sprites + (3 * S_SPRITE_ATTR)
 
-gloworb		= sprites + (4 * S_SPRITE_ATTR) ; 1 anchor + 3 composites
-
 ; cross overlay anchor+composite sprite storage
-crossoverlayP1	= sprites + (8 * S_SPRITE_ATTR)
-crossoverlayP2	= sprites + (12 * S_SPRITE_ATTR)
-crossoverlayP3	= sprites + (16 * S_SPRITE_ATTR)
-crossoverlayP4	= sprites + (20 * S_SPRITE_ATTR)
-crossoverlayP5	= sprites + (24 * S_SPRITE_ATTR)
-crossoverlayP6	= sprites + (28 * S_SPRITE_ATTR)
+crossoverlayP1	= sprites + (4 * S_SPRITE_ATTR)
+crossoverlayP2	= sprites + (8 * S_SPRITE_ATTR)
+crossoverlayP3	= sprites + (12 * S_SPRITE_ATTR)
+crossoverlayP4	= sprites + (16 * S_SPRITE_ATTR)
+crossoverlayP5	= sprites + (20 * S_SPRITE_ATTR)
+crossoverlayP6	= sprites + (24 * S_SPRITE_ATTR)
+
+gloworb		= sprites + (28 * S_SPRITE_ATTR) ; 1 anchor + 3 composites
 
 	endmodule
