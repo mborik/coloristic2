@@ -23,7 +23,7 @@ start_level
 		ei
 		halt
 
-level		ld	a,80 ; 34 ; TODO TESTING
+level		ld	a,70 ; 34 ; TODO TESTING
 tmplevel	cp	-1
 		jr	z,.tmp
 
@@ -235,8 +235,8 @@ perform_move	rlca
 .makemove	ld	a,0	; nonzero when we storing undo
 		or	a
 		call	nz,store_undo
-;		bit	4,e	; TODO rotation handling
-;		call	nz,.rotation
+		bit	4,e	; is rotation tile?
+		call	nz,.rotation
 		call	.applymove
 		call	finish_move
 .forbidden	call	key_delay
@@ -327,7 +327,7 @@ perform_move	rlca
 
 .switch		push	hl
 		push	bc
-		ld	bc,1 | (PLAYFIELD_CHECK_SIZE << 8)
+		ld	bc,(PLAYFIELD_CHECK_SIZE << 8) | 1
 .switchreset	ld	(ix+0),c
 		ld	hl,playground
 .switchloop	ld	a,(hl)
@@ -339,9 +339,9 @@ perform_move	rlca
 .clearblocked	dec	l
 		ld	a,(hl)
 		cp	3	; blocked tile
-		jr	nz,.next
+		jr	nz,.switchnext
 		ld	(hl),c
-.next		djnz	.clearblocked
+.switchnext	djnz	.clearblocked
 .moreswitches	pop	bc
 		pop	hl
 		ret
@@ -405,6 +405,25 @@ perform_move	rlca
 
 .storecross_end	ld	hl,.processcross
 		dec	(hl)
+		pop	hl
+		ret
+
+.rotation	push	hl
+		push	bc
+		ld	bc,(PLAYFIELD_CHECK_SIZE << 8) | %1100
+		ld	hl,playground
+.rotationloop	ld	a,(hl)
+		and	-4
+		cp	c
+		jr	nz,.rotnext
+		ld	a,(hl)
+		inc	a
+		and	3
+		or	c
+		ld	(hl),a
+.rotnext	inc	l
+		djnz	.rotationloop
+		pop	bc
 		pop	hl
 		ret
 
