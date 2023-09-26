@@ -23,7 +23,7 @@ start_level
 		ei
 		halt
 
-level		ld	a,70 ; 34 ; TODO TESTING
+level		ld	a,80 ; 34 ; TODO TESTING
 tmplevel	cp	-1
 		jr	z,.tmp
 
@@ -86,6 +86,7 @@ mainloop	call	get_controls.entry
 		ld	a,(active_color)
 		cp	c
 		jr	z,mainloop_cont
+		call	check_on_cross
 		call	tick
 		ld	a,c
 		ld	(active_color),a
@@ -103,6 +104,7 @@ perform_undo	call	undo
 
 change_color	call	tick
 		ld	a,(active_color)
+		call	check_on_cross
 		inc	a
 		and	3
 		ld	e,a
@@ -114,10 +116,28 @@ change_color	call	tick
 		jr	mainloop_cont
 
 do_restart	call	tick
-;		call	tick
-;		dec	a
-;		jr	nz,do_restart
+		call	tick
+		dec	a
+		jr	nz,do_restart
 		jp	start_level
+
+check_on_cross	push	af
+		add	a,low playground.current_location
+		ld	l,a
+		ld	h,high playground.current_location
+		ld	l,(hl)
+		ld	a,(hl)
+		and	#C0
+		cp	#C0
+		jr	z,.restict
+		pop	af
+		ret
+
+.restict	call	tick
+		call	tick
+		dec	a
+		jr	nz,.restict
+		jr	mainloop_cont-3
 
 undo	;	ld	a,(undo_area+PLAYFIELD_SIZE-8) ; TODO FIXME
 	;	or	a
@@ -486,29 +506,29 @@ next_level	call	beeeep
 
 tick		push	af
 		push	bc
-; 		ld	a,C_BG_PAPER
-; 		ld	b,16
-; .loop		out	(254),a
-; 		xor	16
-; 		nop
-; 		nop
-; 		djnz	.loop
+		ld	a,PAL_COLOR_BACKGROUND
+		ld	b,16
+.loop		out	(254),a
+		xor	16
+		nop
+		nop
+		djnz	.loop
 		pop	bc
 		pop	af
 		ret
 
 beeeep		push	af
 		push	bc
-; 		ld	bc,0
-; 		ld	a,C_BG_PAPER
-; .loop1:	push	bc
-; .loop2:	out	(254),a
-; 		djnz	.loop2
-; 		pop	bc
-; 		xor	16
-; 		dec	b
-; 		dec	c
-; 		jr	nz,.loop1
+		ld	bc,0
+		ld	a,PAL_COLOR_BACKGROUND
+.loop1:		push	bc
+.loop2:		out	(254),a
+		djnz	.loop2
+		pop	bc
+		xor	16
+		dec	b
+		dec	c
+		jr	nz,.loop1
 		pop	bc
 		pop	af
 		ret
