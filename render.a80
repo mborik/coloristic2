@@ -126,7 +126,7 @@ prepare_level	cp	-1
 	endm
 
 draw_border	ld	ix,tilemap_map + TILEMAP_CHAR_WIDTH
-		ld	d,tilemap.border.ptr
+		ld	d,tilemap.numerals
 		ld	b,TILEMAP_CHAR_HEIGHT - 2
 .row		ld	c,TILEMAP_CHAR_WIDTH - 1
 .col		dec	c
@@ -504,6 +504,10 @@ findplayablecolor
 		ld	(active_color),a
 
 reset_gloworb	ld	a,(active_color)
+		ld	c,a
+		add	a,tilemap.status_color
+		ld	(tilemap_map + (TILEMAP_CHAR_WIDTH * TILEMAP_CHAR_HEIGHT) - 7),a
+		ld	a,c
 		ld	hl,playground.current_location
 		add	hl,a
 		inc	a	; color to palette shift

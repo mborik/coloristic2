@@ -2,8 +2,11 @@ play
 	; clear tilemap render screen
 		ld	hl,tilemap_map
 		ld	de,tilemap_map+1
-		ld	bc,tilemap_map.sz
+		ld	bc,tilemap_map.sz - TILEMAP_CHAR_WIDTH - 1
 		ld	(hl),l
+		ldir
+		ld	hl,statusbar_line
+		ld	bc,TILEMAP_CHAR_WIDTH
 		ldir
 		ld	a,#BE ; res 7,(hl)
 		ld	(redraw_numerals.color00+1),a
@@ -23,7 +26,7 @@ start_level
 		ei
 		halt
 
-level		ld	a,80 ; 34 ; TODO TESTING
+level		ld	a,0
 tmplevel	cp	-1
 		jr	z,.tmp
 
@@ -36,7 +39,30 @@ tmplevel	cp	-1
 		call	prepare_level.justdraw
 
 .playground	ld	a,(level+1)	;level
-		; TODO print level
+		ld	ix,tilemap_map + (TILEMAP_CHAR_WIDTH * (TILEMAP_CHAR_HEIGHT - 1)) + 6
+		ld	de,20 + (tilemap.numerals * 256) ; 20 levels per chapter
+		push	de
+.chapter_digit	inc	d
+		sub	e
+		jr	nc,.chapter_digit
+		add	a,e
+		inc	a
+		ex	af,af' ; keep level part in A'
+		ld	(ix+0),d
+		ld	(ix+1),tilemap.numerals+10
+		pop	de
+		srl	e
+		ld	c,d
+		ex	af,af'
+.level_dec	cp	e
+		jr	c,.level_end
+		inc	c
+		sub	e
+		jr	.level_dec
+
+.level_end	ld	(ix+2),c
+		add	a,d
+		ld	(ix+3),a
 
 mainloop	call	get_controls.entry
 		cp	K_LEFT

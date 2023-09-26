@@ -108,15 +108,16 @@ border
 .outer_BR	= 251
 
 numerals	= 176
+status_color	= 188
 letters
-.L		= 188
-.E		= 189
-.V		= 190
-.C		= 191
-.O		= 192
-.D		= 193
-.R		= 194
-.colon		= 195
+.L		= 192
+.E		= 193
+.V		= 194
+.C		= 195
+.O		= 196
+.D		= 197
+.R		= 198
+.colon		= 199
 
 	endmodule
 
@@ -310,3 +311,17 @@ path_corners	db	%01010101	; PATH_HORIZONTAL
 		db	0
 		db	%00001010	; PATH_TELEPT_U
 		db	0
+
+statusbar_line	db	tilemap.letters.L
+		db	tilemap.letters.E
+		db	tilemap.letters.V
+		db	tilemap.letters.E
+		db	tilemap.letters.L
+		db	tilemap.background
+		block	4, tilemap.numerals + 10
+		block	25, tilemap.background
+		db	tilemap.letters.C
+		db	tilemap.letters.O
+		db	tilemap.letters.L
+		db	tilemap.letters.O
+		db	tilemap.letters.R
