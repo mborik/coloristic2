@@ -312,16 +312,20 @@ path_corners	db	%01010101	; PATH_HORIZONTAL
 		db	%00001010	; PATH_TELEPT_U
 		db	0
 
-statusbar_line	db	tilemap.letters.L
+statusbar_line	block	2, tilemap.background
+		db	tilemap.letters.L
 		db	tilemap.letters.E
 		db	tilemap.letters.V
 		db	tilemap.letters.E
 		db	tilemap.letters.L
 		db	tilemap.background
 		block	4, tilemap.numerals + 10
-		block	25, tilemap.background
+		block	19, tilemap.background
+		db	tilemap.letters.O
+		db	tilemap.background
 		db	tilemap.letters.C
 		db	tilemap.letters.O
 		db	tilemap.letters.L
 		db	tilemap.letters.O
 		db	tilemap.letters.R
+		block	2 + TILEMAP_CHAR_WIDTH, tilemap.background

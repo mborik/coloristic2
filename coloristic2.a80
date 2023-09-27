@@ -21,7 +21,7 @@ start:		di
 		nextreg INTERRUPT_ENABLE_2_UART_C6,%00000000
 		nextreg	VIDEO_INTERUPT_CONTROL_NR_22,%00000000
 		nextreg	GLOBAL_TRANSPARENCY_NR_14,PAL_COLOR_TRANSPARENT
-		nextreg	SPRITE_CONTROL_NR_15,%00000111		; LoRes=0, SprToTop, Sclip=0, LSU, Sborder, S=1
+		nextreg	SPRITE_CONTROL_NR_15,%00100111		; LoRes=0, SprToTop, Sclip=1, LSU, Sborder, S=1
 		nextreg	SPRITE_TRANSPARENCY_I_NR_4B,PAL_COLOR_TRANSPARENT
 		nextreg	DISPLAY_CONTROL_NR_69,$00		; Layer2=0, ULA bank5, Timex off (regular ULA)
 		nextreg	LAYER2_CONTROL_NR_70,%00010000		; 320x256x8bpp, palette offset 0
@@ -94,8 +94,13 @@ start:		di
 		ei
 		halt
 
+		nextreg	MMU0_0000_NR_50, music.page
+		nextreg	MMU1_2000_NR_51, music.page + 1
+
 		call	music_init
 		call	detect_kempston
+
+		nextreg	MMU6_C000_NR_56, levels.page
 
 ;--------------------------------------------------------------------------------------------
 		include "engine.a80"
@@ -168,12 +173,13 @@ sprite_data:	incbin	"gfx/numerals.spr"
 		assert	$$ == $$sprite_data + 1	; must fit into two pages
 
 
-		mmu	6 7, MMU_PG_MUSIC, $C000
+		mmu	0 1, MMU_PG_MUSIC, $0000
 ;--------------------------------------------------------------------------------------------
 ; Music
 music:		incbin	"music/final.pt3"
-.page		equ	$$music
 		assert	$$ == $$music + 1	; must fit into two pages
+		block	$4000 - $
+.page		equ	$$music
 
 
 		mmu	$C000 w, MMU_PG_LEVELS, $C000

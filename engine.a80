@@ -2,11 +2,11 @@ play
 	; clear tilemap render screen
 		ld	hl,tilemap_map
 		ld	de,tilemap_map+1
-		ld	bc,tilemap_map.sz - TILEMAP_CHAR_WIDTH - 1
+		ld	bc,tilemap_map.sz - (TILEMAP_CHAR_WIDTH * 2) - 1
 		ld	(hl),l
 		ldir
 		ld	hl,statusbar_line
-		ld	bc,TILEMAP_CHAR_WIDTH
+		ld	bc,TILEMAP_CHAR_WIDTH * 2
 		ldir
 		ld	a,#BE ; res 7,(hl)
 		ld	(redraw_numerals.color00+1),a
@@ -39,7 +39,7 @@ tmplevel	cp	-1
 		call	prepare_level.justdraw
 
 .playground	ld	a,(level+1)	;level
-		ld	ix,tilemap_map + (TILEMAP_CHAR_WIDTH * (TILEMAP_CHAR_HEIGHT - 1)) + 6
+		ld	ix,tilemap_map + (TILEMAP_CHAR_WIDTH * (TILEMAP_CHAR_HEIGHT - 2)) + 8
 		ld	de,20 + (tilemap.numerals * 256) ; 20 levels per chapter
 		push	de
 .chapter_digit	inc	d
@@ -49,7 +49,7 @@ tmplevel	cp	-1
 		inc	a
 		ex	af,af' ; keep level part in A'
 		ld	(ix+0),d
-		ld	(ix+1),tilemap.numerals+10
+		ld	(ix+1),tilemap.numerals + 10 ; dash
 		pop	de
 		srl	e
 		ld	c,d

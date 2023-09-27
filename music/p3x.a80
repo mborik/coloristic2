@@ -6,14 +6,8 @@
 ; simplified aj adopted to sjasmplus by mborik/NAG (c) 2019
 ;------------------------------------------------------------------------------
 
-music_init	nextreg	MMU6_C000_NR_56, music.page
-		nextreg	MMU7_E000_NR_57, music.page + 1
-		jr	p3x_init
-
-music_play	nextreg	MMU6_C000_NR_56, music.page
-		nextreg	MMU7_E000_NR_57, music.page + 1
-		jp	p3x_play
-
+music_init	jr	p3x_init
+music_play	jp	p3x_play
 music_stop	jp	p3x_mute
 
 p3x_init:	ld	hl,music

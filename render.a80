@@ -10,7 +10,6 @@ prepare_level	cp	-1
 		ld	hl,levels
 		add	hl,de
 		ld	de,playground
-		nextreg	MMU6_C000_NR_56, levels.page
 		ld	a,LEVEL_HEIGHT
 .row		ld	bc,LEVEL_WIDTH
 		ldir
@@ -125,7 +124,7 @@ prepare_level	cp	-1
 		rr	l
 	endm
 
-draw_border	ld	ix,tilemap_map + TILEMAP_CHAR_WIDTH
+draw_border	ld	ix,tilemap_map
 		ld	d,tilemap.numerals
 		ld	b,TILEMAP_CHAR_HEIGHT - 2
 .row		ld	c,TILEMAP_CHAR_WIDTH - 1
@@ -506,7 +505,7 @@ findplayablecolor
 reset_gloworb	ld	a,(active_color)
 		ld	c,a
 		add	a,tilemap.status_color
-		ld	(tilemap_map + (TILEMAP_CHAR_WIDTH * TILEMAP_CHAR_HEIGHT) - 7),a
+		ld	(tilemap_map + (TILEMAP_CHAR_WIDTH * (TILEMAP_CHAR_HEIGHT - 1)) - 9),a
 		ld	a,c
 		ld	hl,playground.current_location
 		add	hl,a
