@@ -514,13 +514,15 @@ finish_move	ld	e,l
 next_level	ld	a,-1
 		ld	(tmplevel+1),a
 
+		call	reset_gloworb
+		call	update_gloworb
+		xor	a
+		ld	(update_gloworb+1),a
 		ld	hl,tilemap_map + STATUSBAR_COLOR_TICK
 		ld	de,tilemap_map + STATUSBAR_COLOR_TICK + 1
 		ld	bc,6
 		ld	(hl),b
 		ldir
-		ld	a,b
-		ld	(update_gloworb+1),a
 		call	tween_lvldialog
 
 		ld	a,(level+1)
