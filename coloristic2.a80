@@ -20,10 +20,11 @@ start:		di
 		nextreg INTERRUPT_ENABLE_1_CTC_C5,%00000000
 		nextreg INTERRUPT_ENABLE_2_UART_C6,%00000000
 		nextreg	VIDEO_INTERUPT_CONTROL_NR_22,%00000000
-		nextreg	GLOBAL_TRANSPARENCY_NR_14,PAL_COLOR_TRANSPARENT
 		nextreg	SPRITE_CONTROL_NR_15,%00100111		; LoRes=0, SprToTop, Sclip=1, LSU, Sborder, S=1
 		nextreg	SPRITE_TRANSPARENCY_I_NR_4B,PAL_COLOR_TRANSPARENT
 		nextreg	DISPLAY_CONTROL_NR_69,$00		; Layer2=0, ULA bank5, Timex off (regular ULA)
+		nextreg	LAYER2_RAM_BANK_NR_12,PAGE_LAYER2_BANK
+		nextreg	GLOBAL_TRANSPARENCY_NR_14,$E3		; $1C7 as transparent color
 		nextreg	LAYER2_CONTROL_NR_70,%00010000		; 320x256x8bpp, palette offset 0
 		nextreg	LAYER2_XOFFSET_MSB_NR_71,0,,LAYER2_XOFFSET_NR_16,0,,LAYER2_YOFFSET_NR_17,0
 		nextreg	CLIP_WINDOW_CONTROL_NR_1C,15
@@ -42,6 +43,12 @@ start:		di
 
 	; load sprite palette
 		ld	a,%01101110
+		ld	hl,base_palette
+		ld	de,low(base_palette.count)
+		call	upload_palette
+
+	; load L2 palette
+		ld	a,%01011110
 		ld	hl,base_palette
 		ld	de,low(base_palette.count)
 		call	upload_palette
@@ -88,6 +95,9 @@ start:		di
 		ld	bc,tilemap_gfx.sz
 		ldir
 
+		ld	a,nxi_dialog.page
+		call	layer2_clear_screen_and_transfer_dialog
+
 		ld	a,high int_vector
 		ld	i,a
 		im	2
@@ -108,6 +118,7 @@ start:		di
 		include "utils.a80"
 		include "interrupt.a80"
 		include "music/p3x.a80"
+		include "def.tween.inc"
 
 music_muted	db	0
 active_color	db	0
@@ -188,6 +199,16 @@ music:		incbin	"music/final.pt3"
 levels:		incbin	"levels/levels.bin"
 .page		equ	$$levels
 		assert	$$ == $$levels		; must fit into one page
+
+
+		mmu	$E000 n, MMU_PG_DIALOG, $E000
+;--------------------------------------------------------------------------------------------
+; Layer2 graphics data
+nxi_dialog:	incbin	"gfx/dialog.nxi"
+.page		equ	$$nxi_dialog
+
+nxi_menu:	incbin	"gfx/menu.nxi"
+.page		equ	$$nxi_menu
 
 
 ;--------------------------------------------------------------------------------------------

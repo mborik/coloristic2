@@ -78,3 +78,43 @@ calc_playfield_offset_to_xy:
 		sub	8
 		pop	de
 		ret
+
+;------------------------------------------------------------------------------
+; A = dialog starting page
+layer2_clear_screen_and_transfer_dialog
+		ex	af,af'
+		ld	a,MMU_PG_LAYER2
+		call	.filltwo
+		ld	b,6
+.loop		push	bc
+		nextreg	MMU7_E000_NR_57,a
+		inc	a
+		ex	af,af'
+		nextreg	MMU6_C000_NR_56,a
+		inc	a
+		ex	af,af'
+		ld	hl,$C000
+		ld	de,$E000
+		ld	bc,$2000
+		ldir
+		pop	bc
+		djnz	.loop
+
+.filltwo	nextreg	MMU7_E000_NR_57,a
+		ld	hl,$E000
+		ld	de,$E001
+		ld	bc,$1FFF
+		ld	(hl),PAL_COLOR_TRANSPARENT
+		push	hl
+		push	de
+		push	bc
+		ldir
+		inc	a
+		nextreg	MMU7_E000_NR_57,a
+		pop	bc
+		pop	de
+		pop	hl
+		ld	(hl),PAL_COLOR_TRANSPARENT
+		ldir
+		inc	a
+		ret

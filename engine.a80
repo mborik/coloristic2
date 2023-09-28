@@ -39,7 +39,7 @@ tmplevel	cp	-1
 		call	prepare_level.justdraw
 
 .playground	ld	a,(level+1)	;level
-		ld	ix,tilemap_map + (TILEMAP_CHAR_WIDTH * (TILEMAP_CHAR_HEIGHT - 2)) + 8
+		ld	ix,tilemap_map + STATUSBAR_LEVEL_NUMBER
 		ld	de,20 + (tilemap.numerals * 256) ; 20 levels per chapter
 		push	de
 .chapter_digit	inc	d
@@ -511,24 +511,64 @@ finish_move	ld	e,l
 .testnext	djnz	.testfield
 		pop	af ; throw away ret and move to next level
 
-next_level	call	beeeep
-		ld	a,-1
+next_level	ld	a,-1
 		ld	(tmplevel+1),a
 
-; 		ld	b,50
-; .waitsec	ei
-; 		halt
-; 		djnz	.waitsec
+		ld	hl,tilemap_map + STATUSBAR_COLOR_TICK
+		ld	de,tilemap_map + STATUSBAR_COLOR_TICK + 1
+		ld	bc,6
+		ld	(hl),b
+		ldir
+		ld	a,b
+		ld	(update_gloworb+1),a
+		call	tween_lvldialog
 
 		ld	a,(level+1)
 		inc	a
 		ld	(level+1),a
-		cp	LEVEL_CNT
+;		cp	LEVEL_CNT
 ;		jr	nc,game_end
-
-.wkey		call	get_controls.entry
-		jr	z,.wkey
 		jp	play
+
+tween_lvldialog	ld	hl,tween_animation
+		ld	a,(hl)
+		inc	hl
+		call	.applycrop
+		call	beeeep
+		ld	bc,LAYER2_ACCESS_P_123B
+		ld	a,LAYER2_ACCESS_L2_ENABLED
+		out	(c),a
+		ld	b,24
+.easein		ei
+		halt
+		ld	a,(hl)
+		inc	hl
+		call	.applycrop
+		djnz	.easein
+		call	beeeep
+		nextreg	LAYER2_YOFFSET_NR_17,0
+.wkey		call	get_key
+		or	a
+		jr	z,.wkey
+		call	tick
+		ld	hl,tween_animation + 24
+		ld	b,24
+.easeout	ei
+		halt
+		ld	a,(hl)
+		dec	hl
+		call	.applycrop
+		djnz	.easeout
+		call	key_delay
+		ld	bc,LAYER2_ACCESS_P_123B
+		ld	a,0
+		out	(c),a
+		ret
+
+.applycrop	nextreg	LAYER2_YOFFSET_NR_17,a
+		neg
+		nextreg	CLIP_LAYER2_NR_18,0,,CLIP_LAYER2_NR_18,159,,CLIP_LAYER2_NR_18,a,,CLIP_LAYER2_NR_18,255
+		ret
 
 tick		push	af
 		push	bc
