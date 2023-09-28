@@ -34,7 +34,7 @@ keys		db	"zxcv"
 		db	"asdfg"
 
 .caps		db	"ZXCV"
-		db	K_SPACE,K_SYMB,"MNB"
+		db	K_BREAK,K_SYMB,"MNB"
 		db	K_ENTER,"LKJH"
 		db	"POIUY"
 		db	K_DEL,K_GRAPH,K_RIGHT,K_UP,K_DOWN ; Cursor joystick

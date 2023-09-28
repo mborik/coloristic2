@@ -82,6 +82,9 @@ calc_playfield_offset_to_xy:
 ;------------------------------------------------------------------------------
 ; A = dialog starting page
 layer2_clear_screen_and_transfer_dialog
+		cp	0
+		ret	z
+		ld	(layer2_clear_screen_and_transfer_dialog+1),a
 		ex	af,af'
 		ld	a,MMU_PG_LAYER2
 		call	.filltwo

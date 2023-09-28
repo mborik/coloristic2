@@ -24,3 +24,24 @@ tween_animation	db	160
 		db	249
 		db	255
 		db	255
+
+menu_animation	db	220
+		db	198
+		db	176
+		db	156
+		db	138
+		db	120
+		db	104
+		db	88
+		db	74
+		db	62
+		db	50
+		db	40
+		db	30
+		db	22
+		db	16
+		db	10
+		db	6
+		db	2
+		db	0
+		db	0

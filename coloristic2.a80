@@ -95,9 +95,6 @@ start:		di
 		ld	bc,tilemap_gfx.sz
 		ldir
 
-		ld	a,nxi_dialog.page
-		call	layer2_clear_screen_and_transfer_dialog
-
 		ld	a,high int_vector
 		ld	i,a
 		im	2
@@ -109,8 +106,6 @@ start:		di
 
 		call	music_init
 		call	detect_kempston
-
-		nextreg	MMU6_C000_NR_56, levels.page
 
 ;--------------------------------------------------------------------------------------------
 		include "engine.a80"

@@ -7,6 +7,7 @@ prepare_level	cp	-1
 .copy2pg	ld	d,a
 		ld	e,LEVEL_SIZE
 		mul	d,e
+		nextreg	MMU6_C000_NR_56, levels.page
 		ld	hl,levels
 		add	hl,de
 		ld	de,playground

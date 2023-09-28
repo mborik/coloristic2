@@ -70,8 +70,8 @@ mainloop	call	get_controls.entry
 		cp	K_UP + 1
 		jp	c,perform_move
 
-;		cp	K_BREAK		;info
-;		jp	z,info_screen
+		cp	K_BREAK		;info
+		jp	z,info_screen
 
 		cp	K_FIRE		;change color
 		jr	z,change_color
@@ -85,8 +85,8 @@ mainloop	call	get_controls.entry
 		cp	'u'		;undo
 		jr	z,perform_undo
 
-		cp	'l'		;select level
-		ret	z
+;		cp	'l'		;select level
+;		ret	z
 
 		cp	'r'		;reload
 		jr	z,do_restart
@@ -532,7 +532,9 @@ next_level	ld	a,-1
 ;		jr	nc,game_end
 		jp	play
 
-tween_lvldialog	ld	hl,tween_animation
+tween_lvldialog	ld	a,nxi_dialog.page
+		call	layer2_clear_screen_and_transfer_dialog
+		ld	hl,tween_animation
 		ld	a,(hl)
 		inc	hl
 		call	.applycrop
@@ -563,13 +565,61 @@ tween_lvldialog	ld	hl,tween_animation
 		djnz	.easeout
 		call	key_delay
 		ld	bc,LAYER2_ACCESS_P_123B
-		ld	a,0
+		xor	a
 		out	(c),a
 		ret
 
 .applycrop	nextreg	LAYER2_YOFFSET_NR_17,a
 		neg
 		nextreg	CLIP_LAYER2_NR_18,0,,CLIP_LAYER2_NR_18,159,,CLIP_LAYER2_NR_18,a,,CLIP_LAYER2_NR_18,255
+		ret
+
+info_screen	call	key_delay
+		call	tick
+		ld	a,nxi_menu.page
+		call	layer2_clear_screen_and_transfer_dialog
+		ld	hl,menu_animation
+		ld	a,(hl)
+		inc	hl
+		call	.applycrop
+		ld	bc,LAYER2_ACCESS_P_123B
+		ld	a,LAYER2_ACCESS_L2_ENABLED
+		out	(c),a
+		ld	b,17
+.easein		ei
+		halt
+		ld	a,(hl)
+		inc	hl
+		call	.applycrop
+		djnz	.easein
+.wkey		call	get_controls.entry
+		cp	K_LEFT
+		jr	c,.wkey
+		cp	K_UP + 1
+		jr	c,.wkey
+		cp	K_BREAK
+		jr	nz,.cont
+		xor	a
+.cont		push	af
+		ld	hl,menu_animation + 17
+		ld	b,17
+.easeout	ei
+		halt
+		ld	a,(hl)
+		dec	hl
+		call	.applycrop
+		djnz	.easeout
+		call	key_delay
+		ld	bc,LAYER2_ACCESS_P_123B
+		xor	a
+		out	(c),a
+		call	reset_gloworb
+		pop	af
+		jp	mainloop+3
+
+.applycrop	nextreg	LAYER2_YOFFSET_NR_17,a
+		neg
+		nextreg	CLIP_LAYER2_NR_18,0,,CLIP_LAYER2_NR_18,159,,CLIP_LAYER2_NR_18,0,,CLIP_LAYER2_NR_18,a
 		ret
 
 tick		push	af
