@@ -311,6 +311,20 @@ MEM_TILEMAP_DAT_4000		equ $4000
 MEM_TILEMAP_GFX_6000		equ $6000
 
 ;-----------------------------------------------------------------------------
+;-- Enhanced ULA control $43 settings
+SET_PALETTE_ULA_1ST		equ %00000000
+SET_PALETTE_ULA_2ND		equ %01000000
+SET_PALETTE_LAYER2_1ST		equ %00010000
+SET_PALETTE_LAYER2_2ND		equ %01010000
+SET_PALETTE_SPRITE_1ST		equ %00110000
+SET_PALETTE_SPRITE_2ND		equ %01110000
+SET_PALETTE_TILEMAP_1ST		equ %00110000
+SET_PALETTE_TILEMAP_2ND		equ %01110000
+ACT_PALETTE_ULA_2ND		equ %00001000
+ACT_PALETTE_LAYER2_2ND		equ %00000100
+ACT_PALETTE_SPRITE_2ND		equ %00000010
+
+;-----------------------------------------------------------------------------
 ;-- Copper commands
 COPPER_NOOP			equ %00000000
 COPPER_WAIT_H			equ %1'000000'0
