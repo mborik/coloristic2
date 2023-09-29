@@ -108,7 +108,6 @@ border
 .outer_BR	= 251
 
 numerals	= 176
-status_color	= 188
 letters
 .L		= 192
 .E		= 193
@@ -117,7 +116,12 @@ letters
 .O		= 196
 .D		= 197
 .R		= 198
-.colon		= 199
+.S		= 199
+.T		= 200
+.A		= 201
+.G		= 202
+dash		= 203
+status_color	= 204
 
 	endmodule
 
@@ -319,7 +323,7 @@ statusbar_line	block	2, tilemap.background
 		db	tilemap.letters.E
 		db	tilemap.letters.L
 		db	tilemap.background
-		block	4, tilemap.numerals + 10
+		block	4, tilemap.dash
 		block	19, tilemap.background
 		db	tilemap.letters.O
 		db	tilemap.background

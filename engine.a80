@@ -49,7 +49,7 @@ tmplevel	cp	-1
 		inc	a
 		ex	af,af' ; keep level part in A'
 		ld	(ix+0),d
-		ld	(ix+1),tilemap.numerals + 10 ; dash
+		ld	(ix+1),tilemap.dash
 		pop	de
 		srl	e
 		ld	c,d

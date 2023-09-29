@@ -14,10 +14,10 @@ const parser = new xml2js.Parser({
   preserveChildrenOrder: true
 });
 
-const plus3dosHeader = Buffer.from(
-  '50 4C 55 53 33 44 4F 53 1A 01 00 80 05 00 00 03 00 05 28 00 00 05 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00'
-  .split(' ').map((v) => parseInt(v, 16))
-);
+// const plus3dosHeader = Buffer.from(
+//   '50 4C 55 53 33 44 4F 53 1A 01 00 80 05 00 00 03 00 05 28 00 00 05 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00'
+//   .split(' ').map((v) => parseInt(v, 16))
+// );
 
 parser.parseString(tmx, (e, result) => {
   if (e) {
@@ -38,8 +38,9 @@ parser.parseString(tmx, (e, result) => {
         levelData.writeUInt8(value, i);
       }
 
-      plus3dosHeader.writeUInt8(crc, 127);
-      fs.writeFileSync(resultFn, Buffer.concat([plus3dosHeader, levelData]));
+      // plus3dosHeader.writeUInt8(crc, 127);
+      // fs.writeFileSync(resultFn, Buffer.concat([plus3dosHeader, levelData]));
+      fs.writeFileSync(resultFn, levelData);
     }
   }
 });
