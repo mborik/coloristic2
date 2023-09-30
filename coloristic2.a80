@@ -41,25 +41,25 @@ start:		di
 		nextreg	PALETTE_FORMAT_NR_42,-1
 		nextreg	TRANSPARENCY_FALLBACK_COL_NR_4A,RGB_COLOR_BACKGROUND
 
-	; load sprite palette
+	; upload sprite palette
 		ld	a,SET_PALETTE_SPRITE_2ND | ACTIVATE_2ND_PALETTES
 		ld	hl,base_palette
 		ld	de,low(base_palette.count)
 		call	upload_palette
 
-	; load L2 palette
+	; upload L2 palette
 		ld	a,SET_PALETTE_LAYER2_2ND | ACTIVATE_2ND_PALETTES
 		ld	hl,base_palette
 		ld	de,low(base_palette.count)
 		call	upload_palette
 
-	; load tilemode palette
+	; upload tilemode palette
 		ld	a,SET_PALETTE_TILEMAP_2ND | ACTIVATE_2ND_PALETTES
 		ld	hl,base_palette
 		ld	de,low(base_palette.count)
 		call	upload_palette
 
-	; load ULA palette
+	; upload ULA palette
 		ld	a,SET_PALETTE_ULA_2ND | ACTIVATE_2ND_PALETTES
 		ld	hl,base_palette + 16
 		ld	de,$0008
@@ -77,6 +77,7 @@ start:		di
 		ld	a,PAL_COLOR_BACKGROUND
 		out	(ULA_P_FE),a
 
+	; upload sprite data
 		ld	bc,SPRITE_SLOT_SELECT_P_303B
 		xor	a
 		out	(c),a	; select slot 0 for patterns (selects also index 0 for attributes)
@@ -89,17 +90,32 @@ start:		di
 		dec	a
 		jr	nz,.spriteupload
 
+	; fill L2 with transparent color
+		ld	a,MMU_PG_LAYER2
+	dup 5
+		call	layer2_clear_screen_and_transfer_dialog.filltwo
+	edup
+		ld	a,LAYER2_ACCESS_L2_ENABLED
+		ld	bc,LAYER2_ACCESS_P_123B
+		out	(c),a
+
+	; upload tilemap graphics data
 		nextreg	MMU7_E000_NR_57, tilemap_gfx.page
 		ld	hl,tilemap_gfx
 		ld	de,MEM_TILEMAP_GFX_6000
 		ld	bc,tilemap_gfx.sz
 		ldir
 
+	; setup interrupt
 		ld	a,high int_vector
 		ld	i,a
 		im	2
 		ei
 		halt
+
+		xor	a
+		ld	bc,LAYER2_ACCESS_P_123B
+		out	(c),a
 
 		nextreg	MMU0_0000_NR_50, music.page
 		nextreg	MMU1_2000_NR_51, music.page + 1
