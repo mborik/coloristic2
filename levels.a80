@@ -1,0 +1,197 @@
+main_start	ld	bc,tween_level_selector
+		call	play
+		call	tick
+
+		ld	a,(level+1)
+		ld	(tmplevel+1),a
+select_level2
+maxlevel	ld	a,13
+		ld	b,a
+		ld	a,(level+1)
+		cp	b
+		jr	c,.max
+		ld	(maxlevel+1),a
+.max		; b=currentlevel c=maxlevel
+		push	bc
+		ei
+		halt
+
+		ld	a,SPRITE_CONTROL_NR_15
+		ld	bc,NEXTREG_SELECT_P_243B
+		out	(c),a
+		inc	b
+		in	a,(c)
+		ld	(restore_sprites+3),a
+		xor	1 ; disable sprites
+		out	(c),a
+
+		xor	a
+		ld	(interrupt.disable_glow+1),a
+		ld	(interrupt.even+1),a
+
+		ld	a,~242
+		nextreg	TILEMAP_YOFFSET_NR_31,a
+		neg
+		nextreg	CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,159,,CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,a
+		ld	hl,menu_animation
+		ld	b,17
+.easeout	ei
+		halt
+		ld	a,(hl)
+		inc	hl
+		nextreg	CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,159,,CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,a
+		neg
+		nextreg	TILEMAP_YOFFSET_NR_31,a
+		djnz	.easeout
+
+		ld	hl,levelselect_map
+		ld	de,tilemap_map
+		ld	bc,TILEMAP_CHAR_WIDTH * TILEMAP_CHAR_HEIGHT
+		ldir
+
+		ld	a,~242
+		nextreg	TILEMAP_YOFFSET_NR_31,a
+		neg
+		nextreg	CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,159,,CLIP_TILEMAP_NR_1B,a,,CLIP_TILEMAP_NR_1B,255
+		ld	hl,menu_animation
+		ld	b,18
+.easein		ei
+		halt
+		ld	a,(hl)
+		inc	hl
+		nextreg	CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,159,,CLIP_TILEMAP_NR_1B,a,,CLIP_TILEMAP_NR_1B,255
+		neg
+		nextreg	TILEMAP_YOFFSET_NR_31,a
+		djnz	.easein
+
+		nextreg	TILEMAP_YOFFSET_NR_31,0
+		nextreg	CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,159,,CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,255
+
+		ld	bc,SPRITE_SLOT_SELECT_P_303B
+		xor	a
+		out	(c),a
+		ld	hl,levelselector_sprites
+		ld	bc,(levelselector_sprites.length << 8) | SPRITE_ATTRIBUTE_P_57
+		otir
+
+restore_sprites	nextreg	SPRITE_CONTROL_NR_15,0
+
+; 		pop	bc
+; 		ld	a,c
+; 		call	calc_divisor
+; 		ld	a,d
+; 		ex	af,af'
+; 		ld	a,b
+; 		call	calc_divisor
+; 		ex	af,af'
+; 		ld	e,a
+; 		; d=currentlevel e=maxlevel
+
+; 		ld	hl,tilemap_map + (4 * TILEMAP_CHAR_WIDTH) + 8
+; 		ld	b,6
+; .stages		ld	a,e
+; 		cp	b
+; 		ld	c,16 ; blocked
+; 		jr	c,.next
+; 		ld	a,d
+; 		cp	b
+; 		ld	c,48 ; active
+; 		jr	z,.next
+; 		ld	c,32 ; free
+; .next
+
+
+level_select	call	get_controls.entry
+		jr	z,level_select
+		cp	K_BREAK
+		jr	z,level_continue
+		cp	K_EDIT
+		jr	z,level_continue
+		cp	K_FIRE
+		jr	z,level_play
+		cp	K_LEFT
+		jr	z,level_down
+		cp	K_DOWN
+		jr	z,level_pgup
+		cp	K_UP
+		jr	z,level_pgdown
+		cp	K_RIGHT
+		jr	nz,level_select
+
+level_up	ld	a,(maxlevel+1)
+		ld	e,a
+		ld	a,(level+1)
+		cp	e
+		jr	nc,level_select
+		ld	e,a
+		inc	a
+		jr	level_set
+
+level_down	ld	a,(level+1)
+		or	a
+		jr	z,level_select
+		ld	e,a
+		dec	a
+		jr	level_set
+
+level_pgup	ld	a,(maxlevel+1)
+		ld	e,a
+		ld	a,(level+1)
+		add	a,7
+		cp	e
+		jr	nc,level_select
+		ld	a,(level+1)
+		ld	e,a
+		add	a,8
+		jr	level_set
+
+level_pgdown	ld	a,(level+1)
+		cp	8
+		jr	c,level_select
+		ld	e,a
+		sub	8
+		jr	level_set
+
+level_set	call	tick
+		ld	(level+1),a
+		call	highlight_level
+		ld	a,(level+1)
+		ld	e,a
+		call	highlight_level
+		call	key_delay
+		jr	level_select
+		ret
+
+level_play	call	tick
+		ld	a,(tmplevel+1)
+		ld	e,a
+		ld	a,(level+1)
+		cp	e
+		jp	nz,main_start
+
+level_continue	call	tick
+		ld	a,(tmplevel+1)
+		cp	-1
+		jp	z,main_start
+		ld	(level+1),a
+		jp	main_start
+
+highlight_level
+		ld	a,(maxlevel+1)
+		cp	e
+		ld	d,16 ; blocked
+		jr	c,.next
+		ld	a,(level+1)
+		cp	e
+		ld	d,48 ; active
+		jr	z,.next
+		ld	d,32 ; free
+.next		ld	a,e
+		ret
+
+calc_divisor	ld	de,$0614 ; 20 levels per stage
+.stage		dec	d
+		sub	e
+		jr	nc,.stage
+		add	a,e
+		ret

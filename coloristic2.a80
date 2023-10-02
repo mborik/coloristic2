@@ -124,8 +124,10 @@ start:		di
 		call	detect_kempston
 
 ;--------------------------------------------------------------------------------------------
+		include "levels.a80"
 		include "engine.a80"
 		include "render.a80"
+		include "transitions.a80"
 		include "utils.a80"
 		include "interrupt.a80"
 		include "music/p3x.a80"
@@ -165,6 +167,8 @@ stack:
 
 base_palette:	incbin	"gfx/base.pal"	; raw data, include full 256 palette
 .count		equ	($ - base_palette) / 2
+
+levelselect_map	incbin	"tileset/tilemap.map"
 
 
 		include "def.sprites.inc"

@@ -6,14 +6,6 @@ vpat		byte	0	; V 5B NNNNNN (visible, 5B type, pattern number 0..63)
 ext		byte	0	; H N6 T XX YY Y8 (4bit, 7th pattern bit, relative, zoomX, zoomY, Y8)
 	ends
 
-sprite	; constants placeholder
-.numerals = 0
-.gloworb = 32
-.gloworb.anicount = 10
-.cross = .gloworb + 44
-
-;------------------------------------------------------------------------------
-
 	macro sprPatExt pattern?, enabled?, anchor?
 		db	$40 | (enabled? << 7) | (pattern? >> 1)
 	if anchor?
@@ -28,6 +20,57 @@ sprite	; constants placeholder
 		sprPatExt (pattern? + 2), enabled?, 0
 		sprPatExt (pattern? + 3), enabled?, 0
 	endm
+	macro sprStaticNumeral num?, cx?, cy?, pal?
+		db	(cx? * 8)
+		db	(cy? * 8)
+		db	((pal? & $F) << 4) | ((cx? * 8) >> 8)
+		db	%11000000 | ((num? + sprite.numerals) >> 1)
+		db	%10000000 | (((num? + sprite.numerals) & 1) << 6)
+	endm
+
+sprite	; constants placeholder
+.numerals = 0
+.gloworb = 32
+.gloworb.anicount = 10
+.cross = .gloworb + 44
+
+;------------------------------------------------------------------------------
+
+levelselector_sprites
+		sprStaticNumeral 1,  9, 5, 0
+		sprStaticNumeral 2, 13, 5, 0
+		sprStaticNumeral 3, 17, 5, 0
+		sprStaticNumeral 4, 21, 5, 0
+		sprStaticNumeral 5, 25, 5, 0
+		sprStaticNumeral 6, 29, 5, 0
+
+		sprStaticNumeral  1,  7, 13, 0
+		sprStaticNumeral  2, 13, 13, 0
+		sprStaticNumeral  3, 19, 13, 0
+		sprStaticNumeral  4, 25, 13, 0
+		sprStaticNumeral  5, 31, 13, 0
+		sprStaticNumeral  6,  7, 17, 0
+		sprStaticNumeral  7, 13, 17, 0
+		sprStaticNumeral  8, 19, 17, 0
+		sprStaticNumeral  9, 25, 17, 0
+		sprStaticNumeral 10, 31, 17, 0
+		sprStaticNumeral 11,  7, 21, 0
+		sprStaticNumeral 12, 13, 21, 0
+		sprStaticNumeral 13, 19, 21, 0
+		sprStaticNumeral 14, 25, 21, 0
+		sprStaticNumeral 15, 31, 21, 0
+		sprStaticNumeral 16,  7, 25, 0
+		sprStaticNumeral 17, 13, 25, 0
+		sprStaticNumeral 18, 19, 25, 0
+		sprStaticNumeral 19, 25, 25, 0
+		sprStaticNumeral 20, 31, 25, 0
+; reset rest sprite
+	dup 6
+		dw 0: sprPatExt 0, 0, 0
+	edup
+.length = $ - levelselector_sprites
+
+;------------------------------------------------------------------------------
 
 		align	256
 

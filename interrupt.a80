@@ -13,7 +13,7 @@ interrupt:	di
 		push	af
 
 .even		ld	a,0
-		xor	1
+.disable_glow	xor	1
 		ld	(.even+1),a
 		jr	z,.testmute
 

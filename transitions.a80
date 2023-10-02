@@ -1,0 +1,113 @@
+tween_level_tilemap
+		ld	a,1
+		or	a
+		ret	nz
+		ld	a,240
+		nextreg	CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,159,,CLIP_TILEMAP_NR_1B,a,,CLIP_TILEMAP_NR_1B,255
+		neg
+		nextreg	TILEMAP_YOFFSET_NR_31,a
+		ld	hl,menu_animation
+		ld	b,18
+.easein		ei
+		halt
+		ld	a,(hl)
+		inc	hl
+		nextreg	TILEMAP_YOFFSET_NR_31,a
+		neg
+		nextreg	CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,159,,CLIP_TILEMAP_NR_1B,a,,CLIP_TILEMAP_NR_1B,255
+		djnz	.easein
+		ret
+
+tween_level_selector
+		ret
+
+tween_winlevel_dialog
+		ld	a,nxi_dialog.page
+		call	layer2_clear_screen_and_transfer_dialog
+		ld	hl,tween_animation
+		ld	a,(hl)
+		inc	hl
+		call	.applycrop
+		call	beeeep
+		ld	bc,LAYER2_ACCESS_P_123B
+		ld	a,LAYER2_ACCESS_L2_ENABLED
+		out	(c),a
+		ld	b,24
+.easein		ei
+		halt
+		ld	a,(hl)
+		inc	hl
+		call	.applycrop
+		djnz	.easein
+		call	beeeep
+		nextreg	LAYER2_YOFFSET_NR_17,0
+.wkey		call	get_key
+		or	a
+		jr	z,.wkey
+		call	tick
+		ld	hl,tween_animation + 24
+		ld	b,24
+.easeout	ei
+		halt
+		ld	a,(hl)
+		dec	hl
+		call	.applycrop
+		djnz	.easeout
+		call	key_delay
+		ld	bc,LAYER2_ACCESS_P_123B
+		xor	a
+		out	(c),a
+		ret
+
+.applycrop	nextreg	LAYER2_YOFFSET_NR_17,a
+		neg
+		nextreg	CLIP_LAYER2_NR_18,0,,CLIP_LAYER2_NR_18,159,,CLIP_LAYER2_NR_18,a,,CLIP_LAYER2_NR_18,255
+		ret
+
+info_screen	call	key_delay
+		call	tick
+		ld	a,nxi_menu.page
+		call	layer2_clear_screen_and_transfer_dialog
+		ld	hl,menu_animation
+		ld	a,(hl)
+		inc	hl
+		call	.applycrop
+		ld	bc,LAYER2_ACCESS_P_123B
+		ld	a,LAYER2_ACCESS_L2_ENABLED
+		out	(c),a
+		ld	b,17
+.easein		ei
+		halt
+		ld	a,(hl)
+		inc	hl
+		call	.applycrop
+		djnz	.easein
+.wkey		call	get_controls.entry
+		cp	K_LEFT
+		jr	c,.wkey
+		cp	K_UP + 1
+		jr	c,.wkey
+		cp	K_BREAK
+		jr	nz,.cont
+		xor	a
+.cont		push	af
+		ld	hl,menu_animation + 17
+		ld	b,17
+.easeout	ei
+		halt
+		ld	a,(hl)
+		dec	hl
+		call	.applycrop
+		djnz	.easeout
+		call	key_delay
+		ld	bc,LAYER2_ACCESS_P_123B
+		xor	a
+		out	(c),a
+		call	reset_gloworb
+		pop	af
+		jp	mainloop+3
+
+.applycrop	nextreg	LAYER2_YOFFSET_NR_17,a
+		neg
+		nextreg	CLIP_LAYER2_NR_18,0,,CLIP_LAYER2_NR_18,159,,CLIP_LAYER2_NR_18,0,,CLIP_LAYER2_NR_18,a
+		ret
