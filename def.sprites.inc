@@ -91,8 +91,7 @@ gloworb_animation_sprattrs:
 	edup
 
 ;------------------------------------------------------------------------------
-
-; assumed aligned to 256
+; space for sprite attributes
 sprites:
 .count = 32
 		ds	.count * S_SPRITE_ATTR, 0

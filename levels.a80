@@ -5,14 +5,46 @@ main_start	ld	bc,tween_level_selector
 		ld	a,(level+1)
 		ld	(tmplevel+1),a
 select_level2
-maxlevel	ld	a,13
+maxlevel	ld	a,0
 		ld	b,a
 		ld	a,(level+1)
 		cp	b
 		jr	c,.max
+		ld	b,a
 		ld	(maxlevel+1),a
-.max		; b=currentlevel c=maxlevel
-		push	bc
+.max		ld	d,a ; current level
+		ld	e,b ; max level
+		inc	e
+		ld	hl,levelselect_tmp + LEVEL_CNT - 1
+		ld	bc,(LEVEL_CNT << 8) | 1
+levelselect_F	ld	a,l
+		cp	e
+		jr	nc,.unblock
+		ld	c,0
+.unblock	ld	(hl),c
+		ld	a,l
+		cp	d
+		jr	nz,.next
+		set	7,(hl)
+.next		dec	l
+		djnz	levelselect_F
+		ld	l,b
+		ld	de,levelselect_tmp + LEVEL_CNT
+		ld	c,STAGE_CNT
+stageselect	xor	a
+		ld	b,LEVEL_CNT / STAGE_CNT
+.stageloop	cp	(hl)
+		jr	nc,.nextlevel
+		ld	a,(hl)
+.nextlevel	rlc	(hl)
+		inc	l
+		djnz	.stageloop
+		rlca
+		ld	(de),a
+		inc	e
+		dec	c
+		jr	nz,stageselect
+
 		ei
 		halt
 
@@ -29,19 +61,19 @@ maxlevel	ld	a,13
 		ld	(interrupt.disable_glow+1),a
 		ld	(interrupt.even+1),a
 
-		ld	a,~242
+		ld	a,15
 		nextreg	TILEMAP_YOFFSET_NR_31,a
 		neg
 		nextreg	CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,159,,CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,a
-		ld	hl,menu_animation
-		ld	b,17
+		neg
+		ld	b,9
 .easeout	ei
 		halt
-		ld	a,(hl)
-		inc	hl
+		add	a,25
+		nextreg	TILEMAP_YOFFSET_NR_31,a
+		neg
 		nextreg	CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,159,,CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,a
 		neg
-		nextreg	TILEMAP_YOFFSET_NR_31,a
 		djnz	.easeout
 
 		ld	hl,levelselect_map
@@ -76,30 +108,38 @@ maxlevel	ld	a,13
 
 restore_sprites	nextreg	SPRITE_CONTROL_NR_15,0
 
-; 		pop	bc
-; 		ld	a,c
-; 		call	calc_divisor
-; 		ld	a,d
-; 		ex	af,af'
-; 		ld	a,b
-; 		call	calc_divisor
-; 		ex	af,af'
-; 		ld	e,a
-; 		; d=currentlevel e=maxlevel
+levels_render	ld	iy,tilemap_map + (5 * TILEMAP_CHAR_WIDTH) + 9
+		ld	hl,levelselect_tmp + LEVEL_CNT
+		ld	de,4
+		ld	bc,6 << 8
+.stageloop	ld	a,(hl)
+		inc	l
+		call	draw_level_select_tile
+		dec	a
+		jr	nz,.stagenext
+		ld	a,c
+		ld	(.current_stage+1),a
+.stagenext	add	bc,LEVEL_CNT / STAGE_CNT
+		add	iy,de
+		djnz	.stageloop
 
-; 		ld	hl,tilemap_map + (4 * TILEMAP_CHAR_WIDTH) + 8
-; 		ld	b,6
-; .stages		ld	a,e
-; 		cp	b
-; 		ld	c,16 ; blocked
-; 		jr	c,.next
-; 		ld	a,d
-; 		cp	b
-; 		ld	c,48 ; active
-; 		jr	z,.next
-; 		ld	c,32 ; free
-; .next
-
+		ld	iy,tilemap_map + (13 * TILEMAP_CHAR_WIDTH) + 7
+.current_stage	ld	l,0
+		ld	c,4
+		ld	e,6
+.loopY		ld	b,5
+.loopX		ld	a,(hl)
+		inc	l
+		call	draw_level_select_tile
+		add	iy,de
+		djnz	.loopX
+		dec	c
+		jr	z,level_select
+		push	de
+		ld	de,(3 * TILEMAP_CHAR_WIDTH) + 10
+		add	iy,de
+		pop	de
+		jr	.loopY
 
 level_select	call	get_controls.entry
 		jr	z,level_select
@@ -154,10 +194,10 @@ level_pgdown	ld	a,(level+1)
 
 level_set	call	tick
 		ld	(level+1),a
-		call	highlight_level
-		ld	a,(level+1)
-		ld	e,a
-		call	highlight_level
+;		call	highlight_level
+;		ld	a,(level+1)
+;		ld	e,a
+;		call	highlight_level
 		call	key_delay
 		jr	level_select
 		ret
@@ -176,22 +216,28 @@ level_continue	call	tick
 		ld	(level+1),a
 		jp	main_start
 
-highlight_level
-		ld	a,(maxlevel+1)
-		cp	e
-		ld	d,16 ; blocked
-		jr	c,.next
-		ld	a,(level+1)
-		cp	e
-		ld	d,48 ; active
-		jr	z,.next
-		ld	d,32 ; free
-.next		ld	a,e
+draw_level_select_tile
+		push	af
+		push	hl
+		rlca
+		add	a,low levelselect_bubble_map
+		ld	h,high levelselect_bubble_map
+		ld	l,a
+		jr	nc,.nc
+		inc	h
+.nc		ld	a,(hl)
+		call	draw_tiles_by_base
+		inc	hl
+		ld	a,(hl)
+		ld	(iy + 0),a
+		ld	(iy + 1),a
+		ld	(iy + TILEMAP_CHAR_WIDTH),a
+		ld	(iy + TILEMAP_CHAR_WIDTH + 1),a
+		pop	hl
+		pop	af
 		ret
 
-calc_divisor	ld	de,$0614 ; 20 levels per stage
-.stage		dec	d
-		sub	e
-		jr	nc,.stage
-		add	a,e
-		ret
+levelselect_bubble_map
+		db	tilemap.base.ptr, tilemap.tilebackground
+		db	tilemap.colorblob.C1, tilemap.base.C1
+		db	tilemap.colorblob.C2, tilemap.base.C2
