@@ -19,6 +19,10 @@ tween_level_tilemap
 		ret
 
 tween_level_selector
+		xor	a
+		ld	(tween_level_tilemap+1),a
+		inc	a
+		ld	(main_start),a
 		ret
 
 tween_winlevel_dialog
