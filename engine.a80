@@ -1,22 +1,3 @@
-play
-	; clear tilemap render screen
-		ld	hl,tilemap_map
-		ld	de,tilemap_map+1
-		ld	bc,tilemap_map.sz - (TILEMAP_CHAR_WIDTH * 2) - 1
-		ld	(hl),l
-		ldir
-		ld	hl,statusbar_line
-		ld	bc,TILEMAP_CHAR_WIDTH * 2
-		ldir
-		ld	a,#BE ; res 7,(hl)
-		ld	(redraw_numerals.color00+1),a
-		ld	(redraw_numerals.color01+1),a
-		ld	(redraw_numerals.color10+1),a
-		ld	(redraw_numerals.color11+1),a
-		call	redraw_numerals
-		ld	(update_gloworb+1),a
-		call	update_gloworb
-
 start_level
 .nokey		xor	a
 		in	a,(ULA_P_FE)
@@ -30,12 +11,35 @@ level		ld	a,0
 tmplevel	cp	-1
 		jr	z,.tmp
 
-		;load level and print it to the screen
+	; clear tilemap render screen
+		ld	hl,tilemap_map
+		ld	de,tilemap_map+1
+		ld	bc,tilemap_map.sz - (TILEMAP_CHAR_WIDTH * 2) - 1
+		ld	(hl),l
+		ldir
+		ld	hl,statusbar_line
+		ld	bc,TILEMAP_CHAR_WIDTH * 2
+		ldir
+	;load level and print it to the screen
+		ex	af,af'
+		ld	a,#BE ; res 7,(hl)
+		ld	(redraw_numerals.color00+1),a
+		ld	(redraw_numerals.color01+1),a
+		ld	(redraw_numerals.color10+1),a
+		ld	(redraw_numerals.color11+1),a
+		ex	af,af'
 		call	prepare_level
 		jr	.playground
 
 .tmp		ld	a,-1
 		ld	(tmplevel+1),a
+
+		ei
+		halt
+		ld	hl,tilemap_map + tilemap_map.sz
+		ld	de,tilemap_map
+		ld	bc,tilemap_map.sz
+		ldir
 		call	prepare_level.justdraw
 
 .playground	ld	a,(level+1)	;level
@@ -531,7 +535,7 @@ next_level	ld	a,-1
 		ld	(level+1),a
 ;		cp	LEVEL_CNT
 ;		jr	nc,game_end
-		jp	play
+		jp	start_level
 
 tick		push	af
 		push	bc

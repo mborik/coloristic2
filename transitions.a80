@@ -1,9 +1,9 @@
 tween_level_tilemap
 		ld	a,1
 		or	a
-		ret	nz
-		ld	a,240
-		nextreg	CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,159,,CLIP_TILEMAP_NR_1B,a,,CLIP_TILEMAP_NR_1B,255
+		jr	nz,.redraw_overlays
+		ld	a,~240
+		nextreg	CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,159,,CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,a
 		neg
 		nextreg	TILEMAP_YOFFSET_NR_31,a
 		ld	hl,menu_animation
@@ -14,15 +14,34 @@ tween_level_tilemap
 		inc	hl
 		nextreg	TILEMAP_YOFFSET_NR_31,a
 		neg
-		nextreg	CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,159,,CLIP_TILEMAP_NR_1B,a,,CLIP_TILEMAP_NR_1B,255
+		nextreg	CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,159,,CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,a
 		djnz	.easein
-		ret
+		ld	(tween_level_tilemap+1),a
+		ei
+		halt
+		nextreg	TILEMAP_YOFFSET_NR_31,0
+		nextreg	CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,159,,CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,255
+.redraw_overlays
+		jp	restore_level_selector
 
 tween_level_selector
 		xor	a
 		ld	(tween_level_tilemap+1),a
-		inc	a
-		ld	(main_start),a
+		nextreg	SPRITE_CONTROL_NR_15,SPRITE_CONTROL_DEFAULTS
+		ld	a,~15
+		nextreg	TILEMAP_YOFFSET_NR_31,a
+		neg
+		nextreg	CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,159,,CLIP_TILEMAP_NR_1B,a,,CLIP_TILEMAP_NR_1B,255
+		neg
+		ld	b,9
+.easeout	ei
+		halt
+		sub	25
+		nextreg	TILEMAP_YOFFSET_NR_31,a
+		neg
+		nextreg	CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,159,,CLIP_TILEMAP_NR_1B,a,,CLIP_TILEMAP_NR_1B,255
+		neg
+		djnz	.easeout
 		ret
 
 tween_winlevel_dialog

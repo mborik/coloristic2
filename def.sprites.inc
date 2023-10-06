@@ -95,6 +95,7 @@ gloworb_animation_sprattrs:
 sprites:
 .count = 32
 		ds	.count * S_SPRITE_ATTR, 0
+.length = $ - sprites
 
 	module sprattr
 
