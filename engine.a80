@@ -44,30 +44,7 @@ tmplevel	cp	-1
 
 .playground	ld	a,(level+1)	;level
 		ld	ix,tilemap_map + STATUSBAR_LEVEL_NUMBER
-		ld	de,20 + (tilemap.numerals * 256) ; 20 levels per chapter
-		push	de
-.chapter_digit	inc	d
-		sub	e
-		jr	nc,.chapter_digit
-		add	a,e
-		inc	a
-		ex	af,af' ; keep level part in A'
-		ld	(ix+0),d
-		ld	(ix+1),tilemap.dash
-		pop	de
-		srl	e
-		ld	c,d
-		ex	af,af'
-.level_dec	cp	e
-		jr	c,.level_end
-		inc	c
-		sub	e
-		jr	.level_dec
-
-.level_end	ld	(ix+2),c
-		add	a,d
-		ld	(ix+3),a
-
+		call	print_stage_level_numerals
 		call	tween_level_tilemap
 mainloop	call	get_controls.entry
 		cp	K_LEFT

@@ -108,6 +108,9 @@ stageselect	xor	a
 		nextreg	SPRITE_CONTROL_NR_15,SPRITE_CONTROL_DEFAULTS + 1
 
 level_sel_loop	call	levels_render
+		ld	a,(level+1)
+		ld	ix,tilemap_map + LEVEL_SELECTOR_NUMBER
+		call	print_stage_level_numerals
 level_select	call	get_controls.entry
 		jr	z,level_select
 		cp	K_BREAK
