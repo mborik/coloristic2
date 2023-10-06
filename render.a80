@@ -532,6 +532,7 @@ reset_gloworb	ld	a,(active_color)
 		ld	de,16
 		call	.store_sprattr
 		ld	(update_gloworb+1),a
+		ld	(perform_move.makemove+1),a
 		ret
 
 ; A = base of S_SPRITE_ATTR.ext,

@@ -70,7 +70,7 @@ mainloop	call	get_controls.entry
 		cp	'l'		;select level
 		ret	z
 
-		cp	'r'		;reload
+		cp	'0'		;reload
 		jr	z,do_restart
 
 		cp	'1'
@@ -147,9 +147,9 @@ check_on_cross	push	af
 		jr	nz,.restict
 		jr	mainloop_cont-3
 
-undo	;	ld	a,(undo_area+PLAYFIELD_SIZE-8) ; TODO FIXME
-	;	or	a
-	;	ret	z
+undo		ld	a,(undo_area.checkpoint)
+		or	a
+		ret	z
 		ld	b,9
 .tock		call	tick
 		djnz	.tock
@@ -170,6 +170,8 @@ undo	;	ld	a,(undo_area+PLAYFIELD_SIZE-8) ; TODO FIXME
 		ld	hl,playground.active_color
 		ld	a,(hl)	; pick stored active_color
 		ld	(hl),c	; and discard from level data
+		ld	l,low playground.checkpoint
+		ld	(hl),c
 		push	af
 		call	prepare_level.justdraw
 		pop	af
@@ -190,6 +192,8 @@ store_undo	push	hl
 		ld	(undo_area.active_color),a
 		xor	a
 		ld	(perform_move.makemove+1),a
+		dec	a
+		ld	(undo_area.checkpoint),a
 .nop		pop	bc
 		pop	de
 		pop	hl
@@ -263,8 +267,9 @@ perform_move	rlca
 .makemove	ld	a,0	; nonzero when we storing undo
 		or	a
 		call	nz,store_undo
-		bit	4,e	; is rotation tile?
-		call	nz,.rotation
+		ld	a,16
+		cp	e	; is rotation tile?
+		call	z,.rotation
 		call	.applymove
 		call	finish_move
 .forbidden	call	key_delay

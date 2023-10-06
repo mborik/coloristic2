@@ -144,11 +144,13 @@ active_color	db	0
 playground	ds	PLAYFIELD_SNAPSHOT_SIZE
 .offset_base = playground + PLAYFIELD_SIZE
 .active_color = playground + PLAYFIELD_SIZE + 1
+.checkpoint = playground + PLAYFIELD_SIZE - 1
 .steps = $ - (STEP_COUNT_SIZE * 2)
 .current_location = $ - STEP_COUNT_SIZE
 
 undo_area	ds	PLAYFIELD_SNAPSHOT_SIZE * UNDO_LEVELS
 .active_color = undo_area + PLAYFIELD_SIZE + 1
+.checkpoint = undo_area + PLAYFIELD_SIZE - 1
 
 backup_area	ds	PLAYFIELD_SIZE
 
