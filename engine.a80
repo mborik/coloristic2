@@ -145,6 +145,7 @@ check_on_cross	push	af
 		call	tick
 		dec	a
 		jr	nz,.restict
+		pop	af
 		jr	mainloop_cont-3
 
 undo		ld	a,(undo_area.checkpoint)
