@@ -177,7 +177,7 @@ undo		ld	a,(undo_area.checkpoint)
 		call	prepare_level.justdraw
 		pop	af
 		ld	(active_color),a
-		ret
+		jp	reset_gloworb
 
 store_undo	push	hl
 		push	de
