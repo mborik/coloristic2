@@ -116,9 +116,9 @@ change_color	call	tick
 		inc	a
 		and	3
 		ld	e,a
-		add	a,low playground.steps
+		add	a,low playground.current_location
 		ld	l,a
-		ld	h,high playground.steps
+		ld	h,high playground.current_location
 		xor	a
 		call	findplayablecolor.findnext
 		jr	mainloop_cont

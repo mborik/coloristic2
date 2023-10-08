@@ -480,22 +480,23 @@ redraw_numerals	ld	hl,sprattr.numeralC1 + S_SPRITE_ATTR.vpat
 
 findplayablecolor
 		xor	a
-		ld	hl,playground.steps
+		ld	hl,playground.current_location
 		ld	e,a
 .findnext	ld	bc,#0303
 .loop		or	(hl)
+		inc	a
 		jr	nz,.setcolor
 		ex	af,af'
 		ld	a,l
 		inc	a
 		ld	l,a
-		cp	4 + (low playground.steps)
+		cp	4 + (low playground.current_location)
 		jr	c,.nowrap
-		ld	l,low playground.steps
+		ld	l,low playground.current_location
 .nowrap		ex	af,af'
 		djnz	.loop
 		or	(hl)
-		jr	z,reset_gloworb
+		jp	m,reset_gloworb
 
 .setcolor	ld	a,b
 		xor	c
