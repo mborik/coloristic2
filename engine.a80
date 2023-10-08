@@ -137,14 +137,14 @@ check_on_cross	push	af
 		ld	a,(hl)
 		and	#C0
 		cp	#C0
-		jr	z,.restict
+		jr	z,.restrict
 		pop	af
 		ret
 
-.restict	call	tick
+.restrict	call	tick
 		call	tick
 		dec	a
-		jr	nz,.restict
+		jr	nz,.restrict
 		pop	af
 		jr	mainloop_cont-3
 
@@ -490,12 +490,12 @@ finish_move	ld	e,l
 .testfield	ld	c,(hl)
 		inc	l
 		xor	a
-		or	c
-		jr	z,.testnext
-		cp	3
+ 		or	c
 		jr	z,.testnext
 		bit	7,c
 		ret	z
+		bit	6,c
+		call	nz,test_fin_cross
 .testnext	djnz	.testfield
 		pop	af ; throw away ret and move to next level
 
@@ -519,6 +519,29 @@ next_level	ld	a,-1
 ;		cp	LEVEL_CNT
 ;		jr	nc,game_end
 		jp	start_level
+
+test_fin_cross	push	hl
+		ld	a,l
+		dec	a
+		ld	l,low playground.current_location
+		cp	(hl)
+		jr	z,.restrict
+		inc	l
+		cp	(hl)
+		jr	z,.restrict
+		inc	l
+		cp	(hl)
+		jr	z,.restrict
+		inc	l
+		cp	(hl)
+		jr	nz,.end
+.restrict	call	tick
+		call	tick
+		dec	a
+		jr	nz,.restrict
+		pop	hl ; throw away ret
+.end		pop	hl
+		ret
 
 tick		push	af
 		push	bc
