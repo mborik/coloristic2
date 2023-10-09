@@ -141,12 +141,14 @@ active_color	db	0
 
 		align	256
 
-playground	ds	PLAYFIELD_SNAPSHOT_SIZE
-.offset_base = playground + PLAYFIELD_SIZE
-.active_color = playground + PLAYFIELD_SIZE + 1
-.checkpoint = playground + PLAYFIELD_SIZE - 1
-.steps = $ - (STEP_COUNT_SIZE * 2)
-.current_location = $ - STEP_COUNT_SIZE
+playground	ds	PLAYFIELD_SIZE
+.checkpoint = $ - 1
+.offset_base	db	0
+.active_color	db	0
+.steps		ds	STEP_COUNT_SIZE
+.current_location
+		ds	STEP_COUNT_SIZE
+.crossdata	ds	6 * S_CROSS_ATTR
 
 undo_area	ds	PLAYFIELD_SNAPSHOT_SIZE * UNDO_LEVELS
 .active_color = undo_area + PLAYFIELD_SIZE + 1

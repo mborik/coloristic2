@@ -174,6 +174,7 @@ undo		ld	a,(undo_area.checkpoint)
 		ld	l,low playground.checkpoint
 		ld	(hl),c
 		push	af
+		call	reset_crossoverlay
 		call	prepare_level.justdraw
 		pop	af
 		ld	(active_color),a
@@ -199,8 +200,6 @@ store_undo	push	hl
 		pop	de
 		pop	hl
 		ret
-
-		include "def.cross.inc"
 
 perform_move	rlca
 		add	a,low ctrl2direction
@@ -394,7 +393,7 @@ perform_move	rlca
 		inc	l
 		ld	c,l
 		ld	b,6
-		ld	hl,crossdata
+		ld	hl,playground.crossdata
 .crossfinder	ld	a,(hl)
 		inc	a
 		jr	z,.crossfound

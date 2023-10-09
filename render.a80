@@ -44,11 +44,11 @@ prepare_level	cp	-1
 		dec	bc
 		ld	(playground.current_location+0),bc
 		ld	(playground.current_location+2),bc
-		ld	(crossdata),bc
+		ld	(playground.crossdata),bc
 		inc	bc
-		ld	(crossdata+2),bc
-		ld	hl,crossdata
-		ld	de,crossdata + S_CROSS_ATTR
+		ld	(playground.crossdata+2),bc
+		ld	hl,playground.crossdata
+		ld	de,playground.crossdata + S_CROSS_ATTR
 	dup 5
 		ld	c,S_CROSS_ATTR
 		ldir
@@ -63,7 +63,7 @@ prepare_level	cp	-1
 
 .justdraw	ei
 		halt
-		ld	hl,tilemap_map + PLAYFIELD_OFFSET_BASE
+		ld	hl,tilemap_map + TILEFIELD_OFFSET_BASE
 		ld	ix,playground
 		ld	a,(ix+PLAYFIELD_SIZE)
 		add	hl,a
@@ -101,7 +101,7 @@ prepare_level	cp	-1
 		djnz	.cols
 		inc	ix ; extra gap for board checks
 		pop	de
-		add	de,PLAYFIELD_TILE_HEIGHT
+		add	de,TILEFIELD_TILE_HEIGHT
 		dec	c
 		jr	nz,.rows
 		call	redraw_numerals
@@ -283,7 +283,7 @@ draw_tele	ld	a,tilemap.base.ptr
 .phase		add	a,0
 		jr	draw_base.center
 
-draw_cross	ld	hl,crossdata
+draw_cross	ld	hl,playground.crossdata
 		ld	a,6
 .crossfinder	ex	af,af'
 		ld	a,(hl)
@@ -632,7 +632,7 @@ reset_crossoverlay
 redraw_crossoverlay
 		ld	a,4
 		ld	(.sprite_slot+1),a
-		ld	de,crossdata
+		ld	de,playground.crossdata
 .repeat		ld	a,(de)
 		or	a
 		ret	m

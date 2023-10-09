@@ -12,7 +12,7 @@ main_start	ld	bc,tween_level_selector
 		ld	(tween_level_tilemap.redraw_overlays),a
 
 select_level2
-maxlevel	ld	a,0
+maxlevel	ld	a,119
 		ld	b,a
 		ld	a,(level+1)
 		cp	b
@@ -310,6 +310,7 @@ restore_level_selector
 		call	reset_gloworb
 		call	reset_crossoverlay
 		call	redraw_numerals
+		call	redraw_crossoverlay
 		call	update_gloworb.ptr
 		nextreg	SPRITE_CONTROL_NR_15,SPRITE_CONTROL_DEFAULTS+1
 		ld	a,#C9
