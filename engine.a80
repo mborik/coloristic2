@@ -67,11 +67,14 @@ mainloop	call	get_controls.entry
 		cp	'u'		;undo
 		jr	z,perform_undo
 
-		cp	'l'		;select level
-		ret	z
+		cp	'r'		;reset
+		jr	z,perform_reset
 
 		cp	'0'		;reload
 		jr	z,do_restart
+
+		cp	'l'		;select level
+		ret	z
 
 		cp	'1'
 		jr	c,mainloop_cont
@@ -108,6 +111,9 @@ manage_music	call	tick
 		jr	mainloop_cont
 
 perform_undo	call	undo
+		jr	mainloop_cont
+
+perform_reset	call	reset_color
 		jr	mainloop_cont
 
 change_color	call	tick
@@ -147,6 +153,68 @@ check_on_cross	push	af
 		jr	nz,.restrict
 		pop	af
 		jr	mainloop_cont-3
+
+reset_color	call	tick
+		call	tick
+		dec	a
+		jr	nz,reset_color
+		dec	a
+		ld	(.check_blocked+1),a
+		ld	(store_undo.lastcolor+1),a
+		ld	(perform_move.makemove+1),a
+		ld	a,(active_color)
+		swapnib
+		or	$80
+		ld	(.checkcolor+1),a
+		ld	a,$3D
+		ld	(apply_rotation.direction),a
+		ld	hl,playground
+		ld	de,backup_area
+		ld	c,LEVEL_HEIGHT
+.col		ld	b,PLAYFIELD_W
+.row		ld	a,(hl)
+		and	%10110000
+		jr	z,.nextrow
+.checkcolor	cp	0
+		jr	nz,.nextrow
+		ld	a,(de)
+		ld	(hl),a
+		cp	16
+		call	z,apply_rotation
+		dec	a
+		dec	a
+		jr	nz,.nextrow
+		ld	(.check_blocked+1),a
+.nextrow	inc	l
+		inc	e
+		djnz	.row
+		inc	l
+		dec	c
+		jr	nz,.col
+		ld	a,$3C
+		ld	(apply_rotation.direction),a
+.check_blocked	ld	a,0
+		or	a
+		jr	nz,.finish
+	; TODO
+.finish		ld	a,(active_color)
+		ld	c,a
+		add	a,low playground.steps
+		ld	d,high playground.steps
+		ld	e,a
+		ld	a,c
+		add	a,low backup_area.steps
+		ld	h,high backup_area.steps
+		ld	l,a
+		ld	a,(hl)
+		ld	(de),a
+		add	hl,STEP_COUNT_SIZE
+		add	de,STEP_COUNT_SIZE
+		ld	a,(hl)
+		ld	(de),a
+		call	reset_crossoverlay
+		call	prepare_level.justdraw
+		jp	reset_gloworb
 
 undo		ld	a,(undo_area.checkpoint)
 		or	a
@@ -269,7 +337,7 @@ perform_move	rlca
 		call	nz,store_undo
 		ld	a,16
 		cp	e	; is rotation tile?
-		call	z,.rotation
+		call	z,apply_rotation
 		call	.applymove
 		call	finish_move
 .forbidden	call	key_delay
@@ -441,21 +509,23 @@ perform_move	rlca
 		pop	hl
 		ret
 
-.rotation	push	hl
+apply_rotation	push	hl
 		push	bc
+		push	af
 		ld	bc,(PLAYFIELD_CHECK_SIZE << 8) | %1100
 		ld	hl,playground
-.rotationloop	ld	a,(hl)
+.loop		ld	a,(hl)
 		and	-4
 		cp	c
 		jr	nz,.rotnext
 		ld	a,(hl)
-		inc	a
+.direction	inc	a
 		and	3
 		or	c
 		ld	(hl),a
 .rotnext	inc	l
-		djnz	.rotationloop
+		djnz	.loop
+		pop	af
 		pop	bc
 		pop	hl
 		ret

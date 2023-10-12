@@ -154,7 +154,10 @@ undo_area	ds	PLAYFIELD_SNAPSHOT_SIZE * UNDO_LEVELS
 .active_color = undo_area + PLAYFIELD_SIZE + 1
 .checkpoint = undo_area + PLAYFIELD_SIZE - 1
 
-backup_area	ds	PLAYFIELD_SIZE
+backup_area	ds	PLAYFIELD_BACKUP_SIZE
+.steps = $ - (2 * STEP_COUNT_SIZE)
+.current_location = $ - STEP_COUNT_SIZE
+
 
 		align	256
 levelselect_tmp	ds	LEVEL_CNT + STAGE_CNT

@@ -113,6 +113,10 @@ prepare_level	cp	-1
 		ld	(.firsttime),a
 		dec	a
 		ld	(.endno1stTime+1),a
+		ld	hl,playground
+		ld	de,backup_area
+		ld	bc,PLAYFIELD_BACKUP_SIZE
+		ldir
 		call	findplayablecolor
 
 ; draw border around the game plan
