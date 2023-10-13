@@ -83,11 +83,11 @@ mainloop	call	get_controls.entry
 
 		sub	'1'
 		push	af
-		add	a,low playground.steps
+		add	a,low playground.current_location
 		ld	l,a
-		ld	h,high playground.steps
+		ld	h,high playground.current_location
 		ld	a,(hl)
-		or	a
+		inc	a
 		jr	nz,.setact
 		pop	af
 		jr	mainloop_cont
@@ -162,42 +162,57 @@ reset_color	call	tick
 		ld	(.check_blocked+1),a
 		ld	(store_undo.lastcolor+1),a
 		ld	(perform_move.makemove+1),a
+		ld	a,$3D
+		ld	(apply_rotation.direction),a
 		ld	a,(active_color)
 		swapnib
 		or	$80
-		ld	(.checkcolor+1),a
-		ld	a,$3D
+		call	.process
+		ld	a,$3C
 		ld	(apply_rotation.direction),a
-		ld	hl,playground
+		call	reset_crossoverlay
+		call	prepare_level.justdraw
+		jp	reset_gloworb
+
+.process	ld	hl,playground
 		ld	de,backup_area
-		ld	c,LEVEL_HEIGHT
-.col		ld	b,PLAYFIELD_W
-.row		ld	a,(hl)
+		ld	b,PLAYFIELD_CHECK_SIZE
+		ld	c,a
+.loop		ld	a,(hl)
 		and	%10110000
-		jr	z,.nextrow
-.checkcolor	cp	0
-		jr	nz,.nextrow
+		jr	z,.next
+.checkcolor	cp	c
+		jr	nz,.next
 		ld	a,(de)
 		ld	(hl),a
 		cp	16
 		call	z,apply_rotation
 		dec	a
 		dec	a
-		jr	nz,.nextrow
+		jr	nz,.next
 		ld	(.check_blocked+1),a
-.nextrow	inc	l
+.next		inc	l
 		inc	e
-		djnz	.row
-		inc	l
-		dec	c
-		jr	nz,.col
-		ld	a,$3C
-		ld	(apply_rotation.direction),a
+		djnz	.loop
 .check_blocked	ld	a,0
 		or	a
 		jr	nz,.finish
-	; TODO
-.finish		ld	a,(active_color)
+		ld	l,a ; low playground
+		ld	e,low backup_area
+		ld	b,PLAYFIELD_CHECK_SIZE
+.checkloop	ld	a,(de)
+		cp	3
+		jr	nz,.checknext
+		ld	a,(hl)
+		cp	128
+		call	nc,.recureset
+		ld	(hl),3
+.checknext	inc	l
+		inc	e
+		djnz	.checkloop
+.finish		ld	a,c
+		swapnib
+		and	3
 		ld	c,a
 		add	a,low playground.steps
 		ld	d,high playground.steps
@@ -212,9 +227,16 @@ reset_color	call	tick
 		add	de,STEP_COUNT_SIZE
 		ld	a,(hl)
 		ld	(de),a
-		call	reset_crossoverlay
-		call	prepare_level.justdraw
-		jp	reset_gloworb
+		ret
+
+.recureset	push	af
+		exx
+		and	%10110000
+		ld	(.check_blocked+1),a
+		call	.process
+		exx
+		pop	af
+		ret
 
 undo		ld	a,(undo_area.checkpoint)
 		or	a
