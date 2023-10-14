@@ -161,7 +161,7 @@ reset_color	call	tick
 		dec	a
 		ld	(.check_blocked+1),a
 		ld	(store_undo.lastcolor+1),a
-		ld	(perform_move.makemove+1),a
+		call	store_undo
 		ld	a,$3D
 		ld	(apply_rotation.direction),a
 		ld	a,(active_color)
@@ -184,6 +184,8 @@ reset_color	call	tick
 .checkcolor	cp	c
 		jr	nz,.next
 		ld	a,(de)
+		cp	64
+		jr	z,.revertcross
 		ld	(hl),a
 		cp	16
 		call	z,apply_rotation
@@ -228,6 +230,79 @@ reset_color	call	tick
 		ld	a,(hl)
 		ld	(de),a
 		ret
+
+.revertcross	push	de
+		push	bc
+		ld	c,l
+		ld	b,6
+		ld	de,playground.crossdata
+.crossfinder	ld	a,(de)
+		cp	c
+		jr	z,.crossfound
+		add	de,S_CROSS_ATTR
+		djnz	.crossfinder
+.revcrossback	pop	bc
+		pop	de
+		jr	.next
+
+.crossfound	add	de,S_CROSS_ATTR.tile_second
+		ld	a,(de)
+		or	a
+		jr	nz,.cross_second
+		dec	e
+		ld	a,(de)
+		cp	(hl)
+		jr	nz,.revcrossback
+		ld	(hl),64
+		push	hl
+		inc	e
+		inc	e
+		ld	h,d
+		ld	l,e
+		ex	de,hl
+		add	de,-S_CROSS_ATTR
+		ld	a,low playground.crossdata + (5 * S_CROSS_ATTR)
+		sub	e
+		ld	c,a
+		xor	a
+		ld	b,a
+		ldir
+		dec	a
+		ld	(de),a
+		inc	e
+		ld	(de),a
+		inc	e
+		inc	a
+		ld	(de),a
+		inc	e
+		ld	(de),a
+		pop	hl
+		pop	bc
+		pop	de
+		jp	.next
+
+.cross_second	cp	(hl)
+		jr	nz,.cross_shift
+		xor	a
+		ld	(de),a
+		dec	e
+		ld	a,(de)
+		ld	(hl),a
+		jr	.revcrossback
+
+.cross_shift	dec	e
+		ld	a,(de)
+		cp	(hl)
+		jr	nz,.revcrossback
+		ex	de,hl
+		inc	l
+		ld	a,(hl)
+		ld	(hl),0
+		dec	l
+		ld	(hl),a
+		ld	(de),a
+		ex	de,hl
+		jr	.revcrossback
 
 .recureset	push	af
 		exx
