@@ -1,6 +1,7 @@
 main_start	ld	bc,tween_level_selector
 		call	start_level
-		call	tick
+		ld	a,sfx.tick
+		call	sampleplay
 
 		ld	a,(level+1)
 		ld	(tmplevel+1),a
@@ -147,7 +148,10 @@ level_down	call	get_level_location
 		ld	a,e
 		jr	level_set
 
-level_set	call	tick
+level_set	push	af
+		ld	a,sfx.tick
+		call	sampleplay
+		pop	af
 		ld	(level+1),a
 		ld	l,d
 		ld	d,a
@@ -215,13 +219,18 @@ level_left	call	get_level_location
 		xor	a
 		jr	level_set
 
-level_play	call	tick
-		ld	de,(tmplevel+1)
+level_play	ld	de,(tmplevel+1)
 		ld	a,(level+1)
 		cp	e
-		jp	nz,main_start
+		jr	z,level_continue
+		ld	a,sfx.teleport
+		ld	(tween_level_tilemap.sfxvalue+1),a
+		jp	main_start
 
-level_continue	call	tick
+level_continue	ld	a,sfx.tock
+		call	sampleplay
+		xor	a
+		ld	(tween_level_tilemap.sfxvalue+1),a
 		ld	a,(tmplevel+1)
 		cp	-1
 		jp	z,main_start

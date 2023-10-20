@@ -2,6 +2,9 @@ tween_level_tilemap
 		ld	a,1
 		or	a
 		jr	nz,.redraw_overlays
+.sfxvalue	ld	a,0
+		or	a
+		call	nz,sampleplay
 		ld	a,~240
 		nextreg	CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,159,,CLIP_TILEMAP_NR_1B,0,,CLIP_TILEMAP_NR_1B,a
 		neg
@@ -51,7 +54,8 @@ tween_winlevel_dialog
 		ld	a,(hl)
 		inc	hl
 		call	.applycrop
-		call	beeeep
+		ld	a,sfx.welldone
+		call	sampleplay
 		ld	bc,LAYER2_ACCESS_P_123B
 		ld	a,LAYER2_ACCESS_L2_ENABLED
 		out	(c),a
@@ -62,12 +66,12 @@ tween_winlevel_dialog
 		inc	hl
 		call	.applycrop
 		djnz	.easein
-		call	beeeep
 		nextreg	LAYER2_YOFFSET_NR_17,0
 .wkey		call	get_key
 		or	a
 		jr	z,.wkey
-		call	tick
+		ld	a,sfx.tick
+		call	sampleplay
 		ld	hl,tween_animation + 24
 		ld	b,24
 .easeout	ei
@@ -88,7 +92,8 @@ tween_winlevel_dialog
 		ret
 
 info_screen	call	key_delay
-		call	tick
+		ld	a,sfx.tick
+		call	sampleplay
 		ld	a,nxi_menu.page
 		call	layer2_clear_screen_and_transfer_dialog
 		ld	hl,menu_animation

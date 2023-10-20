@@ -1,0 +1,75 @@
+sampleplay:	push	hl
+		push	de
+		push	bc
+		ld	d,a
+		ld	e,5
+		mul	d,e			; get offest in sample table
+		ld	hl,sampletable		; add offset to samplestart address
+		add	hl,de
+		ld	a,(hl)
+		nextreg	MMU6_C000_NR_56,a	; set mmu6/#C000 with bank in a
+		inc	hl
+		ld	e,(hl)
+		inc	hl
+		ld	d,(hl)
+		ld	(dmadata.smpaddr),de	; store new address in dma code
+		inc	hl
+		ld	e,(hl)
+		inc	hl
+		ld	d,(hl)
+		ld	(dmadata.smplen),de	; store length in dma length
+		ld	bc,ZXN_DMA_P_6B
+		ld	a,#87
+		out	(c),a			; reset dma
+		ld	hl,dmadata
+		ld	b,dmadata.length
+		otir				; send data to dma
+		pop	bc
+		pop	de
+		pop	hl
+		ret
+
+dmadata:	db	#C3		; r6-reset dma
+		db	#C7		; r6-reset port a timing
+		db	#CA		; r6-set port b timing same as port a
+		db	#7D		; r0-transfer mode, a -> b
+.smpaddr	dw	#C000		; r0-port a, start address
+.smplen		dw	0		; r0-block length
+		db	#54		;  01010100 r1-port a address incrementing, variable timing
+		db	#02 		; r1-cycle length port b
+		db	#68		;  01101000 r2-port b address fixed, variable timing
+		db	#22		; r2-cycle length port b 2t with pre-scaler
+		db	#80		; r2-port b pre-scaler
+		db	#CD		;  11001101 r4-burst mode
+					; r4-port b, start address
+		dw	SPECDRUM_DAC_OUTPUT_P_XXDF
+		db	#82		; r5-stop on end of block, rdy active low
+					; ( #B2 for short burst #82 for one shot )
+		db	#BB		;  10111011 read mask follows
+		db	%00001000	; mask - only port a hi byte
+		db	#CF		; r6-load
+		db	#B3		; r6-force ready
+		db	#87		; r6-enable dma
+.length = $ - dmadata
+
+	macro storesmp name?
+	define __storesmp_arg name?
+	lua allpass
+		_pc("db	sfx." .. sj.get_define('__storesmp_arg') .. ".bank")
+		_pc("dw	sfx." .. sj.get_define('__storesmp_arg') .. ".data")
+		_pc("dw	sfx." .. sj.get_define('__storesmp_arg') .. ".length")
+	endlua
+	undefine __storesmp_arg
+	endm
+
+sampletable:	db	sfx.welldone.bank
+		dw	sfx.welldone.data + sfx.welldone.length - 1
+		dw	1		; = 0 (init)
+		storesmp tick		; = 1
+		storesmp tock		; = 2
+		storesmp undo		; = 3
+		storesmp reset		; = 4
+		storesmp rotate		; = 5
+		storesmp unlock		; = 6
+		storesmp teleport	; = 7
+		storesmp welldone	; = 8

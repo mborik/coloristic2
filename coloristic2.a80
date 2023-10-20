@@ -13,7 +13,7 @@
 start:		di
 		nextreg	TURBO_CONTROL_NR_07,3
 		nextreg	PERIPHERAL_2_NR_06,%00000001 ; CPUSpeed off, NMI button off, M1 button off, PS2 off, AY
-		nextreg	PERIPHERAL_3_NR_08,%01010000 ; 128k off, Contention off, ABC, Beeper on, DAC off, Timex off, TS off
+		nextreg	PERIPHERAL_3_NR_08,%01001000 ; 128k off, Contention off, ABC, Beeper on, DAC on, Timex off, TS off
 		nextreg	PERIPHERAL_4_NR_09,%00000000 ; Stereo AY, other cfg off
 		nextreg	INTERRUPT_CONTROL_C0,%00000000
 		nextreg INTERRUPT_ENABLE_0_ULA_C4,%10000001
@@ -122,6 +122,7 @@ start:		di
 
 		call	music_init
 		call	detect_kempston
+		call	sampleplay
 
 ;--------------------------------------------------------------------------------------------
 		include "levels.a80"
@@ -131,6 +132,7 @@ start:		di
 		include "utils.a80"
 		include "interrupt.a80"
 		include "music/p3x.a80"
+		include "sfx.a80"
 		include "def.tween.inc"
 
 music_muted	db	0
@@ -225,8 +227,58 @@ music:		incbin	"music/final.pt3"
 ; Level data
 levels:		incbin	"levels/levels.bin"
 .page		equ	$$levels
-		assert	$$ == $$levels		; must fit into one page
+		assert	$$ == $$levels		; must fit into single page
 
+;--------------------------------------------------------------------------------------------
+; Samples
+	module sfx
+		mmu	$C000 w, MMU_PG_SAMPLES + 0, $C000
+
+tick:		equ	1
+.bank		equ	$$
+.data		incbin	"sfx/tick.raw"
+.length		equ	$ - tick.data
+tock:		equ	2
+.bank		equ	$$
+.data		incbin	"sfx/tock.raw"
+.length		equ	$ - tock.data
+undo:		equ	3
+.bank		equ	$$
+.data		incbin	"sfx/undo.raw"
+.length		equ	$ - undo.data
+reset:		equ	4
+.bank		equ	$$
+.data		incbin	"sfx/reset.raw"
+.length		equ	$ - reset.data
+		assert	$$ == tick.bank		; must fit into single page
+
+
+		mmu	$C000 w, MMU_PG_SAMPLES + 1, $C000
+
+rotate:		equ	5
+.bank		equ	$$
+.data		incbin	"sfx/rotate.raw"
+.length		equ	$ - rotate.data
+unlock:		equ	6
+.bank		equ	$$
+.data		incbin	"sfx/unlock.raw"
+.length		equ	$ - unlock.data
+teleport:	equ	7
+.bank		equ	$$
+.data		incbin	"sfx/teleport.raw"
+.length		equ	$ - teleport.data
+		assert	$$ == rotate.bank		; must fit into single page
+
+
+		mmu	$C000 w, MMU_PG_SAMPLES + 2, $C000
+
+welldone:	equ	8
+.bank		equ	$$
+.data		incbin	"sfx/welldone.raw"
+.length		equ	$ - welldone.data
+		assert	$$ == welldone.bank	; must fit into single page
+
+	endmod
 
 		mmu	$E000 n, MMU_PG_DIALOG, $E000
 ;--------------------------------------------------------------------------------------------

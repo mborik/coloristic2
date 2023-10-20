@@ -51,6 +51,7 @@ ZX128P3_MEMORY_P_1FFD		equ $1FFD
 AY_REG_P_FFFD			equ $FFFD
 AY_DATA_P_BFFD			equ $BFFD
 TURBO_SOUND_CONTROL_P_FFFD	equ $FFFD	; write with bit 7 = 1 (port shared with AY)
+SPECDRUM_DAC_OUTPUT_P_XXDF	equ $FFDF
 
 Z80_DMA_PORT_DATAGEAR		equ $6B		; on ZXN the zxnDMA handles this in zxnDMA mode
 Z80_DMA_PORT_MB02		equ $0B		; on ZXN the zxnDMA handles this in Zilog mode

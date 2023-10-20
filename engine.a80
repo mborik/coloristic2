@@ -98,7 +98,8 @@ mainloop	call	get_controls.entry
 		cp	c
 		jr	z,mainloop_cont
 		call	check_on_cross
-		call	tick
+		ld	a,sfx.tick
+		call	sampleplay
 		ld	a,c
 		ld	(active_color),a
 		call	reset_gloworb
@@ -106,7 +107,8 @@ mainloop	call	get_controls.entry
 mainloop_cont	call	key_delay
 		jr	mainloop
 
-manage_music	call	tick
+manage_music	ld	a,sfx.tick
+		call	sampleplay
 		call	mute_unmute
 		jr	mainloop_cont
 
@@ -116,7 +118,8 @@ perform_undo	call	undo
 perform_reset	call	reset_color
 		jr	mainloop_cont
 
-change_color	call	tick
+change_color	ld	a,sfx.tick
+		call	sampleplay
 		ld	a,(active_color)
 		call	check_on_cross
 		inc	a
@@ -129,10 +132,12 @@ change_color	call	tick
 		call	findplayablecolor.findnext
 		jr	mainloop_cont
 
-do_restart	call	tick
-		call	tick
-		dec	a
-		jr	nz,do_restart
+do_restart	ld	a,sfx.reset
+		call	sampleplay
+		ld	b,30
+.waitforsfx	ei
+		halt
+		djnz	.waitforsfx
 		jp	start_level
 
 check_on_cross	push	af
@@ -147,15 +152,15 @@ check_on_cross	push	af
 		pop	af
 		ret
 
-.restrict	call	tick
-		call	tick
-		dec	a
-		jr	nz,.restrict
+.restrict	ld	a,sfx.tock
+		call	sampleplay
 		pop	af
 		jr	mainloop_cont-3
 
-reset_color	call	tick
-		call	tick
+reset_color	push	af
+		ld	a,sfx.undo
+		call	sampleplay
+		pop	af
 		dec	a
 		jr	nz,reset_color
 		dec	a
@@ -316,9 +321,8 @@ reset_color	call	tick
 undo		ld	a,(undo_area.checkpoint)
 		or	a
 		ret	z
-		ld	b,9
-.tock		call	tick
-		djnz	.tock
+		ld	a,sfx.undo
+		call	sampleplay
 		ld	hl,undo_area
 		ld	de,playground
 		ld	bc,PLAYFIELD_SNAPSHOT_SIZE * UNDO_LEVELS
@@ -400,6 +404,8 @@ perform_move	rlca
 ; ix = position, b = tile at current position,
 ; c = color, d = direction, e = tile at following position
 
+		ld	a,sfx.tick
+		ld	(.sfxvalue+1),a
 		xor	a	; reset flags
 		ld	(.additional+1),a
 
@@ -471,7 +477,8 @@ perform_move	rlca
 .additional	or	0
 		ld	(hl),a
 .processcross	call	z,.storecross
-		jp	tick
+.sfxvalue	ld	a,sfx.tick
+		jp	sampleplay
 
 .teleport_out	ld	a,4
 		add	a,c
@@ -501,6 +508,8 @@ perform_move	rlca
 
 .teleport	ld	a,8
 		ld	(.additional+1),a
+		dec	a	; ld	a,sfx.teleport
+		ld	(.sfxvalue+1),a
 		ld	a,(.makemove+1)
 		or	a
 		call	nz,store_undo
@@ -544,6 +553,8 @@ perform_move	rlca
 		jr	nz,.switchnext
 		ld	(hl),c
 .switchnext	djnz	.clearblocked
+		ld	a,sfx.unlock
+		ld	(.sfxvalue+1),a
 .moreswitches	pop	bc
 		pop	hl
 		ret
@@ -626,6 +637,8 @@ apply_rotation	push	hl
 		ld	(hl),a
 .rotnext	inc	l
 		djnz	.loop
+		ld	a,sfx.rotate
+		ld	(perform_move.sfxvalue+1),a
 		pop	af
 		pop	bc
 		pop	hl
@@ -705,41 +718,10 @@ test_fin_cross	push	hl
 		inc	l
 		cp	(hl)
 		jr	nz,.end
-.restrict	call	tick
-		call	tick
-		dec	a
-		jr	nz,.restrict
+.restrict	ld	a,sfx.tock
+		call	sampleplay
 		pop	hl ; throw away ret
 .end		pop	hl
-		ret
-
-tick		push	af
-		push	bc
-		ld	a,PAL_COLOR_BACKGROUND
-		ld	b,16
-.loop		out	(254),a
-		xor	16
-		nop
-		nop
-		djnz	.loop
-		pop	bc
-		pop	af
-		ret
-
-beeeep		push	af
-		push	bc
-		ld	bc,0
-		ld	a,PAL_COLOR_BACKGROUND
-.loop1:		push	bc
-.loop2:		out	(254),a
-		djnz	.loop2
-		pop	bc
-		xor	16
-		dec	b
-		dec	c
-		jr	nz,.loop1
-		pop	bc
-		pop	af
 		ret
 
 mute_unmute	ld	a,(music_muted)
