@@ -6,6 +6,7 @@
 *.pak
 *.bin
 *.bak
+*.sfk
 .DS_Store
 .vscode/settings.json
 bordel.dir/
