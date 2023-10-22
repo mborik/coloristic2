@@ -13,6 +13,7 @@ LEVEL_WIDTH		= 9
 LEVEL_HEIGHT		= 7
 STEP_COUNT_SIZE		= 4
 LEVEL_SIZE		= (LEVEL_WIDTH * LEVEL_HEIGHT) + 1 + STEP_COUNT_SIZE
+LEVEL_MAX		= 119
 
 ; playfield allocation constants
 	struct S_CROSS_ATTR

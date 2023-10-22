@@ -13,7 +13,7 @@ main_start	ld	bc,tween_level_selector
 		ld	(tween_level_tilemap.redraw_overlays),a
 
 select_level2
-maxlevel	ld	a,119
+maxlevel	ld	a,LEVEL_MAX
 		ld	b,a
 		ld	a,(level+1)
 		cp	b
