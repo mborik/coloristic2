@@ -60,6 +60,8 @@ prepare_level	cp	-1
 		ld	(store_undo.lastcolor+1),a
 		ld	(perform_move.makemove+1),a
 		ld	(perform_move.processcross),a
+		ld	a,3
+		ld	(reset_color.lockstate+1),a
 
 .justdraw	ei
 		halt

@@ -157,13 +157,9 @@ check_on_cross	push	af
 		pop	af
 		jr	mainloop_cont-3
 
-reset_color	push	af
-		ld	a,sfx.undo
+reset_color	ld	a,sfx.undo
 		call	sampleplay
-		pop	af
-		dec	a
-		jr	nz,reset_color
-		dec	a
+		ld	a,-1
 		ld	(.check_blocked+1),a
 		ld	(store_undo.lastcolor+1),a
 		call	store_undo
@@ -196,8 +192,16 @@ reset_color	push	af
 		call	z,apply_rotation
 		dec	a
 		dec	a
+		jr	z,.setchkblk
+		dec	a
 		jr	nz,.next
-		ld	(.check_blocked+1),a
+		ld	a,(.lockstate+1)
+		ld	(hl),a
+		jr	.next
+
+.setchkblk	ld	(.check_blocked+1),a
+		ld	a,3
+		ld	(.lockstate+1),a
 .next		inc	l
 		inc	e
 		djnz	.loop
@@ -213,7 +217,7 @@ reset_color	push	af
 		ld	a,(hl)
 		cp	128
 		call	nc,.recureset
-		ld	(hl),3
+.lockstate	ld	(hl),3
 .checknext	inc	l
 		inc	e
 		djnz	.checkloop
@@ -313,6 +317,10 @@ reset_color	push	af
 		exx
 		and	%10110000
 		ld	(.check_blocked+1),a
+		push	af
+		ld	a,3
+		ld	(.lockstate+1),a
+		pop	af
 		call	.process
 		exx
 		pop	af
@@ -553,6 +561,8 @@ perform_move	rlca
 		jr	nz,.switchnext
 		ld	(hl),c
 .switchnext	djnz	.clearblocked
+		ld	a,c
+		ld	(reset_color.lockstate+1),a
 		ld	a,sfx.unlock
 		ld	(.sfxvalue+1),a
 .moreswitches	pop	bc
@@ -622,25 +632,34 @@ perform_move	rlca
 		ret
 
 apply_rotation	push	hl
+		push	de
 		push	bc
 		push	af
 		ld	bc,(PLAYFIELD_CHECK_SIZE << 8) | %1100
 		ld	hl,playground
-.loop		ld	a,(hl)
+		ld	de,backup_area
+.loop		ld	a,(de)
 		and	-4
 		cp	c
 		jr	nz,.rotnext
-		ld	a,(hl)
+		ld	a,(de)
 .direction	inc	a
 		and	3
 		or	c
+		ld	(de),a
+		ld	a,(hl)
+		cp	128
+		jr	nc,.rotnext
+		ld	a,(de)
 		ld	(hl),a
 .rotnext	inc	l
+		inc	e
 		djnz	.loop
 		ld	a,sfx.rotate
 		ld	(perform_move.sfxvalue+1),a
 		pop	af
 		pop	bc
+		pop	de
 		pop	hl
 		ret
 
