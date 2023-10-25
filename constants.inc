@@ -1,3 +1,8 @@
+; conditional enable/disable game features
+CFG_MUSIC_MUTED		= 0
+CFG_SFX_OUTPUT_ENABLED	= 1
+CFG_CHEAT_ON_C_KEY	= 0
+
 ; zxnext setup constants
 PAGE_LAYER2_BANK	= 9
 ACTIVATE_2ND_PALETTES	= ACT_PALETTE_ULA_2ND | ACT_PALETTE_LAYER2_2ND | ACT_PALETTE_SPRITE_2ND
@@ -7,13 +12,13 @@ SPRITE_CONTROL_DEFAULTS	= %00100110 ; LoRes=0, SprToTop, Sclip=1, LSU, Sborder
 
 ; playfield & level constants
 LEVEL_CNT		= 120
+LEVEL_MAX		= 119
 STAGE_CNT		= 6
 LEVELS_PER_STAGE	= (LEVEL_CNT / STAGE_CNT)
 LEVEL_WIDTH		= 9
 LEVEL_HEIGHT		= 7
 STEP_COUNT_SIZE		= 4
 LEVEL_SIZE		= (LEVEL_WIDTH * LEVEL_HEIGHT) + 1 + STEP_COUNT_SIZE
-LEVEL_MAX		= 119
 
 ; playfield allocation constants
 	struct S_CROSS_ATTR

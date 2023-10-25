@@ -135,7 +135,7 @@ start:		di
 		include "sfx.a80"
 		include "def.tween.inc"
 
-music_muted	db	0
+music_muted	db	CFG_MUSIC_MUTED
 active_color	db	0
 
 

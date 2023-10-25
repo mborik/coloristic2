@@ -59,7 +59,11 @@ mainloop	call	get_controls.entry
 		jr	z,change_color
 
 		cp	'c'		;level code
-		jp	z,next_level	; TODO
+	if CFG_CHEAT_ON_C_KEY
+		jp	z,next_level
+	else
+		; TODO enter level code
+	endif
 
 		cp	'm'		;music off/on
 		jr	z,manage_music
