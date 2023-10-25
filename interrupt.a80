@@ -18,6 +18,7 @@ interrupt:	di
 		jr	z,.testmute
 
 		call	update_gloworb
+		call	update_teleport
 
 .testmute	ld	a,(music_muted)
 		rrca

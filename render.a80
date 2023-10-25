@@ -448,6 +448,46 @@ draw_path	ld	a,c
 .center_color	ld	a,b
 		jp	draw_center_color
 
+; updating of teleport vortex animation
+;------------------------------------------------------------------------------
+update_teleport	ld	hl,tilemap_map + TILEFIELD_OFFSET_BASE
+		ld	a,(playground + PLAYFIELD_SIZE)
+		add	hl,a
+		ld	de,4
+		ld	c,LEVEL_HEIGHT
+.rotarows	ld	b,LEVEL_WIDTH
+.rotacols	ld	a,(hl)
+		cp	160
+		jr	c,.rotanext
+		cp	176
+		jr	nc,.rotanext
+		push	hl
+		add	a,e
+		res	4,a
+		ld	(hl),a
+		inc	hl
+		ld	a,(hl)
+		add	a,e
+		res	4,a
+		ld	(hl),a
+		add	hl,TILEMAP_CHAR_WIDTH - 1
+		ld	a,(hl)
+		add	a,e
+		res	4,a
+		ld	(hl),a
+		inc	hl
+		ld	a,(hl)
+		add	a,e
+		res	4,a
+		ld	(hl),a
+		pop	hl
+.rotanext	add	hl,de
+		djnz	.rotacols
+		add	hl,TILEFIELD_TILE_HEIGHT - (LEVEL_WIDTH * 4)
+		dec	c
+		jr	nz,.rotarows
+		ret
+
 ; updating of numeral sprites with current steps
 ;------------------------------------------------------------------------------
 redraw_numerals	ld	hl,sprattr.numeralC1 + S_SPRITE_ATTR.vpat
